@@ -1,0 +1,186 @@
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Payments.GestPay.Models;
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+	});
+
+	
+
+</script>
+<style type="text/css">
+    table.gestpay {
+    }
+
+        table.gestpay th {
+            padding: 5px;
+        }
+
+        table.gestpay td {
+            padding: 3px;
+        }
+
+    div.gestpay {
+        float: left;
+        margin: 10px;
+        padding: 10px;
+    }
+
+        div.gestpay.left {
+            border-right: solid 1px #000;
+        }
+</style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <h2>Configurazione della pagina di pagamento - Importante!!!</h2>
+                    Accedere alla sezione di backoffice <br />
+                    <b>Configurazione Clienti</b> &gt; <b>Campi &amp; Parametri dell'ambiente di Back Office Merchant</b> e selezionare la pagina di pagamento attualmente pubblica.<br />
+                    Verificare che siano attivati, ed eventualmente impostarli, i seguenti valori come <b>PARAMETRO</b>:<br />
+                    <b>Buyer E-Mail</b>, <b>Buyer Name</b>, <b>Language</b>.<br />
+                    E' IMPORTANTE fare questo passaggio perchè il plugin è impostato nell'inviare questi parametri quindi, se non presenti ed impostati la richiesta di <strong>Encrypt</strong> fallirà.<br /><br />
+
+                    <h2>Risposta all'esercente</h2>
+                    La notifica, viene inoltrata con una chiamata server to server alla pagina opportunamente predisposta sul server dell'esercente
+                    (l'url della pagina di notiﬁca è una delle informazioni che compongono il proﬁlo dell'esercente configurabile tramite l'ambiente di back ofﬁce di GestPay).<br />
+                    http://[www.yourStore.com]/Plugins/PaymentGestPay/s2sHandler
+                    <br />
+
+                    <h2>Risposta all'acquirente</h2>
+                    L'esito della transazione viene immediatamente notiﬁcato da GestPay visualizzando lo "scontrino virtuale" che riporta i dati essenziali della transazione.<br />
+                    GestPay indirizzerà il browser dell'acquirente sul server dell'esercente per concludere il processo d'acquisto. <br />
+                    L'esercente dovrà predisporre due url (e conﬁgurarle nel proﬁlo esercente) <br />
+                    http://[www.yourStore.com]/Plugins/PaymentGestPay/EsitoGestPay/OK (Esito positivo)<br />
+                    http://[www.yourStore.com]/Plugins/PaymentGestPay/EsitoGestPay/KO (Esito negativo)<br /><br />
+
+                    <h2>Profilo esercente</h2>
+                    Ogni esercente ha la possibilità di configurare il proﬁlo accedendo all'ambiente di back office di GestPay.<br />
+                    Ambiente di produzione raggiungibile all'indirizzo:<br />
+                    https://ecomm.sella.it/gestpay/login.asp <br />
+                    Ambiente di test raggiungibile all'indirizzo:<br />
+                    https://testecomm.sella.it/gestlgy/login.asp <br />
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.UseSandboxOverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.UseSandbox)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.UseSandbox)
+                        @Html.ValidationMessageFor(model => model.UseSandbox)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.UseStarterOverrideForStore, model => model.UseStarter, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.UseStarter)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.UseStarter)
+                        @Html.ValidationMessageFor(model => model.UseStarter)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShopOperatorCodeOverrideForStore, model => model.ShopOperatorCode, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShopOperatorCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.ShopOperatorCode)
+                        @Html.ValidationMessageFor(model => model.ShopOperatorCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeeOverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFee)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.AdditionalFee)
+                        @Html.ValidationMessageFor(model => model.AdditionalFee)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentageOverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFeePercentage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.AdditionalFeePercentage)
+                        @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.LanguageCodeOverrideForStore, model => model.LanguageCode, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.LanguageCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.LanguageCode, new { size = 5, maxLength = 3 })
+                        @Html.ValidationMessageFor(model => model.LanguageCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.CurrencyUiCcodeOverrideForStore, model => model.CurrencyUiCcode, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.CurrencyUiCcode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.CurrencyUiCcode, new { size = 5, maxLength = 3 })
+                        @Html.ValidationMessageFor(model => model.CurrencyUiCcode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+                <p>
+                    
+                        <h2>Tabella codici divisa</h2>
+                    <p>Il codice divisa (Codice UIC) viene gestito da GestPay tramite l'attributo Currency.</p>
+                    <table class="gestpay">
+                        <tr><th>Codice UIC</th><th>Sigla ISO</th><th>Descrizione</th></tr>
+                        <tr><td>242</td><td>EUR</td><td>Euro</td></tr>
+                        <tr><td>1</td><td>USD</td><td>Dollari Usa</td></tr>
+                        <tr><td>2</td><td>GBP</td><td>Sterlina Gran Bretagna</td></tr>
+                        <tr><td>3</td><td>CHF</td><td>Franco Svizzero</td></tr>
+                    </table>
+
+                <h2>Tabella codici lingua</h2>
+                <p>&nbsp;</p>
+                <table class="gestpay">
+                    <tr><th>Codice</th><th>Descrizione</th></tr>
+                    <tr><td>1</td><td>Italiano</td></tr>
+                    <tr><td>2</td><td>Inglese</td></tr>
+                    <tr><td>3</td><td>Spagnolo</td></tr>
+                    <tr><td>4</td><td>Francese</td></tr>
+                    <tr><td>5</td><td>Tedesco</td></tr>
+                </table>
+
+            </p>
+            <hr />
+            <p>
+                <br />Per maggiori informazioni consultare la documentazione online all'indirizzo:<br />
+                https://www.gestpay.it/gestpay/specifiche-tecniche/index.jsp
+                <br />oppure il forum all'indirizzo:<br />
+                https://forum.sella.it/spazioaperto/forums/list.page
+            </p>
+        </div>
+        </div>
+    </div>
+}
