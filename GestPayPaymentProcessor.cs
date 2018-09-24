@@ -70,7 +70,7 @@ namespace Nop.Plugin.Payments.GestPay
         /// <returns></returns>
         private string GetGestPayUrl()
         {
-            return _gestPayPaymentSettings.UseSandbox ? "https://testecomm.sella.it/pagam/pagam.aspx" :
+            return _gestPayPaymentSettings.UseSandbox ? "https://sandbox.gestpay.net/pagam/pagam.aspx" :
                 "https://ecomm.sella.it/pagam/pagam.aspx";
         }
 
@@ -380,7 +380,7 @@ namespace Nop.Plugin.Payments.GestPay
                             _gestPayPaymentSettings.CurrencyUiCcode.ToString(),
                             amount.ToString("0.00", CultureInfo.InvariantCulture),
                             shopTransactionId,
-                            buyerName: HttpUtility.UrlEncode(buyerName),
+                            buyerName: buyerName,
                             buyerEmail: postProcessPaymentRequest.Order.BillingAddress.Email,
                             languageId: _gestPayPaymentSettings.LanguageCode.ToString()
                         ).OuterXml;

@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: GestPay BancaSella
 SystemName: Payments.GestPay
-Version: 1.39
+Version: 1.40
 SupportedVersions: 3.90
 Author: Lorenzo Battaglia, LandLogic IT
 DisplayOrder: 1
