@@ -26,5 +26,10 @@ namespace Nop.Plugin.Payments.GestPay
         /// Codice lingua
         /// </summary>
         public int LanguageCode { get; set; }
+
+        /// <summary>
+        /// Api Key
+        /// </summary>
+        public string ApiKey { get; set; }
     }
 }

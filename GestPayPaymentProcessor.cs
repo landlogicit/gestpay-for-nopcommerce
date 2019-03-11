@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using System.Web;
-using System.Web.Routing;
-using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -17,6 +10,13 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Tax;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using System.Web;
+using System.Web.Routing;
+using System.Xml;
 
 namespace Nop.Plugin.Payments.GestPay
 {
@@ -144,7 +144,7 @@ namespace Nop.Plugin.Payments.GestPay
 
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter", "Usa GestPay Starter");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter.Hint", "Spunta se vuoi indicare tipo account come Starter.");
-            
+
 
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode", "Codice esercente");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode.Hint", "Codice esercente di login. Es.: 0000001");
@@ -161,6 +161,9 @@ namespace Nop.Plugin.Payments.GestPay
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage00", "Impossibile procedere con il pagamento.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage01", "La transazione ha avuto esito negativo.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.TitleSummary", "Riepilogo Problema:");
+
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey", "Api Key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint", "Enter Api Key");
 
             base.Install();
         }
@@ -361,7 +364,7 @@ namespace Nop.Plugin.Payments.GestPay
             );
 
             var objCryptDecrypt = new WSCryptDecrypt(UseSandboxEnvironment());
-            
+
             string xmlResponse;
 
             if (_gestPayPaymentSettings.UseStarter)
@@ -370,7 +373,8 @@ namespace Nop.Plugin.Payments.GestPay
                            _gestPayPaymentSettings.ShopOperatorCode,
                            _gestPayPaymentSettings.CurrencyUiCcode.ToString(),
                            amount.ToString("0.00", CultureInfo.InvariantCulture),
-                           shopTransactionId
+                           shopTransactionId,
+                           apikey: _gestPayPaymentSettings.ApiKey
                        ).OuterXml;
             }
             else
@@ -382,7 +386,8 @@ namespace Nop.Plugin.Payments.GestPay
                             shopTransactionId,
                             buyerName: buyerName,
                             buyerEmail: postProcessPaymentRequest.Order.BillingAddress.Email,
-                            languageId: _gestPayPaymentSettings.LanguageCode.ToString()
+                            languageId: _gestPayPaymentSettings.LanguageCode.ToString(),
+                            apikey: _gestPayPaymentSettings.ApiKey
                         ).OuterXml;
             }
 

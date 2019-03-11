@@ -143,6 +143,16 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ApiKeyOverrideForStore, model => model.ApiKey, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ApiKey)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.ApiKey)
+                        @Html.ValidationMessageFor(model => model.ApiKey)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
                         &nbsp;
                     </div>
                     <div class="col-md-9">
@@ -150,16 +160,16 @@
                     </div>
                 </div>
                 <p>
-                    
-                        <h2>Tabella codici divisa</h2>
-                    <p>Il codice divisa (Codice UIC) viene gestito da GestPay tramite l'attributo Currency.</p>
-                    <table class="gestpay">
-                        <tr><th>Codice UIC</th><th>Sigla ISO</th><th>Descrizione</th></tr>
-                        <tr><td>242</td><td>EUR</td><td>Euro</td></tr>
-                        <tr><td>1</td><td>USD</td><td>Dollari Usa</td></tr>
-                        <tr><td>2</td><td>GBP</td><td>Sterlina Gran Bretagna</td></tr>
-                        <tr><td>3</td><td>CHF</td><td>Franco Svizzero</td></tr>
-                    </table>
+
+                    <h2>Tabella codici divisa</h2>
+                <p>Il codice divisa (Codice UIC) viene gestito da GestPay tramite l'attributo Currency.</p>
+                <table class="gestpay">
+                    <tr><th>Codice UIC</th><th>Sigla ISO</th><th>Descrizione</th></tr>
+                    <tr><td>242</td><td>EUR</td><td>Euro</td></tr>
+                    <tr><td>1</td><td>USD</td><td>Dollari Usa</td></tr>
+                    <tr><td>2</td><td>GBP</td><td>Sterlina Gran Bretagna</td></tr>
+                    <tr><td>3</td><td>CHF</td><td>Franco Svizzero</td></tr>
+                </table>
 
                 <h2>Tabella codici lingua</h2>
                 <p>&nbsp;</p>
@@ -172,15 +182,15 @@
                     <tr><td>5</td><td>Tedesco</td></tr>
                 </table>
 
-            </p>
-            <hr />
-            <p>
-                <br />Per maggiori informazioni consultare la documentazione online all'indirizzo:<br />
-                https://www.gestpay.it/gestpay/specifiche-tecniche/index.jsp
-                <br />oppure il forum all'indirizzo:<br />
-                https://forum.sella.it/spazioaperto/forums/list.page
-            </p>
-        </div>
+                </p>
+                <hr />
+                <p>
+                    <br />Per maggiori informazioni consultare la documentazione online all'indirizzo:<br />
+                    https://www.gestpay.it/gestpay/specifiche-tecniche/index.jsp
+                    <br />oppure il forum all'indirizzo:<br />
+                    https://forum.sella.it/spazioaperto/forums/list.page
+                </p>
+            </div>
         </div>
     </div>
 }
