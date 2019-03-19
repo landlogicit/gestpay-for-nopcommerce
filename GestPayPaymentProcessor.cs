@@ -200,6 +200,9 @@ namespace Nop.Plugin.Payments.GestPay
             this.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage01");
             this.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.TitleSummary");
 
+            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey");
+            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint");
+
             base.Uninstall();
         }
 
