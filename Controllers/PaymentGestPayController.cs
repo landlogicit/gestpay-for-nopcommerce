@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Xml;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.GestPay.Models;
@@ -16,6 +9,13 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using System.Web;
+using System.Web.Mvc;
+using System.Xml;
 
 namespace Nop.Plugin.Payments.GestPay.Controllers
 {
@@ -31,6 +31,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         private readonly IWebHelper _webHelper;
         private readonly PaymentSettings _paymentSettings;
         private readonly ILocalizationService _localizationService;
+        private readonly GestPayPaymentSettings _gestPayPaymentSettings;
 
         public PaymentGestPayController(IWorkContext workContext,
             IStoreService storeService,
@@ -40,7 +41,8 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             IOrderProcessingService orderProcessingService,
             ILogger logger, IWebHelper webHelper,
             PaymentSettings paymentSettings,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            GestPayPaymentSettings gestPayPaymentSettings)
         {
             _workContext = workContext;
             _storeService = storeService;
@@ -52,6 +54,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             _webHelper = webHelper;
             _paymentSettings = paymentSettings;
             _localizationService = localizationService;
+            _gestPayPaymentSettings = gestPayPaymentSettings;
         }
 
         [AdminAuthorize]
@@ -71,6 +74,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 AdditionalFeePercentage = gestPayPaymentSettings.AdditionalFeePercentage,
                 CurrencyUiCcode = gestPayPaymentSettings.CurrencyUiCcode,
                 LanguageCode = gestPayPaymentSettings.LanguageCode,
+                ApiKey = gestPayPaymentSettings.ApiKey,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
@@ -83,6 +87,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 model.AdditionalFeePercentageOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
                 model.LanguageCodeOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.LanguageCode, storeScope);
                 model.CurrencyUiCcodeOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.CurrencyUiCcode, storeScope);
+                model.ApiKeyOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.ApiKey, storeScope);
             }
 
             return View("~/Plugins/Payments.GestPay/Views/PaymentGestPay/Configure.cshtml", model);
@@ -108,6 +113,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             gestPayPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             gestPayPaymentSettings.LanguageCode = model.LanguageCode;
             gestPayPaymentSettings.CurrencyUiCcode = model.CurrencyUiCcode;
+            gestPayPaymentSettings.ApiKey = model.ApiKey;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -146,6 +152,11 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 _settingService.SaveSetting(gestPayPaymentSettings, x => x.CurrencyUiCcode, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(gestPayPaymentSettings, x => x.CurrencyUiCcode, storeScope);
+
+            if (model.ApiKeyOverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(gestPayPaymentSettings, x => x.ApiKey, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(gestPayPaymentSettings, x => x.ApiKey, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -210,7 +221,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 if (processor.IsShopLoginChecked(shopLogin) && encString != null)
                 {
                     var objDecrypt = new WSCryptDecrypt(processor.UseSandboxEnvironment());
-                    var xmlResponse = objDecrypt.Decrypt(shopLogin, encString).OuterXml;
+                    var xmlResponse = objDecrypt.Decrypt(shopLogin, encString, _gestPayPaymentSettings.ApiKey).OuterXml;
                     var xmlReturn = new XmlDocument();
                     xmlReturn.LoadXml(xmlResponse);
                     //Recupero il Codice di errore
@@ -399,7 +410,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 if (processor.IsShopLoginChecked(shopLogin) && encString != null)
                 {
                     var objDecrypt = new WSCryptDecrypt(processor.UseSandboxEnvironment());
-                    var xmlResponse = objDecrypt.Decrypt(shopLogin, encString).OuterXml;
+                    var xmlResponse = objDecrypt.Decrypt(shopLogin, encString, _gestPayPaymentSettings.ApiKey).OuterXml;
                     var xmlReturn = new XmlDocument();
                     xmlReturn.LoadXml(xmlResponse);
                     //Codice di errore

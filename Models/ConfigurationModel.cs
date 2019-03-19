@@ -34,5 +34,9 @@ namespace Nop.Plugin.Payments.GestPay.Models
         [NopResourceDisplayName("Plugins.Payments.GestPay.Fields.LanguageCode")]
         public int LanguageCode { get; set; }
         public bool LanguageCodeOverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.GestPay.Fields.ApiKey")]
+        public string ApiKey{ get; set; }
+        public bool ApiKeyOverrideForStore { get; set; }
     }
 }
