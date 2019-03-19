@@ -510,7 +510,7 @@ namespace Nop.Plugin.Payments.GestPay
         public string PaymentMethodDescription
         {
             //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+            //for example, for a redirection payment method, description may be like this: "You will be redirected to site to complete the payment"
             get { return _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription"); }
         }
 

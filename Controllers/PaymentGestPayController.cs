@@ -189,7 +189,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
         public ActionResult CancelOrder(FormCollection form)
         {
-            /* ??Annullare l'ordine o lasciarlo in sospeso come Plugin PayPal?? */
+            /* ??Annullare l'ordine o lasciarlo in sospeso come Plugin?? */
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
