@@ -1,29 +1,32 @@
+Ôªøusing GestPayServiceReference;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
-using Nop.Plugin.Payments.GestPay.Controllers;
+using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Tasks;
 using Nop.Services.Tax;
+using Nop.Web.Framework.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Web;
-using System.Web.Routing;
-using System.Xml;
+using System.Xml.Linq;
+using static GestPayServiceReference.WSCryptDecryptSoapClient;
 
 namespace Nop.Plugin.Payments.GestPay
 {
-    /// <summary>
-    /// GestPay payment processor
-    /// </summary>
-    public class GestPayPaymentProcessor : BasePlugin, IPaymentMethod
+    public class GestPayPaymentProcessor : BasePlugin, IPaymentMethod, IWidgetPlugin
     {
         #region Fields
 
@@ -35,8 +38,10 @@ namespace Nop.Plugin.Payments.GestPay
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ITaxService _taxService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly HttpContextBase _httpContext;
+        private readonly IPaymentService _paymentService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
+        private readonly IScheduleTaskService _scheduleTaskService;
         #endregion
 
         #region Ctor
@@ -45,8 +50,11 @@ namespace Nop.Plugin.Payments.GestPay
             ISettingService settingService, ICurrencyService currencyService,
             CurrencySettings currencySettings, IWebHelper webHelper,
             ICheckoutAttributeParser checkoutAttributeParser, ITaxService taxService,
-            IOrderTotalCalculationService orderTotalCalculationService, HttpContextBase httpContext,
-            ILocalizationService localizationService)
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentService paymentService,
+            IHttpContextAccessor httpContextAccessor,
+            ILocalizationService localizationService,
+            IScheduleTaskService scheduleTaskService)
         {
             _gestPayPaymentSettings = gestPayPaymentSettings;
             _settingService = settingService;
@@ -56,8 +64,10 @@ namespace Nop.Plugin.Payments.GestPay
             _checkoutAttributeParser = checkoutAttributeParser;
             _taxService = taxService;
             _orderTotalCalculationService = orderTotalCalculationService;
-            _httpContext = httpContext;
+            _paymentService = paymentService;
+            _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         #endregion
@@ -105,7 +115,7 @@ namespace Nop.Plugin.Payments.GestPay
         }
 
         /// <summary>
-        /// Ritorna se si Ë in ambiente di test o di produzione
+        /// Ritorna se si √® in ambiente di test o di produzione
         /// </summary>
         /// <returns></returns>
         public bool UseSandboxEnvironment()
@@ -117,9 +127,12 @@ namespace Nop.Plugin.Payments.GestPay
 
         #region Methods
 
-        public Type GetControllerType()
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
         {
-            return typeof(PaymentGestPayController);
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentGestPay/Configure";
         }
 
         /// <summary>
@@ -138,34 +151,44 @@ namespace Nop.Plugin.Payments.GestPay
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.RedirectionTip", "Sarai ridirezionato al circuito di pagamento di BancaSella per completare il pagamento dell'ordine.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox", "Usa Ambiente di test");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox.Hint", "Spunta se vuoi abilitare l'ambiente di test.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.RedirectionTip", "Sarai ridirezionato al circuito di pagamento di BancaSella per completare il pagamento dell'ordine.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox", "Usa Ambiente di test");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox.Hint", "Spunta se vuoi abilitare l'ambiente di test.");
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter", "Usa GestPay Starter");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter.Hint", "Spunta se vuoi indicare tipo account come Starter.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter", "Usa GestPay Starter");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter.Hint", "Spunta se vuoi indicare tipo account come Starter.");
 
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode", "Codice esercente");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode.Hint", "Codice esercente di login. Es.: 0000001");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee", "Costo aggiuntivo");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee.Hint", "Inserisci il costo aggiuntivo che sar√† accreditato al tuo cliente.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage", "Costo aggiuntivo. Usa percentuale");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage.Hint", "Determina se applicare un costo aggiuntivo in percentuale per l'importo totale dell'ordine. Se non selezionato, sar√† applicato l'eventuale costo fisso.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode", "Codice Valuta");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode.Hint", "Codice UIC che verr√† passato al sistema di pagamento per determinare la valuta in cui √® passato la somma da pagare.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode", "Codice Lingua");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode.Hint", "Codice che determina la lingua dell'interfaccia mostrata all'utente.");
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode", "Codice esercente");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode.Hint", "Codice esercente di login. Es.: 0000001");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee", "Costo aggiuntivo");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee.Hint", "Inserisci il costo aggiuntivo che sar‡ accreditato al tuo cliente.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage", "Costo aggiuntivo. Usa percentuale");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage.Hint", "Determina se applicare un costo aggiuntivo in percentuale per l'importo totale dell'ordine. Se non selezionato, sar‡ applicato l'eventuale costo fisso.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode", "Codice Valuta");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode.Hint", "Codice UIC che verr‡ passato al sistema di pagamento per determinare la valuta in cui Ë passato la somma da pagare.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode", "Codice Lingua");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode.Hint", "Codice che determina la lingua dell'interfaccia mostrata all'utente.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageTitle", "Attenzione!! si sono verificati degli errori.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage00", "Impossibile procedere con il pagamento.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage01", "La transazione ha avuto esito negativo.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.TitleSummary", "Riepilogo Problema:");
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageTitle", "Attenzione!! si sono verificati degli errori.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage00", "Impossibile procedere con il pagamento.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage01", "La transazione ha avuto esito negativo.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.TitleSummary", "Riepilogo Problema:");
-
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey", "Api Key");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint", "Enter Api Key");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey", "Api Key");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint", "Enter Api Key");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment", "Enable Guaranteed Payment");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment.Hint", "Only enable if Riskified API enable in your Gestpay account else contact gestpay support");
 
             base.Install();
+
+            ScheduleTask task = new ScheduleTask();
+            task.Enabled = true;
+            task.Name = "Gestpay Verified Payment Check";
+            task.Seconds = 180;
+            task.StopOnError = false;
+            task.Type = "Nop.Plugin.Payments.GestPay.Helper.RiskifiedStatusCheckScheduler, Nop.Plugin.Payments.GestPay";
+
+            _scheduleTaskService.InsertTask(task);
         }
 
         /// <summary>
@@ -177,34 +200,41 @@ namespace Nop.Plugin.Payments.GestPay
             _settingService.DeleteSetting<GestPayPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.RedirectionTip");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.RedirectionTip");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseSandbox.Hint");
 
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.UseStarter.Hint");
 
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ShopOperatorCode.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFee.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.AdditionalFeePercentage.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.CurrencyUICcode.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.LanguageCode.Hint");
 
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageTitle");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage00");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage01");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.TitleSummary");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageTitle");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage00");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.PageMessage01");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.ErrorMessage.TitleSummary");
 
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey");
-            this.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment.Hint");
 
             base.Uninstall();
+
+            var task = _scheduleTaskService.GetTaskByType("Nop.Plugin.Payments.GestPay.Helper.RiskifiedStatusCheckScheduler, Nop.Plugin.Payments.GestPay");
+            if (task != null)
+                _scheduleTaskService.DeleteTask(task);
         }
+
 
         /// <summary>
         /// Process a payment
@@ -217,92 +247,32 @@ namespace Nop.Plugin.Payments.GestPay
             return result;
         }
 
-        public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
-        {
-            return false;
-        }
 
-        /// <summary>
-        /// Gets additional handling fee
-        /// </summary>
-        /// <param name="cart">Shoping cart</param>
-        /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
-        {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
-                _gestPayPaymentSettings.AdditionalFee, _gestPayPaymentSettings.AdditionalFeePercentage);
-            return result;
-        }
+        public bool SupportCapture => false;
 
-        /// <summary>
-        /// Captures payment
-        /// </summary>
-        /// <param name="capturePaymentRequest">Capture payment request</param>
-        /// <returns>Capture payment result</returns>
-        public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
-        {
-            var result = new CapturePaymentResult();
-            result.AddError("Capture method not supported");
-            return result;
-        }
+        public bool SupportPartiallyRefund => false;
 
-        /// <summary>
-        /// Refunds a payment
-        /// </summary>
-        /// <param name="refundPaymentRequest">Request</param>
-        /// <returns>Result</returns>
-        public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
-        {
-            var result = new RefundPaymentResult();
-            result.AddError("Refund method not supported");
-            return result;
-        }
+        public bool SupportRefund => false;
 
-        /// <summary>
-        /// Voids a payment
-        /// </summary>
-        /// <param name="voidPaymentRequest">Request</param>
-        /// <returns>Result</returns>
-        public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
-        {
-            var result = new VoidPaymentResult();
-            result.AddError("Void method not supported");
-            return result;
-        }
+        public bool SupportVoid => false;
 
-        /// <summary>
-        /// Process recurring payment
-        /// </summary>
-        /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
-        {
-            var result = new ProcessPaymentResult();
-            result.AddError("Recurring payment not supported");
-            return result;
-        }
+        public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.NotSupported;
 
-        /// <summary>
-        /// Cancels a recurring payment
-        /// </summary>
-        /// <param name="cancelPaymentRequest">Request</param>
-        /// <returns>Result</returns>
+        public PaymentMethodType PaymentMethodType => PaymentMethodType.Redirection;
+
+        public bool SkipPaymentInfo => false;
+
+        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription");
+
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            var result = new CancelRecurringPaymentResult();
-            result.AddError("Recurring payment not supported");
-            return result;
+            return new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } };
         }
 
-        /// <summary>
-        /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>Result</returns>
         public bool CanRePostProcessPayment(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             //let's ensure that at least 1 minute passed after order is placed
             if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes < 1)
@@ -311,36 +281,43 @@ namespace Nop.Plugin.Payments.GestPay
             return true;
         }
 
-        /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
-            actionName = "Configure";
-            controllerName = "PaymentGestPay";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.GestPay.Controllers" }, { "area", null } };
+            return new CapturePaymentResult { Errors = new[] { "Capture method not supported" } };
         }
 
-        /// <summary>
-        /// Gets a route for payment info
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            actionName = "PaymentInfo";
-            controllerName = "PaymentGestPay";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.GestPay.Controllers" }, { "area", null } };
+            var result = _paymentService.CalculateAdditionalFee(cart,
+                _gestPayPaymentSettings.AdditionalFee, _gestPayPaymentSettings.AdditionalFeePercentage);
+            return result;
         }
 
-        /// <summary>
-        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
-        /// </summary>
-        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        {
+            return new ProcessPaymentRequest();
+        }
+
+        public IList<string> GetWidgetZones()
+        {
+            return new List<string> { PublicWidgetZones.Footer };
+        }
+
+        public string GetWidgetViewComponentName(string widgetZone)
+        {
+            return "GestpayGuaranteedPayment";
+        }
+
+        public string GetPublicViewComponentName()
+        {
+            return "PaymentGestPay";
+        }
+
+        public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
+        {
+            return false;
+        }
+
         public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             /*
@@ -348,7 +325,7 @@ namespace Nop.Plugin.Payments.GestPay
              * Alcuni dei parametri "importanti/principali" per creazione della stringa 
              * "ShopLogin"         :VarChar (30) - Obbligatorio - Codice Esercente (Shop Login)
              * "Currency"          :Num (3) - Obbligatorio - Codice Identificativo della divisa per l'importo della transazione
-             * "Amount"            :Num (9) - Obbligatorio - [ll separatore delle migliaia non deve essere inserito. I decimali (max 2 cifre) sono opzionali ed il separatore Ë il punto.]
+             * "Amount"            :Num (9) - Obbligatorio - [ll separatore delle migliaia non deve essere inserito. I decimali (max 2 cifre) sono opzionali ed il separatore √® il punto.]
              * "ShopTransactionID" :VarChar (50) - Obbligatorio - Identificativo attribuito alla transazione dall'esercente.
              * "BuyerName"         :VarChar (50) - Facoltativo - Nome e cognome dell'acquirente
              * "BuyerEmail"        :VarChar (50) - Facoltativo - Indirizzo e-mail dell'acquirente
@@ -366,23 +343,148 @@ namespace Nop.Plugin.Payments.GestPay
                 postProcessPaymentRequest.Order.BillingAddress.LastName
             );
 
-            var objCryptDecrypt = new WSCryptDecrypt(UseSandboxEnvironment());
+            var endpoint = _gestPayPaymentSettings.UseSandbox ? EndpointConfiguration.WSCryptDecryptSoap12Test : EndpointConfiguration.WSCryptDecryptSoap12;
+            var objCryptDecrypt = new WSCryptDecryptSoapClient(endpoint);
 
-            string xmlResponse;
+            XElement xmlResponse;
+
+            EcommGestpayPaymentDetails paymentDetails = new EcommGestpayPaymentDetails();
+            if (_gestPayPaymentSettings.EnableGuaranteedPayment)
+            {
+                FraudPrevention fraudPrevention = new FraudPrevention();
+                fraudPrevention.BeaconSessionID = _httpContextAccessor.HttpContext.Session.Id;
+                fraudPrevention.SubmitForReview = "1";
+                fraudPrevention.OrderDateTime = postProcessPaymentRequest.Order.CreatedOnUtc.ToString();
+                fraudPrevention.Source = "desktop_web";
+                fraudPrevention.SubmissionReason = "rule_decision";
+                fraudPrevention.VendorName = "Spinnaker";
+                paymentDetails.FraudPrevention = fraudPrevention;
+
+                //var logger = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Logging.ILogger>();
+                //logger.Information("Gestpay BeaconId = " + _httpContextAccessor.HttpContext.Session.Id);
+
+                CustomerDetail customerDetail = new CustomerDetail();
+                customerDetail.PrimaryEmail = postProcessPaymentRequest.Order.BillingAddress.Email;
+                customerDetail.MerchantCustomerID = postProcessPaymentRequest.Order.CustomerId.ToString();
+                customerDetail.FirstName = postProcessPaymentRequest.Order.BillingAddress.FirstName;
+                customerDetail.Lastname = postProcessPaymentRequest.Order.BillingAddress.LastName;
+                customerDetail.PrimaryPhone = postProcessPaymentRequest.Order.BillingAddress.PhoneNumber;
+                customerDetail.Company = postProcessPaymentRequest.Order.BillingAddress.Company;
+                customerDetail.CreatedAtDate = postProcessPaymentRequest.Order.Customer.CreatedOnUtc.ToString();
+                customerDetail.VerifiedEmail = "true";
+                customerDetail.AccountType = "normal";
+                paymentDetails.CustomerDetail = customerDetail;
+
+                if (postProcessPaymentRequest.Order.ShippingAddress != null)
+                {
+                    ShippingAddress shippingAddress = new ShippingAddress();
+                    shippingAddress.ProfileID = postProcessPaymentRequest.Order.ShippingAddressId.ToString();
+                    shippingAddress.FirstName = postProcessPaymentRequest.Order.ShippingAddress.FirstName;
+                    shippingAddress.Lastname = postProcessPaymentRequest.Order.ShippingAddress.LastName;
+                    shippingAddress.StreetName = postProcessPaymentRequest.Order.ShippingAddress.Address1;
+                    shippingAddress.Streetname2 = postProcessPaymentRequest.Order.ShippingAddress.Address2;
+                    shippingAddress.City = postProcessPaymentRequest.Order.ShippingAddress.City;
+                    shippingAddress.ZipCode = postProcessPaymentRequest.Order.ShippingAddress.ZipPostalCode;
+                    shippingAddress.State = postProcessPaymentRequest.Order.ShippingAddress.StateProvince.Name;
+                    shippingAddress.CountryCode = postProcessPaymentRequest.Order.ShippingAddress.Country.TwoLetterIsoCode;
+                    shippingAddress.Email = postProcessPaymentRequest.Order.ShippingAddress.Email;
+                    shippingAddress.PrimaryPhone = postProcessPaymentRequest.Order.ShippingAddress.PhoneNumber;
+                    shippingAddress.Company = postProcessPaymentRequest.Order.ShippingAddress.Company;
+                    shippingAddress.StateCode = postProcessPaymentRequest.Order.ShippingAddress.StateProvince.Abbreviation;
+                    paymentDetails.ShippingAddress = shippingAddress;
+                }
+
+                BillingAddress billingAddress = new BillingAddress();
+                billingAddress.ProfileID = postProcessPaymentRequest.Order.BillingAddressId.ToString();
+                billingAddress.FirstName = postProcessPaymentRequest.Order.BillingAddress.FirstName;
+                billingAddress.Lastname = postProcessPaymentRequest.Order.BillingAddress.LastName;
+                billingAddress.StreetName = postProcessPaymentRequest.Order.BillingAddress.Address1;
+                billingAddress.Streetname2 = postProcessPaymentRequest.Order.BillingAddress.Address2;
+                billingAddress.City = postProcessPaymentRequest.Order.BillingAddress.City;
+                billingAddress.ZipCode = postProcessPaymentRequest.Order.BillingAddress.ZipPostalCode;
+                billingAddress.State = postProcessPaymentRequest.Order.BillingAddress.StateProvince.Name;
+                billingAddress.CountryCode = postProcessPaymentRequest.Order.BillingAddress.Country.TwoLetterIsoCode;
+                billingAddress.Email = postProcessPaymentRequest.Order.BillingAddress.Email;
+                billingAddress.PrimaryPhone = postProcessPaymentRequest.Order.BillingAddress.PhoneNumber;
+                billingAddress.Company = postProcessPaymentRequest.Order.BillingAddress.Company;
+                billingAddress.StateCode = postProcessPaymentRequest.Order.BillingAddress.StateProvince.Abbreviation;
+                paymentDetails.BillingAddress = billingAddress;
+
+                var productDetails = new List<ProductDetail>();
+                foreach (var item in postProcessPaymentRequest.Order.OrderItems)
+                {
+                    var productDetail = new ProductDetail();
+                    productDetail.ProductCode = item.Product.ManufacturerPartNumber;
+                    productDetail.SKU = item.Product.Sku;
+                    productDetail.Name = item.Product.Name;
+                    productDetail.Description = item.Product.ShortDescription;
+                    productDetail.Quantity = item.Quantity.ToString();
+                    productDetail.Price = item.PriceInclTax.ToString("0.00", CultureInfo.InvariantCulture);
+                    productDetail.UnitPrice = item.UnitPriceInclTax.ToString("0.00", CultureInfo.InvariantCulture);
+
+                    if ((!item.Product.IsGiftCard && item.Product.IsShipEnabled) || (item.Product.IsGiftCard && item.Product.GiftCardType == Core.Domain.Catalog.GiftCardType.Physical))
+                    {
+                        productDetail.Type = "physical";
+                        productDetail.RequiresShipping = "true";
+                    }
+                    else
+                    {
+                        productDetail.Type = "digital";
+                        productDetail.RequiresShipping = "false";
+
+                        if (item.Product.IsGiftCard)
+                        {
+                            DigitalGiftCardDetails giftcardDetails = new DigitalGiftCardDetails();
+                            foreach (var giftcard in item.AssociatedGiftCards)
+                            {
+                                giftcardDetails.SenderName = giftcard.SenderName;
+                                giftcardDetails.DisplayName = giftcard.SenderName;
+                                giftcardDetails.GreetingMessage = giftcard.Message;
+
+                                Recipient recipient = new Recipient();
+                                recipient.Email = giftcard.RecipientEmail;
+                                giftcardDetails.Recipient = recipient;
+
+                                break;
+                            }
+                            productDetail.DigitalGiftCardDetails = giftcardDetails;
+                        }
+                    }
+
+                    productDetail.Vat = item.PriceInclTax > 0 ? "22" : "0";
+                    productDetail.Condition = "new";
+                    productDetail.Brand = item.Product.ProductManufacturers.FirstOrDefault()?.Manufacturer.Name;
+                    //productDetail.DeliveryAt = "home";
+                    productDetails.Add(productDetail);
+                }
+                paymentDetails.ProductDetails = productDetails.ToArray();
+
+                var discountCode = new DiscountCode();
+                //discountCode.Code = discount.Discount.CouponCode;
+                discountCode.Amount = postProcessPaymentRequest.Order.OrderDiscount.ToString("0.00", CultureInfo.InvariantCulture);
+                paymentDetails.DiscountCodes = new DiscountCode[] { discountCode };
+
+                var shipping = new ShippingLine();
+                shipping.Code = postProcessPaymentRequest.Order.ShippingRateComputationMethodSystemName;
+                shipping.Title = postProcessPaymentRequest.Order.ShippingRateComputationMethodSystemName;
+                shipping.Price = postProcessPaymentRequest.Order.OrderShippingInclTax.ToString("0.00", CultureInfo.InvariantCulture);
+                paymentDetails.ShippingLines = new ShippingLine[] { shipping };
+            }
 
             if (_gestPayPaymentSettings.UseStarter)
             {
-                xmlResponse = objCryptDecrypt.Encrypt(
-                           _gestPayPaymentSettings.ShopOperatorCode,
-                           _gestPayPaymentSettings.CurrencyUiCcode.ToString(),
-                           amount.ToString("0.00", CultureInfo.InvariantCulture),
-                           shopTransactionId,
-                           apikey: _gestPayPaymentSettings.ApiKey
-                       ).OuterXml;
+                xmlResponse = objCryptDecrypt.EncryptAsync(
+                          _gestPayPaymentSettings.ShopOperatorCode,
+                          _gestPayPaymentSettings.CurrencyUiCcode.ToString(),
+                          amount.ToString("0.00", CultureInfo.InvariantCulture),
+                          shopTransactionId,
+                          apikey: _gestPayPaymentSettings.ApiKey,
+                          OrderDetails: paymentDetails
+                      ).Result.EncryptResult;
             }
             else
             {
-                xmlResponse = objCryptDecrypt.Encrypt(
+                xmlResponse = objCryptDecrypt.EncryptAsync(
                             _gestPayPaymentSettings.ShopOperatorCode,
                             _gestPayPaymentSettings.CurrencyUiCcode.ToString(),
                             amount.ToString("0.00", CultureInfo.InvariantCulture),
@@ -390,24 +492,20 @@ namespace Nop.Plugin.Payments.GestPay
                             buyerName: buyerName,
                             buyerEmail: postProcessPaymentRequest.Order.BillingAddress.Email,
                             languageId: _gestPayPaymentSettings.LanguageCode.ToString(),
-                            apikey: _gestPayPaymentSettings.ApiKey
-                        ).OuterXml;
+                            apikey: _gestPayPaymentSettings.ApiKey,
+                            OrderDetails: paymentDetails
+                        ).Result.EncryptResult;
             }
 
-            var xmlReturn = new XmlDocument();
-            xmlReturn.LoadXml(xmlResponse);
-            var thisNode = xmlReturn.SelectSingleNode("/GestPayCryptDecrypt/ErrorCode");
-            string errorCode = thisNode.InnerText;
+            string errorCode = xmlResponse.Elements().Where(x => x.Name == "ErrorCode").Single().Value;
             if (errorCode == "0")
             {
-                var ThisNode2 = xmlReturn.SelectSingleNode("/GestPayCryptDecrypt/CryptDecryptString");
-                encryptedString = ThisNode2.InnerText;
+                encryptedString = xmlResponse.Elements().Where(x => x.Name == "CryptDecryptString").Single().Value;
             }
             else
             {
                 //Put error handle code HERE
-                thisNode = xmlReturn.SelectSingleNode("/GestPayCryptDecrypt/ErrorDescription");
-                errorDescription = thisNode.InnerText;
+                errorDescription = xmlResponse.Elements().Where(x => x.Name == "ErrorDescription").Single().Value;
             }
 
             var builder = new StringBuilder();
@@ -424,97 +522,27 @@ namespace Nop.Plugin.Payments.GestPay
                 builder.AppendFormat("?type=0&errc={0}&errd={1}", HttpUtility.UrlEncode(errorCode), HttpUtility.UrlEncode(errorDescription));
             }
 
-            _httpContext.Response.Redirect(builder.ToString());
-        }
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a value indicating whether capture is supported
-        /// </summary>
-        public bool SupportCapture
-        {
-            get
-            {
-                return false;
-            }
+            _httpContextAccessor.HttpContext.Response.Redirect(builder.ToString());
         }
 
-        /// <summary>
-        /// Gets a value indicating whether partial refund is supported
-        /// </summary>
-        public bool SupportPartiallyRefund
+        public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            get
-            {
-                return false;
-            }
+            return new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } };
         }
 
-        /// <summary>
-        /// Gets a value indicating whether refund is supported
-        /// </summary>
-        public bool SupportRefund
+        public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
         {
-            get
-            {
-                return false;
-            }
+            return new RefundPaymentResult { Errors = new[] { "Refund method not supported" } };
         }
 
-        /// <summary>
-        /// Gets a value indicating whether void is supported
-        /// </summary>
-        public bool SupportVoid
+        public IList<string> ValidatePaymentForm(IFormCollection form)
         {
-            get
-            {
-                return false;
-            }
+            return new List<string>();
         }
 
-        /// <summary>
-        /// Gets a recurring payment type of payment method
-        /// </summary>
-        public RecurringPaymentType RecurringPaymentType
+        public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
-            get
-            {
-                return RecurringPaymentType.NotSupported;
-            }
-        }
-
-        /// <summary>
-        /// Gets a payment method type
-        /// </summary>
-        public PaymentMethodType PaymentMethodType
-        {
-            get
-            {
-                return PaymentMethodType.Redirection;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether we should display a payment information page for this plugin
-        /// </summary>
-        public bool SkipPaymentInfo
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets a payment method description that will be displayed on checkout pages in the public store
-        /// </summary>
-        public string PaymentMethodDescription
-        {
-            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-            get { return _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription"); }
+            return new VoidPaymentResult { Errors = new[] { "Void method not supported" } };
         }
 
         #endregion

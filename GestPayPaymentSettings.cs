@@ -1,4 +1,7 @@
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Nop.Plugin.Payments.GestPay
 {
@@ -31,5 +34,10 @@ namespace Nop.Plugin.Payments.GestPay
         /// Api Key
         /// </summary>
         public string ApiKey { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Guaranteed Payment
+        /// </summary>
+        public bool EnableGuaranteedPayment { get; set; }
     }
 }
