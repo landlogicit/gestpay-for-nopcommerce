@@ -543,6 +543,9 @@ namespace Nop.Plugin.Payments.GestPay
         public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
             return new VoidPaymentResult { Errors = new[] { "Void method not supported" } };
+            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+            //for example, for a redirection payment method, description may be like this: "You will be redirected to site to complete the payment"
+            get { return _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription"); }
         }
 
         #endregion
