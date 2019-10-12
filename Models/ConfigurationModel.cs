@@ -1,5 +1,7 @@
-﻿using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+﻿
+
+using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Payments.GestPay.Models
 {
@@ -36,7 +38,11 @@ namespace Nop.Plugin.Payments.GestPay.Models
         public bool LanguageCodeOverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.GestPay.Fields.ApiKey")]
-        public string ApiKey{ get; set; }
+        public string ApiKey { get; set; }
         public bool ApiKeyOverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment")]
+        public bool EnableGuaranteedPayment { get; set; }
+        public bool EnableGuaranteedPaymentOverrideForStore { get; set; }
     }
 }
