@@ -4,7 +4,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Tasks;
-using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -179,6 +178,7 @@ namespace Nop.Plugin.Payments.GestPay
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment.Hint", "Only enable if Riskified API enable in your Gestpay account else contact gestpay support");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.PaymentMethodDescription", "Verrai reindirizzato al sito GestPay per completare il pagamento");
 
+            
             base.Install();
 
             ScheduleTask task = new ScheduleTask();
@@ -264,7 +264,7 @@ namespace Nop.Plugin.Payments.GestPay
         public bool SkipPaymentInfo => false;
 
         public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription");
-        
+
         public bool HideInWidgetList => throw new NotImplementedException();
 
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)

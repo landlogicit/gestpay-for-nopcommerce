@@ -1280,8 +1280,6 @@ namespace GestPayServiceReferenceTest
     public partial class EncryptThreeDsContainer
     {
         
-        private string transTypeReqField;
-        
         private string acquirerBINField;
         
         private string acquirerMerchantIDField;
@@ -1294,20 +1292,6 @@ namespace GestPayServiceReferenceTest
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string transTypeReq
-        {
-            get
-            {
-                return this.transTypeReqField;
-            }
-            set
-            {
-                this.transTypeReqField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string acquirerBIN
         {
             get
@@ -1321,7 +1305,7 @@ namespace GestPayServiceReferenceTest
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string acquirerMerchantID
         {
             get
@@ -1335,7 +1319,7 @@ namespace GestPayServiceReferenceTest
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public string exemption
         {
             get
@@ -1349,7 +1333,7 @@ namespace GestPayServiceReferenceTest
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public BuyerDetails buyerDetails
         {
             get
@@ -1363,7 +1347,7 @@ namespace GestPayServiceReferenceTest
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public MerchantRiskIndicator merchantRiskIndicator
         {
             get

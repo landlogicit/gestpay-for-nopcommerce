@@ -40,7 +40,7 @@ namespace Nop.Plugin.Payments.GestPay.Helper
                     endpoint = GestPayWsS2SServiceReference.WSs2sSoapClient.EndpointConfiguration.WSs2sSoap12;
                     client = new GestPayWsS2SServiceReference.WSs2sSoapClient(endpoint);
                 }
-
+                
 
                 var orders = _orderService.SearchOrders(osIds: new List<int> { (int)OrderStatus.Pending }, psIds: new List<int> { (int)PaymentStatus.Pending }, paymentMethodSystemName: "Payments.GestPay");
 
@@ -49,16 +49,16 @@ namespace Nop.Plugin.Payments.GestPay.Helper
                     if (!string.IsNullOrEmpty(order.AuthorizationTransactionId))
                     {
                         string xmlResponse = client.callReadTrxS2SAsync(_gestPayPaymentSettings.ShopOperatorCode, order.OrderGuid.ToString(), order.AuthorizationTransactionId, _gestPayPaymentSettings.ApiKey, null).Result.OuterXml;
-
+                        
                         XmlDocument xmlReturn = new XmlDocument();
                         xmlReturn.LoadXml(xmlResponse.ToLower());
 
                         //Id transazione inviato  
-
+                    
                         XmlNode thisNode = xmlReturn.SelectSingleNode("/GestPayS2S/errorcode");
                         errorCode = thisNode.InnerText;
                         //Recupero la Descrizione errore
-
+                       
                         if (errorCode == "0")
                         {
                             thisNode = xmlReturn.SelectSingleNode("/GestPayS2S/risk/RiskResponseCode");

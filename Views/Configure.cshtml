@@ -1,0 +1,203 @@
+﻿@inject Nop.Core.IWebHelper webHelper
+@{
+    Layout = "_ConfigurePlugin";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Payments.GestPay.Models;
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>
+
+<style type="text/css">
+    table.gestpay {
+    }
+
+        table.gestpay th {
+            padding: 5px;
+        }
+
+        table.gestpay td {
+            padding: 3px;
+        }
+
+    div.gestpay {
+        float: left;
+        margin: 10px;
+        padding: 10px;
+    }
+
+        div.gestpay.left {
+            border-right: solid 1px #000;
+        }
+</style>
+
+<form asp-controller="PaymentGestPay" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <h2>Configurazione della pagina di pagamento - Importante!!!</h2>
+                    Accedere alla sezione di backoffice <br />
+                    <b>Configurazione Clienti</b> &gt; <b>Campi &amp; Parametri dell'ambiente di Back Office Merchant</b> e selezionare la pagina di pagamento attualmente pubblica.<br />
+                    Verificare che siano attivati, ed eventualmente impostarli, i seguenti valori come <b>PARAMETRO</b>:<br />
+                    <b>Buyer E-Mail</b>, <b>Buyer Name</b>, <b>Language</b>.<br />
+                    E' IMPORTANTE fare questo passaggio perchè il plugin è impostato nell'inviare questi parametri quindi, se non presenti ed impostati la richiesta di <strong>Encrypt</strong> fallirà.<br /><br />
+
+                    <h2>Risposta all'esercente</h2>
+                    La notifica, viene inoltrata con una chiamata server to server alla pagina opportunamente predisposta sul server dell'esercente
+                    (l'url della pagina di notiﬁca è una delle informazioni che compongono il proﬁlo dell'esercente configurabile tramite l'ambiente di back ofﬁce di GestPay).<br />
+                    http://[www.yourStore.com]/Plugins/PaymentGestPay/s2sHandler
+                    <br />
+
+                    <h2>Risposta all'acquirente</h2>
+                    L'esito della transazione viene immediatamente notiﬁcato da GestPay visualizzando lo "scontrino virtuale" che riporta i dati essenziali della transazione.<br />
+                    GestPay indirizzerà il browser dell'acquirente sul server dell'esercente per concludere il processo d'acquisto. <br />
+                    L'esercente dovrà predisporre due url (e conﬁgurarle nel proﬁlo esercente) <br />
+                    http://[www.yourStore.com]/Plugins/PaymentGestPay/EsitoGestPay/OK (Esito positivo)<br />
+                    http://[www.yourStore.com]/Plugins/PaymentGestPay/EsitoGestPay/KO (Esito negativo)<br /><br />
+
+                    <h2>Profilo esercente</h2>
+                    Ogni esercente ha la possibilità di configurare il proﬁlo accedendo all'ambiente di back office di GestPay.<br />
+                    Ambiente di produzione raggiungibile all'indirizzo:<br />
+                    https://dashboard.gestpay.net/BackOffice <br />
+                    Ambiente di test raggiungibile all'indirizzo:<br />
+                    https://sandbox.gestpay.net/BackOffice <br />
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="UseSandboxOverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="UseStarterOverrideForStore" asp-input="UseStarter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseStarter" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseStarter" />
+                        <span asp-validation-for="UseStarter" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ShopOperatorCodeOverrideForStore" asp-input="ShopOperatorCode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ShopOperatorCode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShopOperatorCode" />
+                        <span asp-validation-for="ShopOperatorCode" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AdditionalFeeOverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFee" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFee" />
+                        <span asp-validation-for="AdditionalFee" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="AdditionalFeePercentageOverrideForStore" asp-input="AdditionalFeePercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFeePercentage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFeePercentage" />
+                        <span asp-validation-for="AdditionalFeePercentage" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="LanguageCodeOverrideForStore" asp-input="LanguageCode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="LanguageCode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="LanguageCode" size="5" maxLength="3" />
+                        <span asp-validation-for="LanguageCode" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="CurrencyUiCcodeOverrideForStore" asp-input="CurrencyUiCcode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CurrencyUiCcode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CurrencyUiCcode" size="5" maxLength="3" />
+                        <span asp-validation-for="CurrencyUiCcode" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiKeyOverrideForStore" asp-input="ApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ApiKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiKey" />
+                        <span asp-validation-for="ApiKey" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="EnableGuaranteedPaymentOverrideForStore" asp-input="EnableGuaranteedPayment" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EnableGuaranteedPayment" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="EnableGuaranteedPayment" />
+                        <span asp-validation-for="EnableGuaranteedPayment" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+                <p>
+
+                    <h2>Tabella codici divisa</h2>
+                <p>Il codice divisa (Codice UIC) viene gestito da GestPay tramite l'attributo Currency.</p>
+                <table class="gestpay">
+                    <tr><th>Codice UIC</th><th>Sigla ISO</th><th>Descrizione</th></tr>
+                    <tr><td>242</td><td>EUR</td><td>Euro</td></tr>
+                    <tr><td>1</td><td>USD</td><td>Dollari Usa</td></tr>
+                    <tr><td>2</td><td>GBP</td><td>Sterlina Gran Bretagna</td></tr>
+                    <tr><td>3</td><td>CHF</td><td>Franco Svizzero</td></tr>
+                </table>
+
+                <h2>Tabella codici lingua</h2>
+                <p>&nbsp;</p>
+                <table class="gestpay">
+                    <tr><th>Codice</th><th>Descrizione</th></tr>
+                    <tr><td>1</td><td>Italiano</td></tr>
+                    <tr><td>2</td><td>Inglese</td></tr>
+                    <tr><td>3</td><td>Spagnolo</td></tr>
+                    <tr><td>4</td><td>Francese</td></tr>
+                    <tr><td>5</td><td>Tedesco</td></tr>
+                </table>
+
+                </p>
+                <hr />
+                <p>
+                    <br />Per maggiori informazioni consultare la documentazione online all'indirizzo:<br />
+                    https://api.gestpay.it
+                    <br />oppure il forum all'indirizzo:<br />
+                    https://forum.sella.it/spazioaperto/forums/list.page
+                </p>
+            </div>
+        </div>
+    </div>
+</form>

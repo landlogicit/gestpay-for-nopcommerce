@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.Routing;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nop.Plugin.Payments.GestPay.Infrastructure
 {

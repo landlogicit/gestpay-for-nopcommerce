@@ -31,6 +31,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         private readonly ISettingService _settingService;
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
@@ -38,14 +39,17 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly GestPayPaymentSettings _gestPayPaymentSettings;
+        private readonly INotificationService _notificationService;
 
         public PaymentGestPayController(IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
             IPaymentService paymentService,
             IOrderService orderService,
-            IOrderProcessingService orderProcessingService,
+            IPaymentPluginManager paymentPluginManager,
+        IOrderProcessingService orderProcessingService,
             ILogger logger, IWebHelper webHelper,
+            INotificationService notificationService,
             PaymentSettings paymentSettings,
             ILocalizationService localizationService,
             IStoreContext storeContext,
@@ -56,8 +60,10 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             _settingService = settingService;
             _paymentService = paymentService;
             _orderService = orderService;
+            _paymentPluginManager = paymentPluginManager;
             _orderProcessingService = orderProcessingService;
             _logger = logger;
+            _notificationService = notificationService;
             _webHelper = webHelper;
             _paymentSettings = paymentSettings;
             _localizationService = localizationService;
@@ -100,7 +106,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 model.EnableGuaranteedPaymentOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.EnableGuaranteedPayment, storeScope);
             }
 
-            return View("~/Plugins/Payments.GestPay/Views/PaymentGestPay/Configure.cshtml", model);
+            return View("~/Plugins/Payments.GestPay/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -147,7 +153,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
@@ -166,9 +172,9 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             string strRequest = Request.QueryString.ToString().Replace("?", "");
             Dictionary<string, string> values;
 
-            var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.GestPay") as GestPayPaymentProcessor;
+            var processor = _paymentPluginManager.LoadPluginBySystemName("Payments.GestPay") as GestPayPaymentProcessor;
             if (processor == null ||
-                !_paymentService.IsPaymentMethodActive(processor) || !processor.PluginDescriptor.Installed)
+                !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("GestPay module cannot be loaded");
 
             processor.GetResponseDetails(strRequest, out values);
@@ -177,7 +183,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 var shopLogin = values["a"];
                 var encString = values["b"];
                 string shopTransactionId = "", authorizationCode = "", bankTransactionId = "";
-                string transactionResult = "", buyerName = "", buyerEmail = "", riskified = "", authorizationcode = "";
+                string transactionResult = "", buyerName = "", buyerEmail = "", riskified="",authorizationcode="";
                 var checkAmount = decimal.Zero;
 
                 var sb = new StringBuilder();
@@ -197,6 +203,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                         endpoint = GestPayServiceReference.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
                         objDecrypt = new GestPayServiceReference.WSCryptDecryptSoapClient(endpoint);
                     }
+                        
 
                     string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
 
@@ -209,15 +216,14 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                     errorCode = ThisNode.InnerText;
                     ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription");
                     errorDesc = ThisNode.InnerText;
-
+                    
                     ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
-                    if (ThisNode != null)
+                    if(ThisNode!=null)
                         authorizationcode = ThisNode.InnerText;
-
+                    
                     ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid");
-                    if (ThisNode != null)
-                        shopTransactionId = ThisNode.InnerText;
-
+                    if(ThisNode!=null)
+                     shopTransactionId = ThisNode.InnerText;
                     //_____ Messaggio OK _____//
                     if (errorCode == "0")
                     {
@@ -242,7 +248,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
                         //__________ ?validare il totale? __________//
                         ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/riskresponsedescription");
-                        if (ThisNode != null)
+                        if(ThisNode!=null)
                             riskified = ThisNode.InnerText;
 
                         _logger.Information("Res = " + riskified);
@@ -387,9 +393,9 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             var strRequest = Request.QueryString.ToString().Replace("?", "");
             Dictionary<string, string> values;
 
-            var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.GestPay") as GestPayPaymentProcessor;
+            var processor = _paymentPluginManager.LoadPluginBySystemName("Payments.GestPay") as GestPayPaymentProcessor;
             if (processor == null ||
-                !_paymentService.IsPaymentMethodActive(processor) || !processor.PluginDescriptor.Installed)
+                !_paymentPluginManager.IsPluginActive(processor) )
                 throw new NopException("GestPay module cannot be loaded");
 
             processor.GetResponseDetails(strRequest, out values);
@@ -412,15 +418,15 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                         endpoint = GestPayServiceReference.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
                         objDecrypt = new GestPayServiceReference.WSCryptDecryptSoapClient(endpoint);
                     }
-
-
+                           
+                    
 
                     string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
                     XmlDocument XMLReturn = new XmlDocument();
                     XMLReturn.LoadXml(xmlResponse.ToLower());
 
                     //Id transazione inviato  
-
+                    
                     XmlNode ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode");
                     string errorCode = ThisNode.InnerText;
                     ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription");
@@ -429,6 +435,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
                     ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid");
                     string shopTransactionID = ThisNode.InnerText;
+
 
                     //Recupero l'ordine
                     Guid orderNumberGuid = Guid.Empty;
@@ -466,7 +473,6 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
                         //__________ Ordine Completato __________//
                         return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
-
                     }
                     else
                     {
@@ -518,7 +524,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 }
             }
 
-            return View("~/Plugins/Payments.GestPay/Views/PaymentGestPay/GeneralError.cshtml", model);
+            return View("~/Plugins/Payments.GestPay/Views/GeneralError.cshtml", model);
         }
 
     }
