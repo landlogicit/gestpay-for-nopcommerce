@@ -1,5 +1,4 @@
-﻿using GestPayServiceReference;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -8,6 +7,7 @@ using Nop.Plugin.Payments.GestPay.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
@@ -20,7 +20,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
-using static GestPayServiceReference.WSCryptDecryptSoapClient;
+using System.Xml;
 
 namespace Nop.Plugin.Payments.GestPay.Controllers
 {
@@ -177,7 +177,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 var shopLogin = values["a"];
                 var encString = values["b"];
                 string shopTransactionId = "", authorizationCode = "", bankTransactionId = "";
-                string transactionResult = "", buyerName = "", buyerEmail = "";
+                string transactionResult = "", buyerName = "", buyerEmail = "", riskified = "", authorizationcode = "";
                 var checkAmount = decimal.Zero;
 
                 var sb = new StringBuilder();
@@ -185,36 +185,66 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
                 if (processor.IsShopLoginChecked(shopLogin) && encString != null)
                 {
-                    var endpoint = _gestPayPaymentSettings.UseSandbox ? EndpointConfiguration.WSCryptDecryptSoap12Test : EndpointConfiguration.WSCryptDecryptSoap12;
-                    var objDecrypt = new WSCryptDecryptSoapClient(endpoint);
+                    dynamic endpoint;
+                    dynamic objDecrypt;
+                    if (_gestPayPaymentSettings.UseSandbox)
+                    {
+                        endpoint = GestPayServiceReferenceTest.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                        objDecrypt = new GestPayServiceReferenceTest.WSCryptDecryptSoapClient(endpoint);
+                    }
+                    else
+                    {
+                        endpoint = GestPayServiceReference.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                        objDecrypt = new GestPayServiceReference.WSCryptDecryptSoapClient(endpoint);
+                    }
 
-                    var xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result;
+                    string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
 
-                    //Recupero il Codice di errore
-                    errorCode = xmlResponse.Elements().Where(x => x.Name == "ErrorCode").Single().Value;
-                    //Recupero la Descrizione errore
-                    errorDesc = xmlResponse.Elements().Where(x => x.Name == "ErrorDescription").Single().Value;
-                    //Recupero l'Id transazione (orderId)
-                    shopTransactionId = xmlResponse.Elements().Where(x => x.Name == "ShopTransactionID").Single().Value;
-                    //Recupero il Risultato transazione
-                    transactionResult = xmlResponse.Elements().Where(x => x.Name == "TransactionResult").Single().Value;
+                    XmlDocument XMLReturn = new XmlDocument();
+                    XMLReturn.LoadXml(xmlResponse.ToLower());
+
+                    //Id transazione inviato  
+
+                    XmlNode ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode");
+                    errorCode = ThisNode.InnerText;
+                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription");
+                    errorDesc = ThisNode.InnerText;
+
+                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
+                    if (ThisNode != null)
+                        authorizationcode = ThisNode.InnerText;
+
+                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid");
+                    if (ThisNode != null)
+                        shopTransactionId = ThisNode.InnerText;
 
                     //_____ Messaggio OK _____//
                     if (errorCode == "0")
                     {
-                        //Recupero il Codice autorizzazione
-                        authorizationCode = xmlResponse.Elements().Where(x => x.Name == "AuthorizationCode").Single().Value;
-                        //Recupero il Codice transazione
-                        bankTransactionId = xmlResponse.Elements().Where(x => x.Name == "BankTransactionID").Single().Value;
-                        //Recupero l'Ammontare della transazione
-                        var amount = xmlResponse.Elements().Where(x => x.Name == "Amount").Single().Value;
-                        //Recupero il Nome dell'utente
-                        buyerName = xmlResponse.Elements().Where(x => x.Name == "Buyer").Single().Elements().Where(x => x.Name == "BuyerName").Single().Value;
-                        //Recupero l'Email utilizzata nella transazione
-                        buyerEmail = xmlResponse.Elements().Where(x => x.Name == "Buyer").Single().Elements().Where(x => x.Name == "BuyerEmail").Single().Value;
-                        //__________ ?validare il totale? __________//
+                        //Codice autorizzazione
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
+                        authorizationCode = ThisNode.InnerText;
+                        //Codice transazione
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid");
+                        bankTransactionId = ThisNode.InnerText;
+                        //Ammontare della transazione
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount");
+                        var amount = ThisNode.InnerText;
+                        //Risultato transazione
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult");
+                        transactionResult = ThisNode.InnerText;
+                        //Nome dell'utente
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername");
+                        buyerName = ThisNode.InnerText;
+                        //Email utilizzata nella transazione
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail");
+                        buyerEmail = ThisNode.InnerText;
 
-                        var riskified = xmlResponse.Elements().Where(x => x.Name == "RiskResponseDescription").Single().Value;
+                        //__________ ?validare il totale? __________//
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/riskresponsedescription");
+                        if (ThisNode != null)
+                            riskified = ThisNode.InnerText;
+
                         _logger.Information("Res = " + riskified);
                         try
                         {
@@ -370,17 +400,35 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
                 if (processor.IsShopLoginChecked(shopLogin) && encString != null)
                 {
-                    var endpoint = _gestPayPaymentSettings.UseSandbox ? EndpointConfiguration.WSCryptDecryptSoap12Test : EndpointConfiguration.WSCryptDecryptSoap12;
-                    var objDecrypt = new WSCryptDecryptSoapClient(endpoint);
+                    dynamic endpoint;
+                    dynamic objDecrypt;
+                    if (_gestPayPaymentSettings.UseSandbox)
+                    {
+                        endpoint = GestPayServiceReferenceTest.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                        objDecrypt = new GestPayServiceReferenceTest.WSCryptDecryptSoapClient(endpoint);
+                    }
+                    else
+                    {
+                        endpoint = GestPayServiceReference.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                        objDecrypt = new GestPayServiceReference.WSCryptDecryptSoapClient(endpoint);
+                    }
 
-                    var xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result;
 
-                    //Codice di errore
-                    string errorCode = xmlResponse.Elements().Where(x => x.Name == "ErrorCode").Single().Value;//thisNode.InnerText;
-                    //Descrizione errore
-                    string ErrorDesc = xmlResponse.Elements().Where(x => x.Name == "ErrorDescription").Single().Value;//thisNode.InnerText;
+
+                    string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
+                    XmlDocument XMLReturn = new XmlDocument();
+                    XMLReturn.LoadXml(xmlResponse.ToLower());
+
                     //Id transazione inviato  
-                    string shopTransactionID = xmlResponse.Elements().Where(x => x.Name == "ShopTransactionID").Single().Value;//thisNode.InnerText;
+
+                    XmlNode ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode");
+                    string errorCode = ThisNode.InnerText;
+                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription");
+                    string ErrorDesc = ThisNode.InnerText;
+                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
+
+                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid");
+                    string shopTransactionID = ThisNode.InnerText;
 
                     //Recupero l'ordine
                     Guid orderNumberGuid = Guid.Empty;
@@ -394,17 +442,23 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                     if (errorCode == "0" && order != null)
                     {
                         //Codice autorizzazione
-                        var authorizationCode = xmlResponse.Elements().Where(x => x.Name == "AuthorizationCode").Single().Value;//thisNode.InnerText;
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
+                        var authorizationCode = ThisNode.InnerText;
                         //Codice transazione
-                        var bankTransactionId = xmlResponse.Elements().Where(x => x.Name == "BankTransactionID").Single().Value;
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid");
+                        var bankTransactionId = ThisNode.InnerText;
                         //Ammontare della transazione
-                        var amount = xmlResponse.Elements().Where(x => x.Name == "Amount").Single().Value;//thisNode.InnerText;
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount");
+                        var amount = ThisNode.InnerText;
                         //Risultato transazione
-                        var transactionResult = xmlResponse.Elements().Where(x => x.Name == "TransactionResult").Single().Value;//thisNode.InnerText;
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult");
+                        var transactionResult = ThisNode.InnerText;
                         //Nome dell'utente
-                        var buyerName = xmlResponse.Elements().Where(x => x.Name == "Buyer").Single().Elements().Where(x => x.Name == "BuyerName").Single().Value;//thisNode.InnerText;
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername");
+                        var buyerName = ThisNode.InnerText;
                         //Email utilizzata nella transazione
-                        var buyerEmail = xmlResponse.Elements().Where(x => x.Name == "Buyer").Single().Elements().Where(x => x.Name == "BuyerEmail").Single().Value;
+                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail");
+                        var buyerEmail = ThisNode.InnerText;
 
                         //load settings for a chosen store scope
                         var storeScope = _storeContext.ActiveStoreScopeConfiguration;
@@ -412,6 +466,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
                         //__________ Ordine Completato __________//
                         return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+
                     }
                     else
                     {

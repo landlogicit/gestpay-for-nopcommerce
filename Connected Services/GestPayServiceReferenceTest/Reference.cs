@@ -7,18 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GestPayServiceReference
+namespace GestPayServiceReferenceTest
 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="https://ecomm.sella.it/", ConfigurationName="GestPayServiceReference.WSCryptDecryptSoap")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="https://ecomm.sella.it/", ConfigurationName="GestPayServiceReferenceTest.WSCryptDecryptSoap")]
     public interface WSCryptDecryptSoap
     {
         
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomm.sella.it/Encrypt", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<GestPayServiceReference.EncryptResponse> EncryptAsync(GestPayServiceReference.EncryptRequest request);
+        System.Threading.Tasks.Task<GestPayServiceReferenceTest.EncryptResponse> EncryptAsync(GestPayServiceReferenceTest.EncryptRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomm.sella.it/Decrypt", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -1280,6 +1280,8 @@ namespace GestPayServiceReference
     public partial class EncryptThreeDsContainer
     {
         
+        private string transTypeReqField;
+        
         private string acquirerBINField;
         
         private string acquirerMerchantIDField;
@@ -1292,6 +1294,20 @@ namespace GestPayServiceReference
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string transTypeReq
+        {
+            get
+            {
+                return this.transTypeReqField;
+            }
+            set
+            {
+                this.transTypeReqField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string acquirerBIN
         {
             get
@@ -1305,7 +1321,7 @@ namespace GestPayServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public string acquirerMerchantID
         {
             get
@@ -1319,7 +1335,7 @@ namespace GestPayServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public string exemption
         {
             get
@@ -1333,7 +1349,7 @@ namespace GestPayServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public BuyerDetails buyerDetails
         {
             get
@@ -1347,7 +1363,7 @@ namespace GestPayServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
         public MerchantRiskIndicator merchantRiskIndicator
         {
             get
@@ -5490,42 +5506,42 @@ namespace GestPayServiceReference
         public string transKey;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=15)]
-        public GestPayServiceReference.ShippingDetails shippingDetails;
+        public GestPayServiceReferenceTest.ShippingDetails shippingDetails;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=16)]
         [System.Xml.Serialization.XmlArrayItemAttribute("paymentType", IsNullable=false)]
         public string[] paymentTypes;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=17)]
-        public GestPayServiceReference.PaymentTypeDetail paymentTypeDetail;
+        public GestPayServiceReferenceTest.PaymentTypeDetail paymentTypeDetail;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=18)]
         public string redFraudPrevention;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=19)]
-        public GestPayServiceReference.RedCustomerInfo Red_CustomerInfo;
+        public GestPayServiceReferenceTest.RedCustomerInfo Red_CustomerInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=20)]
-        public GestPayServiceReference.RedShippingInfo Red_ShippingInfo;
+        public GestPayServiceReferenceTest.RedShippingInfo Red_ShippingInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=21)]
-        public GestPayServiceReference.RedBillingInfo Red_BillingInfo;
+        public GestPayServiceReferenceTest.RedBillingInfo Red_BillingInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=22)]
-        public GestPayServiceReference.RedCustomerData Red_CustomerData;
+        public GestPayServiceReferenceTest.RedCustomerData Red_CustomerData;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=23)]
         [System.Xml.Serialization.XmlArrayItemAttribute("UserCustomData", IsNullable=false)]
         public string[] Red_CustomInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=24)]
-        public GestPayServiceReference.RedItems Red_Items;
+        public GestPayServiceReferenceTest.RedItems Red_Items;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=25)]
         public string Consel_MerchantPro;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=26)]
-        public GestPayServiceReference.ConselCustomerInfo Consel_CustomerInfo;
+        public GestPayServiceReferenceTest.ConselCustomerInfo Consel_CustomerInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=27)]
         public string payPalBillingAgreementDescription;
@@ -5534,14 +5550,14 @@ namespace GestPayServiceReference
         public string amazonPayBillingAgreementDescription;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=29)]
-        public GestPayServiceReference.EcommGestpayPaymentDetails OrderDetails;
+        public GestPayServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=30)]
         public string apikey;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=31)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public GestPayServiceReference.ThreeDSEncryptTransDetails transDetails;
+        public GestPayServiceReferenceTest.ThreeDSEncryptTransDetails transDetails;
         
         public EncryptRequest()
         {
@@ -5563,23 +5579,23 @@ namespace GestPayServiceReference
                     string requestToken, 
                     string ppSellerProtection, 
                     string transKey, 
-                    GestPayServiceReference.ShippingDetails shippingDetails, 
+                    GestPayServiceReferenceTest.ShippingDetails shippingDetails, 
                     string[] paymentTypes, 
-                    GestPayServiceReference.PaymentTypeDetail paymentTypeDetail, 
+                    GestPayServiceReferenceTest.PaymentTypeDetail paymentTypeDetail, 
                     string redFraudPrevention, 
-                    GestPayServiceReference.RedCustomerInfo Red_CustomerInfo, 
-                    GestPayServiceReference.RedShippingInfo Red_ShippingInfo, 
-                    GestPayServiceReference.RedBillingInfo Red_BillingInfo, 
-                    GestPayServiceReference.RedCustomerData Red_CustomerData, 
+                    GestPayServiceReferenceTest.RedCustomerInfo Red_CustomerInfo, 
+                    GestPayServiceReferenceTest.RedShippingInfo Red_ShippingInfo, 
+                    GestPayServiceReferenceTest.RedBillingInfo Red_BillingInfo, 
+                    GestPayServiceReferenceTest.RedCustomerData Red_CustomerData, 
                     string[] Red_CustomInfo, 
-                    GestPayServiceReference.RedItems Red_Items, 
+                    GestPayServiceReferenceTest.RedItems Red_Items, 
                     string Consel_MerchantPro, 
-                    GestPayServiceReference.ConselCustomerInfo Consel_CustomerInfo, 
+                    GestPayServiceReferenceTest.ConselCustomerInfo Consel_CustomerInfo, 
                     string payPalBillingAgreementDescription, 
                     string amazonPayBillingAgreementDescription, 
-                    GestPayServiceReference.EcommGestpayPaymentDetails OrderDetails, 
+                    GestPayServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails, 
                     string apikey, 
-                    GestPayServiceReference.ThreeDSEncryptTransDetails transDetails)
+                    GestPayServiceReferenceTest.ThreeDSEncryptTransDetails transDetails)
         {
             this.shopLogin = shopLogin;
             this.uicCode = uicCode;
@@ -5637,13 +5653,13 @@ namespace GestPayServiceReference
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    public interface WSCryptDecryptSoapChannel : GestPayServiceReference.WSCryptDecryptSoap, System.ServiceModel.IClientChannel
+    public interface WSCryptDecryptSoapChannel : GestPayServiceReferenceTest.WSCryptDecryptSoap, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    public partial class WSCryptDecryptSoapClient : System.ServiceModel.ClientBase<GestPayServiceReference.WSCryptDecryptSoap>, GestPayServiceReference.WSCryptDecryptSoap
+    public partial class WSCryptDecryptSoapClient : System.ServiceModel.ClientBase<GestPayServiceReferenceTest.WSCryptDecryptSoap>, GestPayServiceReferenceTest.WSCryptDecryptSoap
     {
         
         /// <summary>
@@ -5680,12 +5696,12 @@ namespace GestPayServiceReference
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<GestPayServiceReference.EncryptResponse> GestPayServiceReference.WSCryptDecryptSoap.EncryptAsync(GestPayServiceReference.EncryptRequest request)
+        System.Threading.Tasks.Task<GestPayServiceReferenceTest.EncryptResponse> GestPayServiceReferenceTest.WSCryptDecryptSoap.EncryptAsync(GestPayServiceReferenceTest.EncryptRequest request)
         {
             return base.Channel.EncryptAsync(request);
         }
         
-        public System.Threading.Tasks.Task<GestPayServiceReference.EncryptResponse> EncryptAsync(
+        public System.Threading.Tasks.Task<GestPayServiceReferenceTest.EncryptResponse> EncryptAsync(
                     string shopLogin, 
                     string uicCode, 
                     string amount, 
@@ -5701,25 +5717,25 @@ namespace GestPayServiceReference
                     string requestToken, 
                     string ppSellerProtection, 
                     string transKey, 
-                    GestPayServiceReference.ShippingDetails shippingDetails, 
+                    GestPayServiceReferenceTest.ShippingDetails shippingDetails, 
                     string[] paymentTypes, 
-                    GestPayServiceReference.PaymentTypeDetail paymentTypeDetail, 
+                    GestPayServiceReferenceTest.PaymentTypeDetail paymentTypeDetail, 
                     string redFraudPrevention, 
-                    GestPayServiceReference.RedCustomerInfo Red_CustomerInfo, 
-                    GestPayServiceReference.RedShippingInfo Red_ShippingInfo, 
-                    GestPayServiceReference.RedBillingInfo Red_BillingInfo, 
-                    GestPayServiceReference.RedCustomerData Red_CustomerData, 
+                    GestPayServiceReferenceTest.RedCustomerInfo Red_CustomerInfo, 
+                    GestPayServiceReferenceTest.RedShippingInfo Red_ShippingInfo, 
+                    GestPayServiceReferenceTest.RedBillingInfo Red_BillingInfo, 
+                    GestPayServiceReferenceTest.RedCustomerData Red_CustomerData, 
                     string[] Red_CustomInfo, 
-                    GestPayServiceReference.RedItems Red_Items, 
+                    GestPayServiceReferenceTest.RedItems Red_Items, 
                     string Consel_MerchantPro, 
-                    GestPayServiceReference.ConselCustomerInfo Consel_CustomerInfo, 
+                    GestPayServiceReferenceTest.ConselCustomerInfo Consel_CustomerInfo, 
                     string payPalBillingAgreementDescription, 
                     string amazonPayBillingAgreementDescription, 
-                    GestPayServiceReference.EcommGestpayPaymentDetails OrderDetails, 
+                    GestPayServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails, 
                     string apikey, 
-                    GestPayServiceReference.ThreeDSEncryptTransDetails transDetails)
+                    GestPayServiceReferenceTest.ThreeDSEncryptTransDetails transDetails)
         {
-            GestPayServiceReference.EncryptRequest inValue = new GestPayServiceReference.EncryptRequest();
+            GestPayServiceReferenceTest.EncryptRequest inValue = new GestPayServiceReferenceTest.EncryptRequest();
             inValue.shopLogin = shopLogin;
             inValue.uicCode = uicCode;
             inValue.amount = amount;
@@ -5752,7 +5768,7 @@ namespace GestPayServiceReference
             inValue.OrderDetails = OrderDetails;
             inValue.apikey = apikey;
             inValue.transDetails = transDetails;
-            return ((GestPayServiceReference.WSCryptDecryptSoap)(this)).EncryptAsync(inValue);
+            return ((GestPayServiceReferenceTest.WSCryptDecryptSoap)(this)).EncryptAsync(inValue);
         }
         
         public System.Threading.Tasks.Task<System.Xml.XmlNode> DecryptAsync(string shopLogin, string CryptedString, string apikey)
@@ -5802,11 +5818,11 @@ namespace GestPayServiceReference
         {
             if ((endpointConfiguration == EndpointConfiguration.WSCryptDecryptSoap))
             {
-                return new System.ServiceModel.EndpointAddress("https://ecomms2s.sella.it/gestpay/GestPayWS/WsCryptDecrypt.asmx");
+                return new System.ServiceModel.EndpointAddress("https://sandbox.gestpay.net/gestpay/GestPayWS/WsCryptDecrypt.asmx");
             }
             if ((endpointConfiguration == EndpointConfiguration.WSCryptDecryptSoap12))
             {
-                return new System.ServiceModel.EndpointAddress("https://ecomms2s.sella.it/gestpay/GestPayWS/WsCryptDecrypt.asmx");
+                return new System.ServiceModel.EndpointAddress("https://sandbox.gestpay.net/gestpay/GestPayWS/WsCryptDecrypt.asmx");
             }
             throw new System.InvalidOperationException(string.Format("L\'endpoint denominato \'{0}\' non è stato trovato.", endpointConfiguration));
         }

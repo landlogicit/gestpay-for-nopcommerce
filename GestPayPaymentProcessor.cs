@@ -1,5 +1,4 @@
-﻿using GestPayServiceReference;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -12,6 +11,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Infrastructure;
@@ -21,8 +21,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
-using System.Xml.Linq;
-using static GestPayServiceReference.WSCryptDecryptSoapClient;
+using System.Xml;
 
 namespace Nop.Plugin.Payments.GestPay
 {
@@ -178,6 +177,7 @@ namespace Nop.Plugin.Payments.GestPay
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint", "Enter Api Key");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment", "Enable Guaranteed Payment");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment.Hint", "Only enable if Riskified API enable in your Gestpay account else contact gestpay support");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.GestPay.PaymentMethodDescription", "Verrai reindirizzato al sito GestPay per completare il pagamento");
 
             base.Install();
 
@@ -227,6 +227,7 @@ namespace Nop.Plugin.Payments.GestPay
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.ApiKey.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.Fields.EnableGuaranteedPayment.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.GestPay.PaymentMethodDescription");
 
             base.Uninstall();
 
@@ -263,6 +264,8 @@ namespace Nop.Plugin.Payments.GestPay
         public bool SkipPaymentInfo => false;
 
         public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription");
+        
+        public bool HideInWidgetList => throw new NotImplementedException();
 
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
@@ -343,15 +346,81 @@ namespace Nop.Plugin.Payments.GestPay
                 postProcessPaymentRequest.Order.BillingAddress.LastName
             );
 
-            var endpoint = _gestPayPaymentSettings.UseSandbox ? EndpointConfiguration.WSCryptDecryptSoap12Test : EndpointConfiguration.WSCryptDecryptSoap12;
-            var objCryptDecrypt = new WSCryptDecryptSoapClient(endpoint);
+            dynamic endpoint;
+            dynamic objCryptDecrypt;
+            dynamic paymentDetails;
+            dynamic fraudPrevention;
+            dynamic customerDetail;
+            dynamic shippingAddress;
+            dynamic billingAddress;
+            dynamic productDetails;
+            dynamic discountCode;
+            dynamic shipping;
 
-            XElement xmlResponse;
+            dynamic paymentTDetail;
+            dynamic shipDetails;
+            dynamic redBilling;
+            dynamic redCustomerData;
+            dynamic redCustomerInfo;
+            dynamic redItem;
+            dynamic redShipping;
+            dynamic conselCustomer;
+            dynamic threeDsEncryptTransDetails;
 
-            EcommGestpayPaymentDetails paymentDetails = new EcommGestpayPaymentDetails();
+            if (_gestPayPaymentSettings.UseSandbox)
+            {
+                endpoint = GestPayServiceReferenceTest.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                objCryptDecrypt = new GestPayServiceReferenceTest.WSCryptDecryptSoapClient(endpoint);
+                paymentDetails = new GestPayServiceReferenceTest.EcommGestpayPaymentDetails();
+                fraudPrevention = new GestPayServiceReferenceTest.FraudPrevention();
+                customerDetail = new GestPayServiceReferenceTest.CustomerDetail();
+                shippingAddress = new GestPayServiceReferenceTest.ShippingAddress();
+                billingAddress = new GestPayServiceReferenceTest.BillingAddress();
+                productDetails = new List<GestPayServiceReferenceTest.ProductDetail>();
+                discountCode = new GestPayServiceReferenceTest.DiscountCode();
+                shipping = new GestPayServiceReferenceTest.ShippingLine();
+
+                paymentTDetail = new GestPayServiceReferenceTest.PaymentTypeDetail();
+                shipDetails = new GestPayServiceReferenceTest.ShippingDetails();
+                redBilling = new GestPayServiceReferenceTest.RedBillingInfo();
+                redCustomerData = new GestPayServiceReferenceTest.RedCustomerData();
+                redCustomerInfo = new GestPayServiceReferenceTest.RedCustomerInfo();
+                redItem = new GestPayServiceReferenceTest.RedItems();
+                redShipping = new GestPayServiceReferenceTest.RedShippingInfo();
+                conselCustomer = new GestPayServiceReferenceTest.ConselCustomerInfo();
+                threeDsEncryptTransDetails = new GestPayServiceReferenceTest.ThreeDSEncryptTransDetails();
+            }
+            else
+            {
+                endpoint = GestPayServiceReference.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                objCryptDecrypt = new GestPayServiceReference.WSCryptDecryptSoapClient(endpoint);
+                paymentDetails = new GestPayServiceReference.EcommGestpayPaymentDetails();
+                fraudPrevention = new GestPayServiceReference.FraudPrevention();
+                customerDetail = new GestPayServiceReference.CustomerDetail();
+                shippingAddress = new GestPayServiceReference.ShippingAddress();
+                billingAddress = new GestPayServiceReference.BillingAddress();
+                productDetails = new List<GestPayServiceReference.ProductDetail>();
+                discountCode = new GestPayServiceReference.DiscountCode();
+                shipping = new GestPayServiceReference.ShippingLine();
+
+                paymentTDetail = new GestPayServiceReference.PaymentTypeDetail();
+                shipDetails = new GestPayServiceReference.ShippingDetails();
+                redBilling = new GestPayServiceReference.RedBillingInfo();
+                redCustomerData = new GestPayServiceReference.RedCustomerData();
+                redCustomerInfo = new GestPayServiceReference.RedCustomerInfo();
+                redItem = new GestPayServiceReference.RedItems();
+                redShipping = new GestPayServiceReference.RedShippingInfo();
+                conselCustomer = new GestPayServiceReference.ConselCustomerInfo();
+                threeDsEncryptTransDetails = new GestPayServiceReference.ThreeDSEncryptTransDetails();
+            }
+                
+
+            string xmlResponse;
+
+            
             if (_gestPayPaymentSettings.EnableGuaranteedPayment)
             {
-                FraudPrevention fraudPrevention = new FraudPrevention();
+                //FraudPrevention fraudPrevention = new FraudPrevention();
                 fraudPrevention.BeaconSessionID = _httpContextAccessor.HttpContext.Session.Id;
                 fraudPrevention.SubmitForReview = "1";
                 fraudPrevention.OrderDateTime = postProcessPaymentRequest.Order.CreatedOnUtc.ToString();
@@ -363,7 +432,7 @@ namespace Nop.Plugin.Payments.GestPay
                 //var logger = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Logging.ILogger>();
                 //logger.Information("Gestpay BeaconId = " + _httpContextAccessor.HttpContext.Session.Id);
 
-                CustomerDetail customerDetail = new CustomerDetail();
+                //CustomerDetail customerDetail = new CustomerDetail();
                 customerDetail.PrimaryEmail = postProcessPaymentRequest.Order.BillingAddress.Email;
                 customerDetail.MerchantCustomerID = postProcessPaymentRequest.Order.CustomerId.ToString();
                 customerDetail.FirstName = postProcessPaymentRequest.Order.BillingAddress.FirstName;
@@ -377,7 +446,7 @@ namespace Nop.Plugin.Payments.GestPay
 
                 if (postProcessPaymentRequest.Order.ShippingAddress != null)
                 {
-                    ShippingAddress shippingAddress = new ShippingAddress();
+                    //ShippingAddress shippingAddress = new ShippingAddress();
                     shippingAddress.ProfileID = postProcessPaymentRequest.Order.ShippingAddressId.ToString();
                     shippingAddress.FirstName = postProcessPaymentRequest.Order.ShippingAddress.FirstName;
                     shippingAddress.Lastname = postProcessPaymentRequest.Order.ShippingAddress.LastName;
@@ -394,7 +463,7 @@ namespace Nop.Plugin.Payments.GestPay
                     paymentDetails.ShippingAddress = shippingAddress;
                 }
 
-                BillingAddress billingAddress = new BillingAddress();
+                //BillingAddress billingAddress = new BillingAddress();
                 billingAddress.ProfileID = postProcessPaymentRequest.Order.BillingAddressId.ToString();
                 billingAddress.FirstName = postProcessPaymentRequest.Order.BillingAddress.FirstName;
                 billingAddress.Lastname = postProcessPaymentRequest.Order.BillingAddress.LastName;
@@ -410,10 +479,27 @@ namespace Nop.Plugin.Payments.GestPay
                 billingAddress.StateCode = postProcessPaymentRequest.Order.BillingAddress.StateProvince.Abbreviation;
                 paymentDetails.BillingAddress = billingAddress;
 
-                var productDetails = new List<ProductDetail>();
+                //var productDetails = new List<ProductDetail>();
                 foreach (var item in postProcessPaymentRequest.Order.OrderItems)
                 {
-                    var productDetail = new ProductDetail();
+                    dynamic productDetail;
+                    dynamic giftcardDetails;
+                    dynamic recipient;
+
+                    if (_gestPayPaymentSettings.UseSandbox)
+                    {
+                        productDetail = new GestPayServiceReferenceTest.ProductDetail();
+                        giftcardDetails = new GestPayServiceReferenceTest.DigitalGiftCardDetails();
+                        recipient = new GestPayServiceReferenceTest.Recipient();
+                    }
+                    else
+                    {
+                        productDetail = new GestPayServiceReference.ProductDetail();
+                        giftcardDetails = new GestPayServiceReference.DigitalGiftCardDetails();
+                        recipient = new GestPayServiceReference.Recipient();
+                    }
+                        
+
                     productDetail.ProductCode = item.Product.ManufacturerPartNumber;
                     productDetail.SKU = item.Product.Sku;
                     productDetail.Name = item.Product.Name;
@@ -434,14 +520,14 @@ namespace Nop.Plugin.Payments.GestPay
 
                         if (item.Product.IsGiftCard)
                         {
-                            DigitalGiftCardDetails giftcardDetails = new DigitalGiftCardDetails();
+                            //DigitalGiftCardDetails giftcardDetails = new DigitalGiftCardDetails();
                             foreach (var giftcard in item.AssociatedGiftCards)
                             {
                                 giftcardDetails.SenderName = giftcard.SenderName;
                                 giftcardDetails.DisplayName = giftcard.SenderName;
                                 giftcardDetails.GreetingMessage = giftcard.Message;
 
-                                Recipient recipient = new Recipient();
+                                //Recipient recipient = new Recipient();
                                 recipient.Email = giftcard.RecipientEmail;
                                 giftcardDetails.Recipient = recipient;
 
@@ -459,17 +545,37 @@ namespace Nop.Plugin.Payments.GestPay
                 }
                 paymentDetails.ProductDetails = productDetails.ToArray();
 
-                var discountCode = new DiscountCode();
+                //var discountCode = new DiscountCode();
                 //discountCode.Code = discount.Discount.CouponCode;
                 discountCode.Amount = postProcessPaymentRequest.Order.OrderDiscount.ToString("0.00", CultureInfo.InvariantCulture);
-                paymentDetails.DiscountCodes = new DiscountCode[] { discountCode };
+                if (_gestPayPaymentSettings.UseSandbox)
+                {
+                    paymentDetails.DiscountCodes = new GestPayServiceReferenceTest.DiscountCode[] { discountCode };
+                }
+                else
+                {
+                    paymentDetails.DiscountCodes = new GestPayServiceReference.DiscountCode[] { discountCode };
+                }
+                    
 
-                var shipping = new ShippingLine();
+                //var shipping = new ShippingLine();
                 shipping.Code = postProcessPaymentRequest.Order.ShippingRateComputationMethodSystemName;
                 shipping.Title = postProcessPaymentRequest.Order.ShippingRateComputationMethodSystemName;
                 shipping.Price = postProcessPaymentRequest.Order.OrderShippingInclTax.ToString("0.00", CultureInfo.InvariantCulture);
-                paymentDetails.ShippingLines = new ShippingLine[] { shipping };
+                if (_gestPayPaymentSettings.UseSandbox)
+                {
+                    paymentDetails.ShippingLines = new GestPayServiceReferenceTest.ShippingLine[] { shipping };
+                }
+                else
+                {
+                    paymentDetails.ShippingLines = new GestPayServiceReference.ShippingLine[] { shipping };
+                }
+                
             }
+
+            
+            string[] paymentTypes = { "" };
+            string[] redCustomInfo = { "" };
 
             if (_gestPayPaymentSettings.UseStarter)
             {
@@ -485,27 +591,45 @@ namespace Nop.Plugin.Payments.GestPay
             else
             {
                 xmlResponse = objCryptDecrypt.EncryptAsync(
-                            _gestPayPaymentSettings.ShopOperatorCode,
-                            _gestPayPaymentSettings.CurrencyUiCcode.ToString(),
-                            amount.ToString("0.00", CultureInfo.InvariantCulture),
-                            shopTransactionId,
-                            buyerName: buyerName,
-                            buyerEmail: postProcessPaymentRequest.Order.BillingAddress.Email,
-                            languageId: _gestPayPaymentSettings.LanguageCode.ToString(),
-                            apikey: _gestPayPaymentSettings.ApiKey,
-                            OrderDetails: paymentDetails
-                        ).Result.EncryptResult;
+                    _gestPayPaymentSettings.ShopOperatorCode,
+                    _gestPayPaymentSettings.CurrencyUiCcode.ToString(),
+                    amount.ToString("0.00", CultureInfo.InvariantCulture),
+                    shopTransactionId,
+                    "", "", "", buyerName, postProcessPaymentRequest.Order.BillingAddress.Email,
+                    _gestPayPaymentSettings.LanguageCode.ToString(), "", "", "", "", "",
+                    shipDetails,
+                    paymentTypes,
+                    paymentTDetail, "",
+                    redCustomerInfo,
+                    redShipping,
+                    redBilling,
+                    redCustomerData,
+                    redCustomInfo, redItem, "", conselCustomer, "", ""
+                    , paymentDetails, _gestPayPaymentSettings.ApiKey, threeDsEncryptTransDetails).Result.EncryptResult.OuterXml;
+                
+
+                
+
             }
 
-            string errorCode = xmlResponse.Elements().Where(x => x.Name == "ErrorCode").Single().Value;
+            XmlDocument xmlReturn = new XmlDocument();
+            xmlReturn.LoadXml(xmlResponse);
+            XmlNode thisNode = xmlReturn.SelectSingleNode("/GestPayCryptDecrypt/ErrorCode");
+            string errorCode = thisNode.InnerText;
+
             if (errorCode == "0")
             {
-                encryptedString = xmlResponse.Elements().Where(x => x.Name == "CryptDecryptString").Single().Value;
+                XmlNode thisNode2 = xmlReturn.SelectSingleNode("//GestPayCryptDecrypt/CryptDecryptString");
+                encryptedString = thisNode2.InnerText;
+
             }
             else
             {
                 //Put error handle code HERE
-                errorDescription = xmlResponse.Elements().Where(x => x.Name == "ErrorDescription").Single().Value;
+               
+                thisNode = xmlReturn.SelectSingleNode("/GestPayCryptDecrypt/ErrorDescription");
+                errorDescription = thisNode.InnerText;
+                
             }
 
             var builder = new StringBuilder();
@@ -545,7 +669,7 @@ namespace Nop.Plugin.Payments.GestPay
             return new VoidPaymentResult { Errors = new[] { "Void method not supported" } };
             //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
             //for example, for a redirection payment method, description may be like this: "You will be redirected to site to complete the payment"
-            get { return _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription"); }
+           
         }
 
         #endregion

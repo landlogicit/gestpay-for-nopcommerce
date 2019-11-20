@@ -7,140 +7,104 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GestPayServiceReference
+namespace GestPayWsS2SServiceReferenceTest
 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="https://ecomm.sella.it/", ConfigurationName="GestPayServiceReference.WSCryptDecryptSoap")]
-    public interface WSCryptDecryptSoap
+    [System.ServiceModel.ServiceContractAttribute(Namespace="https://ecomms2s.sella.it/", ConfigurationName="GestPayWsS2SServiceReferenceTest.WSs2sSoap")]
+    public interface WSs2sSoap
     {
         
-        [System.ServiceModel.OperationContractAttribute(Action="https://ecomm.sella.it/Encrypt", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callRefundS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<GestPayServiceReference.EncryptResponse> EncryptAsync(GestPayServiceReference.EncryptRequest request);
+        System.Threading.Tasks.Task<GestPayWsS2SServiceReferenceTest.callRefundS2SResponse> callRefundS2SAsync(GestPayWsS2SServiceReferenceTest.callRefundS2SRequest request);
         
-        [System.ServiceModel.OperationContractAttribute(Action="https://ecomm.sella.it/Decrypt", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callReadTrxS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<System.Xml.XmlNode> DecryptAsync(string shopLogin, string CryptedString, string apikey);
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callReadTrxS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callPagamS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<GestPayWsS2SServiceReferenceTest.callPagamS2SResponse> callPagamS2SAsync(GestPayWsS2SServiceReferenceTest.callPagamS2SRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callDeleteS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callDeleteS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string CancelReason, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callSettleS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callSettleS2SAsync(string shopLogin, string uicCode, string amount, string shopTransID, string bankTransID, GestPayWsS2SServiceReferenceTest.FullFillmentDetails FullFillment, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callVerifycardS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callVerifycardS2SAsync(string shopLogin, string shopTransactionId, string cardNumber, string expMonth, string expYear, string CVV2, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callCheckCartaS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callCheckCartaS2SAsync(string shopLogin, string shopTransactionId, string cardNumber, string expMonth, string expYear, string CVV2, string withAuth, string tokenValue, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callRenounce", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callRenounceAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallRequestTokenS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> CallRequestTokenS2SAsync(string shopLogin, string requestToken, string cardNumber, string expiryMonth, string expiryYear, string cvv, string withAuth, string originalId, string description, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callDeleteTokenS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callDeleteTokenS2SAsync(string tokenValue, string shopLogin, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallUpdateTokenS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateTokenS2SAsync(string shopLogin, string token, string expiryMonth, string expiryYear, string withAut, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallIdealListS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> CallIdealListS2SAsync(string shopLogin, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallMyBankListS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> CallMyBankListS2SAsync(string shopLogin, string languageId, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallUpdateCustomParamS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateCustomParamS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string paramName, string paramValue, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallUpdateOrderS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateOrderS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, GestPayWsS2SServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callExchangeRateS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callExchangeRateS2SAsync(string shopLogin, string uicCode, string isoCode, string numericIsoCode, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callDeviceActivation", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callDeviceActivationAsync(string terminalId);
     }
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class ShippingDetails
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class RefundProductDetail
     {
         
-        private string shipToNameField;
-        
-        private string shipToStreetField;
-        
-        private string shipToCityField;
-        
-        private string shipToStateField;
-        
-        private string shipToCountryCodeField;
-        
-        private string shipToZipField;
-        
-        private string shipToStreet2Field;
+        private ProductDetail[] productDetailsField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string shipToName
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        public ProductDetail[] ProductDetails
         {
             get
             {
-                return this.shipToNameField;
+                return this.productDetailsField;
             }
             set
             {
-                this.shipToNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string shipToStreet
-        {
-            get
-            {
-                return this.shipToStreetField;
-            }
-            set
-            {
-                this.shipToStreetField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string shipToCity
-        {
-            get
-            {
-                return this.shipToCityField;
-            }
-            set
-            {
-                this.shipToCityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string shipToState
-        {
-            get
-            {
-                return this.shipToStateField;
-            }
-            set
-            {
-                this.shipToStateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string shipToCountryCode
-        {
-            get
-            {
-                return this.shipToCountryCodeField;
-            }
-            set
-            {
-                this.shipToCountryCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string shipToZip
-        {
-            get
-            {
-                return this.shipToZipField;
-            }
-            set
-            {
-                this.shipToZipField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string shipToStreet2
-        {
-            get
-            {
-                return this.shipToStreet2Field;
-            }
-            set
-            {
-                this.shipToStreet2Field = value;
+                this.productDetailsField = value;
             }
         }
     }
@@ -148,2199 +112,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class EncryptPreviousTransDetails
-    {
-        
-        private string authDataField;
-        
-        private string authMethodField;
-        
-        private string authTimestampField;
-        
-        private string acsIDField;
-        
-        private string bankTransactionIDField;
-        
-        private string xIDField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string authData
-        {
-            get
-            {
-                return this.authDataField;
-            }
-            set
-            {
-                this.authDataField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string authMethod
-        {
-            get
-            {
-                return this.authMethodField;
-            }
-            set
-            {
-                this.authMethodField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string authTimestamp
-        {
-            get
-            {
-                return this.authTimestampField;
-            }
-            set
-            {
-                this.authTimestampField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string acsID
-        {
-            get
-            {
-                return this.acsIDField;
-            }
-            set
-            {
-                this.acsIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string bankTransactionID
-        {
-            get
-            {
-                return this.bankTransactionIDField;
-            }
-            set
-            {
-                this.bankTransactionIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string XID
-        {
-            get
-            {
-                return this.xIDField;
-            }
-            set
-            {
-                this.xIDField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class RecurringTransaction
-    {
-        
-        private string installNoField;
-        
-        private string expiryField;
-        
-        private string frequencyField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string installNo
-        {
-            get
-            {
-                return this.installNoField;
-            }
-            set
-            {
-                this.installNoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string expiry
-        {
-            get
-            {
-                return this.expiryField;
-            }
-            set
-            {
-                this.expiryField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string frequency
-        {
-            get
-            {
-                return this.frequencyField;
-            }
-            set
-            {
-                this.frequencyField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class MerchantRiskIndicator
-    {
-        
-        private string deliveryEmailAddressField;
-        
-        private string deliveryTimeframeField;
-        
-        private string giftCardAmountField;
-        
-        private string giftCardCountField;
-        
-        private string giftCardCurrField;
-        
-        private string preOrderDateField;
-        
-        private string preOrderPurchaseIndField;
-        
-        private string reorderItemsIndField;
-        
-        private string shipIndicatorField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string deliveryEmailAddress
-        {
-            get
-            {
-                return this.deliveryEmailAddressField;
-            }
-            set
-            {
-                this.deliveryEmailAddressField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string deliveryTimeframe
-        {
-            get
-            {
-                return this.deliveryTimeframeField;
-            }
-            set
-            {
-                this.deliveryTimeframeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string giftCardAmount
-        {
-            get
-            {
-                return this.giftCardAmountField;
-            }
-            set
-            {
-                this.giftCardAmountField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string giftCardCount
-        {
-            get
-            {
-                return this.giftCardCountField;
-            }
-            set
-            {
-                this.giftCardCountField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string giftCardCurr
-        {
-            get
-            {
-                return this.giftCardCurrField;
-            }
-            set
-            {
-                this.giftCardCurrField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string preOrderDate
-        {
-            get
-            {
-                return this.preOrderDateField;
-            }
-            set
-            {
-                this.preOrderDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string preOrderPurchaseInd
-        {
-            get
-            {
-                return this.preOrderPurchaseIndField;
-            }
-            set
-            {
-                this.preOrderPurchaseIndField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string reorderItemsInd
-        {
-            get
-            {
-                return this.reorderItemsIndField;
-            }
-            set
-            {
-                this.reorderItemsIndField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public string shipIndicator
-        {
-            get
-            {
-                return this.shipIndicatorField;
-            }
-            set
-            {
-                this.shipIndicatorField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class AccInfo
-    {
-        
-        private string chAccAgeIndField;
-        
-        private string chAccChangeField;
-        
-        private string chAccChangeIndField;
-        
-        private string chAccDateField;
-        
-        private string chAccPwChangeField;
-        
-        private string chAccPwChangeIndField;
-        
-        private string nbPurchaseAccountField;
-        
-        private string provisionAttemptsDayField;
-        
-        private string txnActivityDayField;
-        
-        private string txnActivityYearField;
-        
-        private string paymentAccAgeField;
-        
-        private string paymentAccIndField;
-        
-        private string shipAddressUsageField;
-        
-        private string shipAddressUsageIndField;
-        
-        private string shipNameIndicatorField;
-        
-        private string suspiciousAccActivityField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string chAccAgeInd
-        {
-            get
-            {
-                return this.chAccAgeIndField;
-            }
-            set
-            {
-                this.chAccAgeIndField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string chAccChange
-        {
-            get
-            {
-                return this.chAccChangeField;
-            }
-            set
-            {
-                this.chAccChangeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string chAccChangeInd
-        {
-            get
-            {
-                return this.chAccChangeIndField;
-            }
-            set
-            {
-                this.chAccChangeIndField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string chAccDate
-        {
-            get
-            {
-                return this.chAccDateField;
-            }
-            set
-            {
-                this.chAccDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string chAccPwChange
-        {
-            get
-            {
-                return this.chAccPwChangeField;
-            }
-            set
-            {
-                this.chAccPwChangeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string chAccPwChangeInd
-        {
-            get
-            {
-                return this.chAccPwChangeIndField;
-            }
-            set
-            {
-                this.chAccPwChangeIndField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string nbPurchaseAccount
-        {
-            get
-            {
-                return this.nbPurchaseAccountField;
-            }
-            set
-            {
-                this.nbPurchaseAccountField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string provisionAttemptsDay
-        {
-            get
-            {
-                return this.provisionAttemptsDayField;
-            }
-            set
-            {
-                this.provisionAttemptsDayField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public string txnActivityDay
-        {
-            get
-            {
-                return this.txnActivityDayField;
-            }
-            set
-            {
-                this.txnActivityDayField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public string txnActivityYear
-        {
-            get
-            {
-                return this.txnActivityYearField;
-            }
-            set
-            {
-                this.txnActivityYearField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public string paymentAccAge
-        {
-            get
-            {
-                return this.paymentAccAgeField;
-            }
-            set
-            {
-                this.paymentAccAgeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public string paymentAccInd
-        {
-            get
-            {
-                return this.paymentAccIndField;
-            }
-            set
-            {
-                this.paymentAccIndField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public string shipAddressUsage
-        {
-            get
-            {
-                return this.shipAddressUsageField;
-            }
-            set
-            {
-                this.shipAddressUsageField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public string shipAddressUsageInd
-        {
-            get
-            {
-                return this.shipAddressUsageIndField;
-            }
-            set
-            {
-                this.shipAddressUsageIndField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public string shipNameIndicator
-        {
-            get
-            {
-                return this.shipNameIndicatorField;
-            }
-            set
-            {
-                this.shipNameIndicatorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public string suspiciousAccActivity
-        {
-            get
-            {
-                return this.suspiciousAccActivityField;
-            }
-            set
-            {
-                this.suspiciousAccActivityField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class CardHolder
-    {
-        
-        private string nameField;
-        
-        private string emailField;
-        
-        private string homePhone_ccField;
-        
-        private string homePhone_numField;
-        
-        private string mobilePhone_ccField;
-        
-        private string mobilePhone_numField;
-        
-        private string workPhone_ccField;
-        
-        private string workPhone_numField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string email
-        {
-            get
-            {
-                return this.emailField;
-            }
-            set
-            {
-                this.emailField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string homePhone_cc
-        {
-            get
-            {
-                return this.homePhone_ccField;
-            }
-            set
-            {
-                this.homePhone_ccField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string homePhone_num
-        {
-            get
-            {
-                return this.homePhone_numField;
-            }
-            set
-            {
-                this.homePhone_numField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string mobilePhone_cc
-        {
-            get
-            {
-                return this.mobilePhone_ccField;
-            }
-            set
-            {
-                this.mobilePhone_ccField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string mobilePhone_num
-        {
-            get
-            {
-                return this.mobilePhone_numField;
-            }
-            set
-            {
-                this.mobilePhone_numField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string workPhone_cc
-        {
-            get
-            {
-                return this.workPhone_ccField;
-            }
-            set
-            {
-                this.workPhone_ccField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string workPhone_num
-        {
-            get
-            {
-                return this.workPhone_numField;
-            }
-            set
-            {
-                this.workPhone_numField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class ThreeDSShippingAddress
-    {
-        
-        private string cityField;
-        
-        private string countryField;
-        
-        private string line1Field;
-        
-        private string line2Field;
-        
-        private string line3Field;
-        
-        private string postCodeField;
-        
-        private string stateField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string city
-        {
-            get
-            {
-                return this.cityField;
-            }
-            set
-            {
-                this.cityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string country
-        {
-            get
-            {
-                return this.countryField;
-            }
-            set
-            {
-                this.countryField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string line1
-        {
-            get
-            {
-                return this.line1Field;
-            }
-            set
-            {
-                this.line1Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string line2
-        {
-            get
-            {
-                return this.line2Field;
-            }
-            set
-            {
-                this.line2Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string line3
-        {
-            get
-            {
-                return this.line3Field;
-            }
-            set
-            {
-                this.line3Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string postCode
-        {
-            get
-            {
-                return this.postCodeField;
-            }
-            set
-            {
-                this.postCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string state
-        {
-            get
-            {
-                return this.stateField;
-            }
-            set
-            {
-                this.stateField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class ThreeDSBillingAddress
-    {
-        
-        private string cityField;
-        
-        private string countryField;
-        
-        private string line1Field;
-        
-        private string line2Field;
-        
-        private string line3Field;
-        
-        private string postCodeField;
-        
-        private string stateField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string city
-        {
-            get
-            {
-                return this.cityField;
-            }
-            set
-            {
-                this.cityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string country
-        {
-            get
-            {
-                return this.countryField;
-            }
-            set
-            {
-                this.countryField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string line1
-        {
-            get
-            {
-                return this.line1Field;
-            }
-            set
-            {
-                this.line1Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string line2
-        {
-            get
-            {
-                return this.line2Field;
-            }
-            set
-            {
-                this.line2Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string line3
-        {
-            get
-            {
-                return this.line3Field;
-            }
-            set
-            {
-                this.line3Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string postCode
-        {
-            get
-            {
-                return this.postCodeField;
-            }
-            set
-            {
-                this.postCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string state
-        {
-            get
-            {
-                return this.stateField;
-            }
-            set
-            {
-                this.stateField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class BuyerProfileDetails
-    {
-        
-        private string cardHolderIDField;
-        
-        private string authDataField;
-        
-        private string authMethodField;
-        
-        private string authTimestampField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string cardHolderID
-        {
-            get
-            {
-                return this.cardHolderIDField;
-            }
-            set
-            {
-                this.cardHolderIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string authData
-        {
-            get
-            {
-                return this.authDataField;
-            }
-            set
-            {
-                this.authDataField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string authMethod
-        {
-            get
-            {
-                return this.authMethodField;
-            }
-            set
-            {
-                this.authMethodField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string authTimestamp
-        {
-            get
-            {
-                return this.authTimestampField;
-            }
-            set
-            {
-                this.authTimestampField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class BuyerDetails
-    {
-        
-        private BuyerProfileDetails profileDetailsField;
-        
-        private ThreeDSBillingAddress billingAddressField;
-        
-        private ThreeDSShippingAddress shippingAddressField;
-        
-        private string addrMatchField;
-        
-        private CardHolder cardHolderField;
-        
-        private AccInfo accInfoField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public BuyerProfileDetails profileDetails
-        {
-            get
-            {
-                return this.profileDetailsField;
-            }
-            set
-            {
-                this.profileDetailsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public ThreeDSBillingAddress billingAddress
-        {
-            get
-            {
-                return this.billingAddressField;
-            }
-            set
-            {
-                this.billingAddressField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public ThreeDSShippingAddress shippingAddress
-        {
-            get
-            {
-                return this.shippingAddressField;
-            }
-            set
-            {
-                this.shippingAddressField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string addrMatch
-        {
-            get
-            {
-                return this.addrMatchField;
-            }
-            set
-            {
-                this.addrMatchField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public CardHolder cardHolder
-        {
-            get
-            {
-                return this.cardHolderField;
-            }
-            set
-            {
-                this.cardHolderField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public AccInfo accInfo
-        {
-            get
-            {
-                return this.accInfoField;
-            }
-            set
-            {
-                this.accInfoField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class EncryptThreeDsContainer
-    {
-        
-        private string acquirerBINField;
-        
-        private string acquirerMerchantIDField;
-        
-        private string exemptionField;
-        
-        private BuyerDetails buyerDetailsField;
-        
-        private MerchantRiskIndicator merchantRiskIndicatorField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string acquirerBIN
-        {
-            get
-            {
-                return this.acquirerBINField;
-            }
-            set
-            {
-                this.acquirerBINField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string acquirerMerchantID
-        {
-            get
-            {
-                return this.acquirerMerchantIDField;
-            }
-            set
-            {
-                this.acquirerMerchantIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string exemption
-        {
-            get
-            {
-                return this.exemptionField;
-            }
-            set
-            {
-                this.exemptionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public BuyerDetails buyerDetails
-        {
-            get
-            {
-                return this.buyerDetailsField;
-            }
-            set
-            {
-                this.buyerDetailsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public MerchantRiskIndicator merchantRiskIndicator
-        {
-            get
-            {
-                return this.merchantRiskIndicatorField;
-            }
-            set
-            {
-                this.merchantRiskIndicatorField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class ThreeDSEncryptTransDetails
-    {
-        
-        private string typeField;
-        
-        private EncryptThreeDsContainer threeDsContainerField;
-        
-        private RecurringTransaction recurringTransactionField;
-        
-        private EncryptPreviousTransDetails previousTransDetailsField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string type
-        {
-            get
-            {
-                return this.typeField;
-            }
-            set
-            {
-                this.typeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public EncryptThreeDsContainer threeDsContainer
-        {
-            get
-            {
-                return this.threeDsContainerField;
-            }
-            set
-            {
-                this.threeDsContainerField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public RecurringTransaction recurringTransaction
-        {
-            get
-            {
-                return this.recurringTransactionField;
-            }
-            set
-            {
-                this.recurringTransactionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public EncryptPreviousTransDetails previousTransDetails
-        {
-            get
-            {
-                return this.previousTransDetailsField;
-            }
-            set
-            {
-                this.previousTransDetailsField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class PassengerDetail
-    {
-        
-        private string firstNameField;
-        
-        private string lastNameField;
-        
-        private string dateOfBirthField;
-        
-        private string nationalityCodeField;
-        
-        private string insuranceTypeField;
-        
-        private string insurancePriceField;
-        
-        private string documentNumberField;
-        
-        private string documentTypeField;
-        
-        private string documentIssueDateField;
-        
-        private string documentExpirationDateField;
-        
-        private string passengerTypeField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string FirstName
-        {
-            get
-            {
-                return this.firstNameField;
-            }
-            set
-            {
-                this.firstNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string LastName
-        {
-            get
-            {
-                return this.lastNameField;
-            }
-            set
-            {
-                this.lastNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string DateOfBirth
-        {
-            get
-            {
-                return this.dateOfBirthField;
-            }
-            set
-            {
-                this.dateOfBirthField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string NationalityCode
-        {
-            get
-            {
-                return this.nationalityCodeField;
-            }
-            set
-            {
-                this.nationalityCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string InsuranceType
-        {
-            get
-            {
-                return this.insuranceTypeField;
-            }
-            set
-            {
-                this.insuranceTypeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string InsurancePrice
-        {
-            get
-            {
-                return this.insurancePriceField;
-            }
-            set
-            {
-                this.insurancePriceField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string DocumentNumber
-        {
-            get
-            {
-                return this.documentNumberField;
-            }
-            set
-            {
-                this.documentNumberField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string DocumentType
-        {
-            get
-            {
-                return this.documentTypeField;
-            }
-            set
-            {
-                this.documentTypeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public string DocumentIssueDate
-        {
-            get
-            {
-                return this.documentIssueDateField;
-            }
-            set
-            {
-                this.documentIssueDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public string DocumentExpirationDate
-        {
-            get
-            {
-                return this.documentExpirationDateField;
-            }
-            set
-            {
-                this.documentExpirationDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public string PassengerType
-        {
-            get
-            {
-                return this.passengerTypeField;
-            }
-            set
-            {
-                this.passengerTypeField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class TravelTicketDetail
-    {
-        
-        private string arrivalCityField;
-        
-        private string arrivalCountryCodeField;
-        
-        private string arrivalDateField;
-        
-        private string arrivalPortCodeField;
-        
-        private string carrierCodeField;
-        
-        private string carrierNameField;
-        
-        private string departureCityField;
-        
-        private string departureCountryCodeField;
-        
-        private string departureDateField;
-        
-        private string departurePortCodeField;
-        
-        private string legIdField;
-        
-        private string legIndexField;
-        
-        private string routeIndexField;
-        
-        private string ticketClassField;
-        
-        private string priceField;
-        
-        private string quantityField;
-        
-        private string titleField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string ArrivalCity
-        {
-            get
-            {
-                return this.arrivalCityField;
-            }
-            set
-            {
-                this.arrivalCityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string ArrivalCountryCode
-        {
-            get
-            {
-                return this.arrivalCountryCodeField;
-            }
-            set
-            {
-                this.arrivalCountryCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string ArrivalDate
-        {
-            get
-            {
-                return this.arrivalDateField;
-            }
-            set
-            {
-                this.arrivalDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string ArrivalPortCode
-        {
-            get
-            {
-                return this.arrivalPortCodeField;
-            }
-            set
-            {
-                this.arrivalPortCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string CarrierCode
-        {
-            get
-            {
-                return this.carrierCodeField;
-            }
-            set
-            {
-                this.carrierCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string CarrierName
-        {
-            get
-            {
-                return this.carrierNameField;
-            }
-            set
-            {
-                this.carrierNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string DepartureCity
-        {
-            get
-            {
-                return this.departureCityField;
-            }
-            set
-            {
-                this.departureCityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string DepartureCountryCode
-        {
-            get
-            {
-                return this.departureCountryCodeField;
-            }
-            set
-            {
-                this.departureCountryCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public string DepartureDate
-        {
-            get
-            {
-                return this.departureDateField;
-            }
-            set
-            {
-                this.departureDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public string DeparturePortCode
-        {
-            get
-            {
-                return this.departurePortCodeField;
-            }
-            set
-            {
-                this.departurePortCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public string LegId
-        {
-            get
-            {
-                return this.legIdField;
-            }
-            set
-            {
-                this.legIdField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public string LegIndex
-        {
-            get
-            {
-                return this.legIndexField;
-            }
-            set
-            {
-                this.legIndexField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public string RouteIndex
-        {
-            get
-            {
-                return this.routeIndexField;
-            }
-            set
-            {
-                this.routeIndexField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public string TicketClass
-        {
-            get
-            {
-                return this.ticketClassField;
-            }
-            set
-            {
-                this.ticketClassField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public string Price
-        {
-            get
-            {
-                return this.priceField;
-            }
-            set
-            {
-                this.priceField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public string Quantity
-        {
-            get
-            {
-                return this.quantityField;
-            }
-            set
-            {
-                this.quantityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public string Title
-        {
-            get
-            {
-                return this.titleField;
-            }
-            set
-            {
-                this.titleField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class AccommodationDetail
-    {
-        
-        private string cityField;
-        
-        private string countryCodeField;
-        
-        private string titleField;
-        
-        private string checkInDateField;
-        
-        private string checkOutDateField;
-        
-        private string productIdField;
-        
-        private string ratingField;
-        
-        private string numberOfGuestsField;
-        
-        private string accommodationTypeField;
-        
-        private string roomTypeField;
-        
-        private string priceField;
-        
-        private string quantityField;
-        
-        private string cancellationPolicyField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string City
-        {
-            get
-            {
-                return this.cityField;
-            }
-            set
-            {
-                this.cityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string CountryCode
-        {
-            get
-            {
-                return this.countryCodeField;
-            }
-            set
-            {
-                this.countryCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string Title
-        {
-            get
-            {
-                return this.titleField;
-            }
-            set
-            {
-                this.titleField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string CheckInDate
-        {
-            get
-            {
-                return this.checkInDateField;
-            }
-            set
-            {
-                this.checkInDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string CheckOutDate
-        {
-            get
-            {
-                return this.checkOutDateField;
-            }
-            set
-            {
-                this.checkOutDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string ProductId
-        {
-            get
-            {
-                return this.productIdField;
-            }
-            set
-            {
-                this.productIdField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string Rating
-        {
-            get
-            {
-                return this.ratingField;
-            }
-            set
-            {
-                this.ratingField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string NumberOfGuests
-        {
-            get
-            {
-                return this.numberOfGuestsField;
-            }
-            set
-            {
-                this.numberOfGuestsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public string AccommodationType
-        {
-            get
-            {
-                return this.accommodationTypeField;
-            }
-            set
-            {
-                this.accommodationTypeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public string RoomType
-        {
-            get
-            {
-                return this.roomTypeField;
-            }
-            set
-            {
-                this.roomTypeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public string Price
-        {
-            get
-            {
-                return this.priceField;
-            }
-            set
-            {
-                this.priceField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public string Quantity
-        {
-            get
-            {
-                return this.quantityField;
-            }
-            set
-            {
-                this.quantityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public string CancellationPolicy
-        {
-            get
-            {
-                return this.cancellationPolicyField;
-            }
-            set
-            {
-                this.cancellationPolicyField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class ShippingLine
-    {
-        
-        private string priceField;
-        
-        private string titleField;
-        
-        private string codeField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Price
-        {
-            get
-            {
-                return this.priceField;
-            }
-            set
-            {
-                this.priceField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Title
-        {
-            get
-            {
-                return this.titleField;
-            }
-            set
-            {
-                this.titleField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string Code
-        {
-            get
-            {
-                return this.codeField;
-            }
-            set
-            {
-                this.codeField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class DiscountCode
-    {
-        
-        private string amountField;
-        
-        private string codeField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Amount
-        {
-            get
-            {
-                return this.amountField;
-            }
-            set
-            {
-                this.amountField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Code
-        {
-            get
-            {
-                return this.codeField;
-            }
-            set
-            {
-                this.codeField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class Recipient
-    {
-        
-        private string emailField;
-        
-        private string phoneField;
-        
-        private string socialField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Email
-        {
-            get
-            {
-                return this.emailField;
-            }
-            set
-            {
-                this.emailField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Phone
-        {
-            get
-            {
-                return this.phoneField;
-            }
-            set
-            {
-                this.phoneField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string Social
-        {
-            get
-            {
-                return this.socialField;
-            }
-            set
-            {
-                this.socialField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class DigitalGiftCardDetails
-    {
-        
-        private string senderNameField;
-        
-        private string displayNameField;
-        
-        private string greetingMessageField;
-        
-        private Recipient recipientField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string SenderName
-        {
-            get
-            {
-                return this.senderNameField;
-            }
-            set
-            {
-                this.senderNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string DisplayName
-        {
-            get
-            {
-                return this.displayNameField;
-            }
-            set
-            {
-                this.displayNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string GreetingMessage
-        {
-            get
-            {
-                return this.greetingMessageField;
-            }
-            set
-            {
-                this.greetingMessageField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public Recipient Recipient
-        {
-            get
-            {
-                return this.recipientField;
-            }
-            set
-            {
-                this.recipientField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ProductDetail
     {
         
@@ -2652,7 +424,2511 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class DigitalGiftCardDetails
+    {
+        
+        private string senderNameField;
+        
+        private string displayNameField;
+        
+        private string greetingMessageField;
+        
+        private Recipient recipientField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string SenderName
+        {
+            get
+            {
+                return this.senderNameField;
+            }
+            set
+            {
+                this.senderNameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string DisplayName
+        {
+            get
+            {
+                return this.displayNameField;
+            }
+            set
+            {
+                this.displayNameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string GreetingMessage
+        {
+            get
+            {
+                return this.greetingMessageField;
+            }
+            set
+            {
+                this.greetingMessageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public Recipient Recipient
+        {
+            get
+            {
+                return this.recipientField;
+            }
+            set
+            {
+                this.recipientField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class Recipient
+    {
+        
+        private string emailField;
+        
+        private string phoneField;
+        
+        private string socialField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string Email
+        {
+            get
+            {
+                return this.emailField;
+            }
+            set
+            {
+                this.emailField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string Phone
+        {
+            get
+            {
+                return this.phoneField;
+            }
+            set
+            {
+                this.phoneField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string Social
+        {
+            get
+            {
+                return this.socialField;
+            }
+            set
+            {
+                this.socialField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class FullfillmentDetail
+    {
+        
+        private string statusField;
+        
+        private ProductDetail[] productDetailsField;
+        
+        private string trackingCompanyField;
+        
+        private string trackingNumbersField;
+        
+        private string trackingUrlsField;
+        
+        private string messageField;
+        
+        private string receiptField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string Status
+        {
+            get
+            {
+                return this.statusField;
+            }
+            set
+            {
+                this.statusField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("ProductDetails", Order=1)]
+        public ProductDetail[] ProductDetails
+        {
+            get
+            {
+                return this.productDetailsField;
+            }
+            set
+            {
+                this.productDetailsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string TrackingCompany
+        {
+            get
+            {
+                return this.trackingCompanyField;
+            }
+            set
+            {
+                this.trackingCompanyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string TrackingNumbers
+        {
+            get
+            {
+                return this.trackingNumbersField;
+            }
+            set
+            {
+                this.trackingNumbersField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string TrackingUrls
+        {
+            get
+            {
+                return this.trackingUrlsField;
+            }
+            set
+            {
+                this.trackingUrlsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string Message
+        {
+            get
+            {
+                return this.messageField;
+            }
+            set
+            {
+                this.messageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string Receipt
+        {
+            get
+            {
+                return this.receiptField;
+            }
+            set
+            {
+                this.receiptField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class FullFillmentDetails
+    {
+        
+        private FullfillmentDetail[] fullFillmentlstField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
+        public FullfillmentDetail[] FullFillmentlst
+        {
+            get
+            {
+                return this.fullFillmentlstField;
+            }
+            set
+            {
+                this.fullFillmentlstField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class PreviousTransDetails
+    {
+        
+        private string authDataField;
+        
+        private string authMethodField;
+        
+        private string authTimestampField;
+        
+        private string acsIDField;
+        
+        private string bankTransactionIDField;
+        
+        private string xIDField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string authData
+        {
+            get
+            {
+                return this.authDataField;
+            }
+            set
+            {
+                this.authDataField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string authMethod
+        {
+            get
+            {
+                return this.authMethodField;
+            }
+            set
+            {
+                this.authMethodField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string authTimestamp
+        {
+            get
+            {
+                return this.authTimestampField;
+            }
+            set
+            {
+                this.authTimestampField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string acsID
+        {
+            get
+            {
+                return this.acsIDField;
+            }
+            set
+            {
+                this.acsIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string bankTransactionID
+        {
+            get
+            {
+                return this.bankTransactionIDField;
+            }
+            set
+            {
+                this.bankTransactionIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string XID
+        {
+            get
+            {
+                return this.xIDField;
+            }
+            set
+            {
+                this.xIDField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class RecurringTransaction
+    {
+        
+        private string installNoField;
+        
+        private string expiryField;
+        
+        private string frequencyField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string installNo
+        {
+            get
+            {
+                return this.installNoField;
+            }
+            set
+            {
+                this.installNoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string expiry
+        {
+            get
+            {
+                return this.expiryField;
+            }
+            set
+            {
+                this.expiryField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string frequency
+        {
+            get
+            {
+                return this.frequencyField;
+            }
+            set
+            {
+                this.frequencyField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class MerchantRiskIndicator
+    {
+        
+        private string deliveryEmailAddressField;
+        
+        private string deliveryTimeframeField;
+        
+        private string giftCardAmountField;
+        
+        private string giftCardCountField;
+        
+        private string giftCardCurrField;
+        
+        private string preOrderDateField;
+        
+        private string preOrderPurchaseIndField;
+        
+        private string reorderItemsIndField;
+        
+        private string shipIndicatorField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string deliveryEmailAddress
+        {
+            get
+            {
+                return this.deliveryEmailAddressField;
+            }
+            set
+            {
+                this.deliveryEmailAddressField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string deliveryTimeframe
+        {
+            get
+            {
+                return this.deliveryTimeframeField;
+            }
+            set
+            {
+                this.deliveryTimeframeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string giftCardAmount
+        {
+            get
+            {
+                return this.giftCardAmountField;
+            }
+            set
+            {
+                this.giftCardAmountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string giftCardCount
+        {
+            get
+            {
+                return this.giftCardCountField;
+            }
+            set
+            {
+                this.giftCardCountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string giftCardCurr
+        {
+            get
+            {
+                return this.giftCardCurrField;
+            }
+            set
+            {
+                this.giftCardCurrField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string preOrderDate
+        {
+            get
+            {
+                return this.preOrderDateField;
+            }
+            set
+            {
+                this.preOrderDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string preOrderPurchaseInd
+        {
+            get
+            {
+                return this.preOrderPurchaseIndField;
+            }
+            set
+            {
+                this.preOrderPurchaseIndField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string reorderItemsInd
+        {
+            get
+            {
+                return this.reorderItemsIndField;
+            }
+            set
+            {
+                this.reorderItemsIndField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string shipIndicator
+        {
+            get
+            {
+                return this.shipIndicatorField;
+            }
+            set
+            {
+                this.shipIndicatorField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class AccInfo
+    {
+        
+        private string chAccAgeIndField;
+        
+        private string chAccChangeField;
+        
+        private string chAccChangeIndField;
+        
+        private string chAccDateField;
+        
+        private string chAccPwChangeField;
+        
+        private string chAccPwChangeIndField;
+        
+        private string nbPurchaseAccountField;
+        
+        private string provisionAttemptsDayField;
+        
+        private string txnActivityDayField;
+        
+        private string txnActivityYearField;
+        
+        private string paymentAccAgeField;
+        
+        private string paymentAccIndField;
+        
+        private string shipAddressUsageField;
+        
+        private string shipAddressUsageIndField;
+        
+        private string shipNameIndicatorField;
+        
+        private string suspiciousAccActivityField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string chAccAgeInd
+        {
+            get
+            {
+                return this.chAccAgeIndField;
+            }
+            set
+            {
+                this.chAccAgeIndField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string chAccChange
+        {
+            get
+            {
+                return this.chAccChangeField;
+            }
+            set
+            {
+                this.chAccChangeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string chAccChangeInd
+        {
+            get
+            {
+                return this.chAccChangeIndField;
+            }
+            set
+            {
+                this.chAccChangeIndField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string chAccDate
+        {
+            get
+            {
+                return this.chAccDateField;
+            }
+            set
+            {
+                this.chAccDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string chAccPwChange
+        {
+            get
+            {
+                return this.chAccPwChangeField;
+            }
+            set
+            {
+                this.chAccPwChangeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string chAccPwChangeInd
+        {
+            get
+            {
+                return this.chAccPwChangeIndField;
+            }
+            set
+            {
+                this.chAccPwChangeIndField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string nbPurchaseAccount
+        {
+            get
+            {
+                return this.nbPurchaseAccountField;
+            }
+            set
+            {
+                this.nbPurchaseAccountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string provisionAttemptsDay
+        {
+            get
+            {
+                return this.provisionAttemptsDayField;
+            }
+            set
+            {
+                this.provisionAttemptsDayField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string txnActivityDay
+        {
+            get
+            {
+                return this.txnActivityDayField;
+            }
+            set
+            {
+                this.txnActivityDayField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public string txnActivityYear
+        {
+            get
+            {
+                return this.txnActivityYearField;
+            }
+            set
+            {
+                this.txnActivityYearField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public string paymentAccAge
+        {
+            get
+            {
+                return this.paymentAccAgeField;
+            }
+            set
+            {
+                this.paymentAccAgeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public string paymentAccInd
+        {
+            get
+            {
+                return this.paymentAccIndField;
+            }
+            set
+            {
+                this.paymentAccIndField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public string shipAddressUsage
+        {
+            get
+            {
+                return this.shipAddressUsageField;
+            }
+            set
+            {
+                this.shipAddressUsageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public string shipAddressUsageInd
+        {
+            get
+            {
+                return this.shipAddressUsageIndField;
+            }
+            set
+            {
+                this.shipAddressUsageIndField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public string shipNameIndicator
+        {
+            get
+            {
+                return this.shipNameIndicatorField;
+            }
+            set
+            {
+                this.shipNameIndicatorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public string suspiciousAccActivity
+        {
+            get
+            {
+                return this.suspiciousAccActivityField;
+            }
+            set
+            {
+                this.suspiciousAccActivityField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class CardHolder
+    {
+        
+        private string nameField;
+        
+        private string emailField;
+        
+        private string homePhone_ccField;
+        
+        private string homePhone_numField;
+        
+        private string mobilePhone_ccField;
+        
+        private string mobilePhone_numField;
+        
+        private string workPhone_ccField;
+        
+        private string workPhone_numField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string name
+        {
+            get
+            {
+                return this.nameField;
+            }
+            set
+            {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string email
+        {
+            get
+            {
+                return this.emailField;
+            }
+            set
+            {
+                this.emailField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string homePhone_cc
+        {
+            get
+            {
+                return this.homePhone_ccField;
+            }
+            set
+            {
+                this.homePhone_ccField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string homePhone_num
+        {
+            get
+            {
+                return this.homePhone_numField;
+            }
+            set
+            {
+                this.homePhone_numField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string mobilePhone_cc
+        {
+            get
+            {
+                return this.mobilePhone_ccField;
+            }
+            set
+            {
+                this.mobilePhone_ccField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string mobilePhone_num
+        {
+            get
+            {
+                return this.mobilePhone_numField;
+            }
+            set
+            {
+                this.mobilePhone_numField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string workPhone_cc
+        {
+            get
+            {
+                return this.workPhone_ccField;
+            }
+            set
+            {
+                this.workPhone_ccField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string workPhone_num
+        {
+            get
+            {
+                return this.workPhone_numField;
+            }
+            set
+            {
+                this.workPhone_numField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ThreeDSShippingAddress
+    {
+        
+        private string cityField;
+        
+        private string countryField;
+        
+        private string line1Field;
+        
+        private string line2Field;
+        
+        private string line3Field;
+        
+        private string postCodeField;
+        
+        private string stateField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string city
+        {
+            get
+            {
+                return this.cityField;
+            }
+            set
+            {
+                this.cityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string country
+        {
+            get
+            {
+                return this.countryField;
+            }
+            set
+            {
+                this.countryField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string line1
+        {
+            get
+            {
+                return this.line1Field;
+            }
+            set
+            {
+                this.line1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string line2
+        {
+            get
+            {
+                return this.line2Field;
+            }
+            set
+            {
+                this.line2Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string line3
+        {
+            get
+            {
+                return this.line3Field;
+            }
+            set
+            {
+                this.line3Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string postCode
+        {
+            get
+            {
+                return this.postCodeField;
+            }
+            set
+            {
+                this.postCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string state
+        {
+            get
+            {
+                return this.stateField;
+            }
+            set
+            {
+                this.stateField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ThreeDSBillingAddress
+    {
+        
+        private string cityField;
+        
+        private string countryField;
+        
+        private string line1Field;
+        
+        private string line2Field;
+        
+        private string line3Field;
+        
+        private string postCodeField;
+        
+        private string stateField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string city
+        {
+            get
+            {
+                return this.cityField;
+            }
+            set
+            {
+                this.cityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string country
+        {
+            get
+            {
+                return this.countryField;
+            }
+            set
+            {
+                this.countryField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string line1
+        {
+            get
+            {
+                return this.line1Field;
+            }
+            set
+            {
+                this.line1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string line2
+        {
+            get
+            {
+                return this.line2Field;
+            }
+            set
+            {
+                this.line2Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string line3
+        {
+            get
+            {
+                return this.line3Field;
+            }
+            set
+            {
+                this.line3Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string postCode
+        {
+            get
+            {
+                return this.postCodeField;
+            }
+            set
+            {
+                this.postCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string state
+        {
+            get
+            {
+                return this.stateField;
+            }
+            set
+            {
+                this.stateField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class BuyerProfileDetails
+    {
+        
+        private string cardHolderIDField;
+        
+        private string authDataField;
+        
+        private string authMethodField;
+        
+        private string authTimestampField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string cardHolderID
+        {
+            get
+            {
+                return this.cardHolderIDField;
+            }
+            set
+            {
+                this.cardHolderIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string authData
+        {
+            get
+            {
+                return this.authDataField;
+            }
+            set
+            {
+                this.authDataField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string authMethod
+        {
+            get
+            {
+                return this.authMethodField;
+            }
+            set
+            {
+                this.authMethodField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string authTimestamp
+        {
+            get
+            {
+                return this.authTimestampField;
+            }
+            set
+            {
+                this.authTimestampField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class BuyerDetails
+    {
+        
+        private BuyerProfileDetails profileDetailsField;
+        
+        private ThreeDSBillingAddress billingAddressField;
+        
+        private ThreeDSShippingAddress shippingAddressField;
+        
+        private string addrMatchField;
+        
+        private CardHolder cardHolderField;
+        
+        private AccInfo accInfoField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public BuyerProfileDetails profileDetails
+        {
+            get
+            {
+                return this.profileDetailsField;
+            }
+            set
+            {
+                this.profileDetailsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public ThreeDSBillingAddress billingAddress
+        {
+            get
+            {
+                return this.billingAddressField;
+            }
+            set
+            {
+                this.billingAddressField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public ThreeDSShippingAddress shippingAddress
+        {
+            get
+            {
+                return this.shippingAddressField;
+            }
+            set
+            {
+                this.shippingAddressField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string addrMatch
+        {
+            get
+            {
+                return this.addrMatchField;
+            }
+            set
+            {
+                this.addrMatchField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public CardHolder cardHolder
+        {
+            get
+            {
+                return this.cardHolderField;
+            }
+            set
+            {
+                this.cardHolderField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public AccInfo accInfo
+        {
+            get
+            {
+                return this.accInfoField;
+            }
+            set
+            {
+                this.accInfoField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ThreeDsContainer
+    {
+        
+        private string transTypeReqField;
+        
+        private string acquirerBINField;
+        
+        private string acquirerMerchantIDField;
+        
+        private string exemptionField;
+        
+        private BuyerDetails buyerDetailsField;
+        
+        private MerchantRiskIndicator merchantRiskIndicatorField;
+        
+        private string sDKDetailsField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string transTypeReq
+        {
+            get
+            {
+                return this.transTypeReqField;
+            }
+            set
+            {
+                this.transTypeReqField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string acquirerBIN
+        {
+            get
+            {
+                return this.acquirerBINField;
+            }
+            set
+            {
+                this.acquirerBINField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string acquirerMerchantID
+        {
+            get
+            {
+                return this.acquirerMerchantIDField;
+            }
+            set
+            {
+                this.acquirerMerchantIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string exemption
+        {
+            get
+            {
+                return this.exemptionField;
+            }
+            set
+            {
+                this.exemptionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public BuyerDetails buyerDetails
+        {
+            get
+            {
+                return this.buyerDetailsField;
+            }
+            set
+            {
+                this.buyerDetailsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public MerchantRiskIndicator merchantRiskIndicator
+        {
+            get
+            {
+                return this.merchantRiskIndicatorField;
+            }
+            set
+            {
+                this.merchantRiskIndicatorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string SDKDetails
+        {
+            get
+            {
+                return this.sDKDetailsField;
+            }
+            set
+            {
+                this.sDKDetailsField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ThreeDSAuthResult
+    {
+        
+        private string authenticationLevelField;
+        
+        private string authenticationStatusField;
+        
+        private string xIDField;
+        
+        private string avField;
+        
+        private string eCIField;
+        
+        private string aVAlgorithmField;
+        
+        private string threeDsVersionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string authenticationLevel
+        {
+            get
+            {
+                return this.authenticationLevelField;
+            }
+            set
+            {
+                this.authenticationLevelField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string authenticationStatus
+        {
+            get
+            {
+                return this.authenticationStatusField;
+            }
+            set
+            {
+                this.authenticationStatusField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string XID
+        {
+            get
+            {
+                return this.xIDField;
+            }
+            set
+            {
+                this.xIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string AV
+        {
+            get
+            {
+                return this.avField;
+            }
+            set
+            {
+                this.avField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string ECI
+        {
+            get
+            {
+                return this.eCIField;
+            }
+            set
+            {
+                this.eCIField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string AVAlgorithm
+        {
+            get
+            {
+                return this.aVAlgorithmField;
+            }
+            set
+            {
+                this.aVAlgorithmField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string threeDsVersion
+        {
+            get
+            {
+                return this.threeDsVersionField;
+            }
+            set
+            {
+                this.threeDsVersionField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class TransDetails
+    {
+        
+        private string typeField;
+        
+        private ThreeDSAuthResult threeDSAuthResultField;
+        
+        private ThreeDsContainer threeDsContainerField;
+        
+        private RecurringTransaction recurringTransactionField;
+        
+        private PreviousTransDetails previousTransDetailsField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string type
+        {
+            get
+            {
+                return this.typeField;
+            }
+            set
+            {
+                this.typeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public ThreeDSAuthResult threeDSAuthResult
+        {
+            get
+            {
+                return this.threeDSAuthResultField;
+            }
+            set
+            {
+                this.threeDSAuthResultField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public ThreeDsContainer threeDsContainer
+        {
+            get
+            {
+                return this.threeDsContainerField;
+            }
+            set
+            {
+                this.threeDsContainerField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public RecurringTransaction recurringTransaction
+        {
+            get
+            {
+                return this.recurringTransactionField;
+            }
+            set
+            {
+                this.recurringTransactionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public PreviousTransDetails previousTransDetails
+        {
+            get
+            {
+                return this.previousTransDetailsField;
+            }
+            set
+            {
+                this.previousTransDetailsField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class PassengerDetail
+    {
+        
+        private string firstNameField;
+        
+        private string lastNameField;
+        
+        private string dateOfBirthField;
+        
+        private string nationalityCodeField;
+        
+        private string insuranceTypeField;
+        
+        private string insurancePriceField;
+        
+        private string documentNumberField;
+        
+        private string documentTypeField;
+        
+        private string documentIssueDateField;
+        
+        private string documentExpirationDateField;
+        
+        private string passengerTypeField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string FirstName
+        {
+            get
+            {
+                return this.firstNameField;
+            }
+            set
+            {
+                this.firstNameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string LastName
+        {
+            get
+            {
+                return this.lastNameField;
+            }
+            set
+            {
+                this.lastNameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string DateOfBirth
+        {
+            get
+            {
+                return this.dateOfBirthField;
+            }
+            set
+            {
+                this.dateOfBirthField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string NationalityCode
+        {
+            get
+            {
+                return this.nationalityCodeField;
+            }
+            set
+            {
+                this.nationalityCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string InsuranceType
+        {
+            get
+            {
+                return this.insuranceTypeField;
+            }
+            set
+            {
+                this.insuranceTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string InsurancePrice
+        {
+            get
+            {
+                return this.insurancePriceField;
+            }
+            set
+            {
+                this.insurancePriceField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string DocumentNumber
+        {
+            get
+            {
+                return this.documentNumberField;
+            }
+            set
+            {
+                this.documentNumberField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string DocumentType
+        {
+            get
+            {
+                return this.documentTypeField;
+            }
+            set
+            {
+                this.documentTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string DocumentIssueDate
+        {
+            get
+            {
+                return this.documentIssueDateField;
+            }
+            set
+            {
+                this.documentIssueDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public string DocumentExpirationDate
+        {
+            get
+            {
+                return this.documentExpirationDateField;
+            }
+            set
+            {
+                this.documentExpirationDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public string PassengerType
+        {
+            get
+            {
+                return this.passengerTypeField;
+            }
+            set
+            {
+                this.passengerTypeField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class TravelTicketDetail
+    {
+        
+        private string arrivalCityField;
+        
+        private string arrivalCountryCodeField;
+        
+        private string arrivalDateField;
+        
+        private string arrivalPortCodeField;
+        
+        private string carrierCodeField;
+        
+        private string carrierNameField;
+        
+        private string departureCityField;
+        
+        private string departureCountryCodeField;
+        
+        private string departureDateField;
+        
+        private string departurePortCodeField;
+        
+        private string legIdField;
+        
+        private string legIndexField;
+        
+        private string routeIndexField;
+        
+        private string ticketClassField;
+        
+        private string priceField;
+        
+        private string quantityField;
+        
+        private string titleField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string ArrivalCity
+        {
+            get
+            {
+                return this.arrivalCityField;
+            }
+            set
+            {
+                this.arrivalCityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string ArrivalCountryCode
+        {
+            get
+            {
+                return this.arrivalCountryCodeField;
+            }
+            set
+            {
+                this.arrivalCountryCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string ArrivalDate
+        {
+            get
+            {
+                return this.arrivalDateField;
+            }
+            set
+            {
+                this.arrivalDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string ArrivalPortCode
+        {
+            get
+            {
+                return this.arrivalPortCodeField;
+            }
+            set
+            {
+                this.arrivalPortCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string CarrierCode
+        {
+            get
+            {
+                return this.carrierCodeField;
+            }
+            set
+            {
+                this.carrierCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string CarrierName
+        {
+            get
+            {
+                return this.carrierNameField;
+            }
+            set
+            {
+                this.carrierNameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string DepartureCity
+        {
+            get
+            {
+                return this.departureCityField;
+            }
+            set
+            {
+                this.departureCityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string DepartureCountryCode
+        {
+            get
+            {
+                return this.departureCountryCodeField;
+            }
+            set
+            {
+                this.departureCountryCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string DepartureDate
+        {
+            get
+            {
+                return this.departureDateField;
+            }
+            set
+            {
+                this.departureDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public string DeparturePortCode
+        {
+            get
+            {
+                return this.departurePortCodeField;
+            }
+            set
+            {
+                this.departurePortCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public string LegId
+        {
+            get
+            {
+                return this.legIdField;
+            }
+            set
+            {
+                this.legIdField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public string LegIndex
+        {
+            get
+            {
+                return this.legIndexField;
+            }
+            set
+            {
+                this.legIndexField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public string RouteIndex
+        {
+            get
+            {
+                return this.routeIndexField;
+            }
+            set
+            {
+                this.routeIndexField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public string TicketClass
+        {
+            get
+            {
+                return this.ticketClassField;
+            }
+            set
+            {
+                this.ticketClassField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public string Price
+        {
+            get
+            {
+                return this.priceField;
+            }
+            set
+            {
+                this.priceField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public string Quantity
+        {
+            get
+            {
+                return this.quantityField;
+            }
+            set
+            {
+                this.quantityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public string Title
+        {
+            get
+            {
+                return this.titleField;
+            }
+            set
+            {
+                this.titleField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class AccommodationDetail
+    {
+        
+        private string cityField;
+        
+        private string countryCodeField;
+        
+        private string titleField;
+        
+        private string checkInDateField;
+        
+        private string checkOutDateField;
+        
+        private string productIdField;
+        
+        private string ratingField;
+        
+        private string numberOfGuestsField;
+        
+        private string accommodationTypeField;
+        
+        private string roomTypeField;
+        
+        private string priceField;
+        
+        private string quantityField;
+        
+        private string cancellationPolicyField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string City
+        {
+            get
+            {
+                return this.cityField;
+            }
+            set
+            {
+                this.cityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string CountryCode
+        {
+            get
+            {
+                return this.countryCodeField;
+            }
+            set
+            {
+                this.countryCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string Title
+        {
+            get
+            {
+                return this.titleField;
+            }
+            set
+            {
+                this.titleField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string CheckInDate
+        {
+            get
+            {
+                return this.checkInDateField;
+            }
+            set
+            {
+                this.checkInDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string CheckOutDate
+        {
+            get
+            {
+                return this.checkOutDateField;
+            }
+            set
+            {
+                this.checkOutDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string ProductId
+        {
+            get
+            {
+                return this.productIdField;
+            }
+            set
+            {
+                this.productIdField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string Rating
+        {
+            get
+            {
+                return this.ratingField;
+            }
+            set
+            {
+                this.ratingField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string NumberOfGuests
+        {
+            get
+            {
+                return this.numberOfGuestsField;
+            }
+            set
+            {
+                this.numberOfGuestsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string AccommodationType
+        {
+            get
+            {
+                return this.accommodationTypeField;
+            }
+            set
+            {
+                this.accommodationTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public string RoomType
+        {
+            get
+            {
+                return this.roomTypeField;
+            }
+            set
+            {
+                this.roomTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public string Price
+        {
+            get
+            {
+                return this.priceField;
+            }
+            set
+            {
+                this.priceField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public string Quantity
+        {
+            get
+            {
+                return this.quantityField;
+            }
+            set
+            {
+                this.quantityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public string CancellationPolicy
+        {
+            get
+            {
+                return this.cancellationPolicyField;
+            }
+            set
+            {
+                this.cancellationPolicyField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ShippingLine
+    {
+        
+        private string priceField;
+        
+        private string titleField;
+        
+        private string codeField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string Price
+        {
+            get
+            {
+                return this.priceField;
+            }
+            set
+            {
+                this.priceField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string Title
+        {
+            get
+            {
+                return this.titleField;
+            }
+            set
+            {
+                this.titleField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string Code
+        {
+            get
+            {
+                return this.codeField;
+            }
+            set
+            {
+                this.codeField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class DiscountCode
+    {
+        
+        private string amountField;
+        
+        private string codeField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string Amount
+        {
+            get
+            {
+                return this.amountField;
+            }
+            set
+            {
+                this.amountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string Code
+        {
+            get
+            {
+                return this.codeField;
+            }
+            set
+            {
+                this.codeField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class BillingAddress
     {
         
@@ -2948,7 +3224,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ShippingAddress
     {
         
@@ -3228,7 +3504,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class CustomerSocial
     {
         
@@ -3444,7 +3720,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class CustomerDetail
     {
         
@@ -3724,7 +4000,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class FraudPrevention
     {
         
@@ -3860,7 +4136,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class EcommGestpayPaymentDetails
     {
         
@@ -4028,423 +4304,23 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class ConselCustomerInfo
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class TokenizationData
     {
         
-        private string surnameField;
-        
-        private string nameField;
-        
-        private string taxationCodeField;
-        
-        private string addressField;
-        
-        private string cityField;
-        
-        private string stateCodeField;
-        
-        private string dateAddressField;
-        
-        private string phoneField;
-        
-        private string mobilePhoneField;
-        
-        private string municipalCodeField;
-        
-        private string stateBirthDateField;
-        
-        private string birthDateField;
-        
-        private string mailField;
-        
-        private string municipalDocumentCodeField;
-        
-        private string employmentField;
-        
-        private string workingAddressField;
-        
-        private string municipalWorkingCodeField;
-        
-        private string documentStateField;
-        
-        private string documentNumberField;
-        
-        private string municipalBirthCodeField;
-        
-        private string visaExpiryDateField;
-        
-        private string ibanField;
-        
-        private string documentDateField;
-        
-        private string workingTelNumberField;
-        
-        private string workingStateField;
-        
-        private string monthlyPayField;
+        private string tokenField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Surname
+        public string token
         {
             get
             {
-                return this.surnameField;
+                return this.tokenField;
             }
             set
             {
-                this.surnameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string TaxationCode
-        {
-            get
-            {
-                return this.taxationCodeField;
-            }
-            set
-            {
-                this.taxationCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string Address
-        {
-            get
-            {
-                return this.addressField;
-            }
-            set
-            {
-                this.addressField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string City
-        {
-            get
-            {
-                return this.cityField;
-            }
-            set
-            {
-                this.cityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string StateCode
-        {
-            get
-            {
-                return this.stateCodeField;
-            }
-            set
-            {
-                this.stateCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string DateAddress
-        {
-            get
-            {
-                return this.dateAddressField;
-            }
-            set
-            {
-                this.dateAddressField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string Phone
-        {
-            get
-            {
-                return this.phoneField;
-            }
-            set
-            {
-                this.phoneField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public string MobilePhone
-        {
-            get
-            {
-                return this.mobilePhoneField;
-            }
-            set
-            {
-                this.mobilePhoneField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public string MunicipalCode
-        {
-            get
-            {
-                return this.municipalCodeField;
-            }
-            set
-            {
-                this.municipalCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public string StateBirthDate
-        {
-            get
-            {
-                return this.stateBirthDateField;
-            }
-            set
-            {
-                this.stateBirthDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public string BirthDate
-        {
-            get
-            {
-                return this.birthDateField;
-            }
-            set
-            {
-                this.birthDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public string Mail
-        {
-            get
-            {
-                return this.mailField;
-            }
-            set
-            {
-                this.mailField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public string MunicipalDocumentCode
-        {
-            get
-            {
-                return this.municipalDocumentCodeField;
-            }
-            set
-            {
-                this.municipalDocumentCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public string Employment
-        {
-            get
-            {
-                return this.employmentField;
-            }
-            set
-            {
-                this.employmentField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public string WorkingAddress
-        {
-            get
-            {
-                return this.workingAddressField;
-            }
-            set
-            {
-                this.workingAddressField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
-        public string MunicipalWorkingCode
-        {
-            get
-            {
-                return this.municipalWorkingCodeField;
-            }
-            set
-            {
-                this.municipalWorkingCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
-        public string DocumentState
-        {
-            get
-            {
-                return this.documentStateField;
-            }
-            set
-            {
-                this.documentStateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
-        public string DocumentNumber
-        {
-            get
-            {
-                return this.documentNumberField;
-            }
-            set
-            {
-                this.documentNumberField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
-        public string MunicipalBirthCode
-        {
-            get
-            {
-                return this.municipalBirthCodeField;
-            }
-            set
-            {
-                this.municipalBirthCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
-        public string VisaExpiryDate
-        {
-            get
-            {
-                return this.visaExpiryDateField;
-            }
-            set
-            {
-                this.visaExpiryDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=21)]
-        public string Iban
-        {
-            get
-            {
-                return this.ibanField;
-            }
-            set
-            {
-                this.ibanField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=22)]
-        public string DocumentDate
-        {
-            get
-            {
-                return this.documentDateField;
-            }
-            set
-            {
-                this.documentDateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=23)]
-        public string WorkingTelNumber
-        {
-            get
-            {
-                return this.workingTelNumberField;
-            }
-            set
-            {
-                this.workingTelNumberField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=24)]
-        public string WorkingState
-        {
-            get
-            {
-                return this.workingStateField;
-            }
-            set
-            {
-                this.workingStateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=25)]
-        public string MonthlyPay
-        {
-            get
-            {
-                return this.monthlyPayField;
-            }
-            set
-            {
-                this.monthlyPayField = value;
+                this.tokenField = value;
             }
         }
     }
@@ -4452,7 +4328,287 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class GooglePayRequest
+    {
+        
+        private TokenizationData tokenizationDataField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public TokenizationData tokenizationData
+        {
+            get
+            {
+                return this.tokenizationDataField;
+            }
+            set
+            {
+                this.tokenizationDataField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class CardData
+    {
+        
+        private string track1Field;
+        
+        private string track2Field;
+        
+        private string cardHolderNameField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string track1
+        {
+            get
+            {
+                return this.track1Field;
+            }
+            set
+            {
+                this.track1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string track2
+        {
+            get
+            {
+                return this.track2Field;
+            }
+            set
+            {
+                this.track2Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string cardHolderName
+        {
+            get
+            {
+                return this.cardHolderNameField;
+            }
+            set
+            {
+                this.cardHolderNameField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class DeviceProvidedInfo
+    {
+        
+        private string deviceIDField;
+        
+        private string ksnField;
+        
+        private CardData cardDataField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string deviceID
+        {
+            get
+            {
+                return this.deviceIDField;
+            }
+            set
+            {
+                this.deviceIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string ksn
+        {
+            get
+            {
+                return this.ksnField;
+            }
+            set
+            {
+                this.ksnField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public CardData cardData
+        {
+            get
+            {
+                return this.cardDataField;
+            }
+            set
+            {
+                this.cardDataField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class CardReaderPayments
+    {
+        
+        private string deviceNameField;
+        
+        private DeviceProvidedInfo deviceProvidedInfoField;
+        
+        private string buyerSignatureField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string deviceName
+        {
+            get
+            {
+                return this.deviceNameField;
+            }
+            set
+            {
+                this.deviceNameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DeviceProvidedInfo deviceProvidedInfo
+        {
+            get
+            {
+                return this.deviceProvidedInfoField;
+            }
+            set
+            {
+                this.deviceProvidedInfoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string buyerSignature
+        {
+            get
+            {
+                return this.buyerSignatureField;
+            }
+            set
+            {
+                this.buyerSignatureField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ApplePayRequest
+    {
+        
+        private string applePayPKPaymentTokenField;
+        
+        private string onlinePaymentCryptogramField;
+        
+        private string eciIndicatorField;
+        
+        private string requestTokenField;
+        
+        private string tokenField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string applePayPKPaymentToken
+        {
+            get
+            {
+                return this.applePayPKPaymentTokenField;
+            }
+            set
+            {
+                this.applePayPKPaymentTokenField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string onlinePaymentCryptogram
+        {
+            get
+            {
+                return this.onlinePaymentCryptogramField;
+            }
+            set
+            {
+                this.onlinePaymentCryptogramField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string eciIndicator
+        {
+            get
+            {
+                return this.eciIndicatorField;
+            }
+            set
+            {
+                this.eciIndicatorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string requestToken
+        {
+            get
+            {
+                return this.requestTokenField;
+            }
+            set
+            {
+                this.requestTokenField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string token
+        {
+            get
+            {
+                return this.tokenField;
+            }
+            set
+            {
+                this.tokenField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedItem
     {
         
@@ -4620,7 +4776,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedItems
     {
         
@@ -4660,7 +4816,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedCustomerData
     {
         
@@ -4764,7 +4920,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedBillingInfo
     {
         
@@ -4996,7 +5152,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedShippingInfo
     {
         
@@ -5212,7 +5368,7 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedCustomerInfo
     {
         
@@ -5396,39 +5552,143 @@ namespace GestPayServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomm.sella.it/")]
-    public partial class PaymentTypeDetail
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ShippingDetails
     {
         
-        private string myBankBankCodeField;
+        private string shipToNameField;
         
-        private string idealBankCodeField;
+        private string shipToStreetField;
+        
+        private string shipToCityField;
+        
+        private string shipToStateField;
+        
+        private string shipToCountryCodeField;
+        
+        private string shipToZipField;
+        
+        private string shipToStreet2Field;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string MyBankBankCode
+        public string shipToName
         {
             get
             {
-                return this.myBankBankCodeField;
+                return this.shipToNameField;
             }
             set
             {
-                this.myBankBankCodeField = value;
+                this.shipToNameField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string IdealBankCode
+        public string shipToStreet
         {
             get
             {
-                return this.idealBankCodeField;
+                return this.shipToStreetField;
             }
             set
             {
-                this.idealBankCodeField = value;
+                this.shipToStreetField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string shipToCity
+        {
+            get
+            {
+                return this.shipToCityField;
+            }
+            set
+            {
+                this.shipToCityField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string shipToState
+        {
+            get
+            {
+                return this.shipToStateField;
+            }
+            set
+            {
+                this.shipToStateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string shipToCountryCode
+        {
+            get
+            {
+                return this.shipToCountryCodeField;
+            }
+            set
+            {
+                this.shipToCountryCodeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string shipToZip
+        {
+            get
+            {
+                return this.shipToZipField;
+            }
+            set
+            {
+                this.shipToZipField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string shipToStreet2
+        {
+            get
+            {
+                return this.shipToStreet2Field;
+            }
+            set
+            {
+                this.shipToStreet2Field = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class PaymentDeviceDetails
+    {
+        
+        private string terminalIdField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string TerminalId
+        {
+            get
+            {
+                return this.terminalIdField;
+            }
+            set
+            {
+                this.terminalIdField = value;
             }
         }
     }
@@ -5436,118 +5696,211 @@ namespace GestPayServiceReference
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Encrypt", WrapperNamespace="https://ecomm.sella.it/", IsWrapped=true)]
-    public partial class EncryptRequest
+    [System.ServiceModel.MessageContractAttribute(WrapperName="callRefundS2S", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
+    public partial class callRefundS2SRequest
     {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=0)]
         public string shopLogin;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=1)]
         public string uicCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=2)]
         public string amount;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=3)]
         public string shopTransactionId;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=4)]
-        public string cardNumber;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=4)]
+        public string bankTransactionId;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=5)]
-        public string expiryMonth;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public GestPayWsS2SServiceReferenceTest.RefundProductDetail OrderDetail;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=6)]
-        public string expiryYear;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=6)]
+        public string RefundReason;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=7)]
-        public string buyerName;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=7)]
+        public string chargeBackFraud;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=8)]
-        public string buyerEmail;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=9)]
-        public string languageId;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=10)]
-        public string cvv;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=11)]
-        public string customInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=12)]
-        public string requestToken;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=13)]
-        public string ppSellerProtection;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=14)]
-        public string transKey;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=15)]
-        public GestPayServiceReference.ShippingDetails shippingDetails;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=16)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("paymentType", IsNullable=false)]
-        public string[] paymentTypes;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=17)]
-        public GestPayServiceReference.PaymentTypeDetail paymentTypeDetail;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=18)]
-        public string redFraudPrevention;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=19)]
-        public GestPayServiceReference.RedCustomerInfo Red_CustomerInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=20)]
-        public GestPayServiceReference.RedShippingInfo Red_ShippingInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=21)]
-        public GestPayServiceReference.RedBillingInfo Red_BillingInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=22)]
-        public GestPayServiceReference.RedCustomerData Red_CustomerData;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=23)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("UserCustomData", IsNullable=false)]
-        public string[] Red_CustomInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=24)]
-        public GestPayServiceReference.RedItems Red_Items;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=25)]
-        public string Consel_MerchantPro;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=26)]
-        public GestPayServiceReference.ConselCustomerInfo Consel_CustomerInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=27)]
-        public string payPalBillingAgreementDescription;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=28)]
-        public string amazonPayBillingAgreementDescription;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=29)]
-        public GestPayServiceReference.EcommGestpayPaymentDetails OrderDetails;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=30)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=8)]
         public string apikey;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=31)]
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public GestPayServiceReference.ThreeDSEncryptTransDetails transDetails;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=9)]
+        public GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails;
         
-        public EncryptRequest()
+        public callRefundS2SRequest()
         {
         }
         
-        public EncryptRequest(
+        public callRefundS2SRequest(string shopLogin, string uicCode, string amount, string shopTransactionId, string bankTransactionId, GestPayWsS2SServiceReferenceTest.RefundProductDetail OrderDetail, string RefundReason, string chargeBackFraud, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails)
+        {
+            this.shopLogin = shopLogin;
+            this.uicCode = uicCode;
+            this.amount = amount;
+            this.shopTransactionId = shopTransactionId;
+            this.bankTransactionId = bankTransactionId;
+            this.OrderDetail = OrderDetail;
+            this.RefundReason = RefundReason;
+            this.chargeBackFraud = chargeBackFraud;
+            this.apikey = apikey;
+            this.paymentDeviceDetails = paymentDeviceDetails;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="callRefundS2SResponse", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
+    public partial class callRefundS2SResponse
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=0)]
+        public System.Xml.XmlNode callRefundS2SResult;
+        
+        public callRefundS2SResponse()
+        {
+        }
+        
+        public callRefundS2SResponse(System.Xml.XmlNode callRefundS2SResult)
+        {
+            this.callRefundS2SResult = callRefundS2SResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="callPagamS2S", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
+    public partial class callPagamS2SRequest
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=0)]
+        public string shopLogin;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=1)]
+        public string uicCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=2)]
+        public string amount;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=3)]
+        public string shopTransactionId;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=4)]
+        public string cardNumber;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=5)]
+        public string expiryMonth;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=6)]
+        public string expiryYear;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=7)]
+        public string buyerName;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=8)]
+        public string buyerEmail;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=9)]
+        public string languageId;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=10)]
+        public string cvv;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=11)]
+        public string min;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=12)]
+        public string transKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=13)]
+        public string PARes;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=14)]
+        public string customInfo;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=15)]
+        public string IDEA;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=16)]
+        public string requestToken;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=17)]
+        public string tokenValue;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=18)]
+        public string clientIP;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=19)]
+        public string itemType;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=20)]
+        public string recurrent;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=21)]
+        public string subMerchantId;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=22)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("paymentType", IsNullable=false)]
+        public string[] paymentTypes;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=23)]
+        public GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=24)]
+        public GestPayWsS2SServiceReferenceTest.ShippingDetails shippingDetails;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=25)]
+        public string redFraudPrevention;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=26)]
+        public GestPayWsS2SServiceReferenceTest.RedCustomerInfo Red_CustomerInfo;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=27)]
+        public GestPayWsS2SServiceReferenceTest.RedShippingInfo Red_ShippingInfo;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=28)]
+        public GestPayWsS2SServiceReferenceTest.RedBillingInfo Red_BillingInfo;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=29)]
+        public GestPayWsS2SServiceReferenceTest.RedCustomerData Red_CustomerData;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=30)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("UserCustomData", IsNullable=false)]
+        public string[] Red_CustomInfo;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=31)]
+        public GestPayWsS2SServiceReferenceTest.RedItems Red_Items;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=32)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public GestPayWsS2SServiceReferenceTest.ApplePayRequest applePay;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=33)]
+        public GestPayWsS2SServiceReferenceTest.CardReaderPayments cardReaderPayments;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=34)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public GestPayWsS2SServiceReferenceTest.GooglePayRequest googlePay;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=35)]
+        public GestPayWsS2SServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=36)]
+        public string apikey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=37)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public GestPayWsS2SServiceReferenceTest.TransDetails transDetails;
+        
+        public callPagamS2SRequest()
+        {
+        }
+        
+        public callPagamS2SRequest(
                     string shopLogin, 
                     string uicCode, 
                     string amount, 
@@ -5559,27 +5912,33 @@ namespace GestPayServiceReference
                     string buyerEmail, 
                     string languageId, 
                     string cvv, 
-                    string customInfo, 
-                    string requestToken, 
-                    string ppSellerProtection, 
+                    string min, 
                     string transKey, 
-                    GestPayServiceReference.ShippingDetails shippingDetails, 
+                    string PARes, 
+                    string customInfo, 
+                    string IDEA, 
+                    string requestToken, 
+                    string tokenValue, 
+                    string clientIP, 
+                    string itemType, 
+                    string recurrent, 
+                    string subMerchantId, 
                     string[] paymentTypes, 
-                    GestPayServiceReference.PaymentTypeDetail paymentTypeDetail, 
+                    GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails, 
+                    GestPayWsS2SServiceReferenceTest.ShippingDetails shippingDetails, 
                     string redFraudPrevention, 
-                    GestPayServiceReference.RedCustomerInfo Red_CustomerInfo, 
-                    GestPayServiceReference.RedShippingInfo Red_ShippingInfo, 
-                    GestPayServiceReference.RedBillingInfo Red_BillingInfo, 
-                    GestPayServiceReference.RedCustomerData Red_CustomerData, 
+                    GestPayWsS2SServiceReferenceTest.RedCustomerInfo Red_CustomerInfo, 
+                    GestPayWsS2SServiceReferenceTest.RedShippingInfo Red_ShippingInfo, 
+                    GestPayWsS2SServiceReferenceTest.RedBillingInfo Red_BillingInfo, 
+                    GestPayWsS2SServiceReferenceTest.RedCustomerData Red_CustomerData, 
                     string[] Red_CustomInfo, 
-                    GestPayServiceReference.RedItems Red_Items, 
-                    string Consel_MerchantPro, 
-                    GestPayServiceReference.ConselCustomerInfo Consel_CustomerInfo, 
-                    string payPalBillingAgreementDescription, 
-                    string amazonPayBillingAgreementDescription, 
-                    GestPayServiceReference.EcommGestpayPaymentDetails OrderDetails, 
+                    GestPayWsS2SServiceReferenceTest.RedItems Red_Items, 
+                    GestPayWsS2SServiceReferenceTest.ApplePayRequest applePay, 
+                    GestPayWsS2SServiceReferenceTest.CardReaderPayments cardReaderPayments, 
+                    GestPayWsS2SServiceReferenceTest.GooglePayRequest googlePay, 
+                    GestPayWsS2SServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails, 
                     string apikey, 
-                    GestPayServiceReference.ThreeDSEncryptTransDetails transDetails)
+                    GestPayWsS2SServiceReferenceTest.TransDetails transDetails)
         {
             this.shopLogin = shopLogin;
             this.uicCode = uicCode;
@@ -5592,13 +5951,20 @@ namespace GestPayServiceReference
             this.buyerEmail = buyerEmail;
             this.languageId = languageId;
             this.cvv = cvv;
-            this.customInfo = customInfo;
-            this.requestToken = requestToken;
-            this.ppSellerProtection = ppSellerProtection;
+            this.min = min;
             this.transKey = transKey;
-            this.shippingDetails = shippingDetails;
+            this.PARes = PARes;
+            this.customInfo = customInfo;
+            this.IDEA = IDEA;
+            this.requestToken = requestToken;
+            this.tokenValue = tokenValue;
+            this.clientIP = clientIP;
+            this.itemType = itemType;
+            this.recurrent = recurrent;
+            this.subMerchantId = subMerchantId;
             this.paymentTypes = paymentTypes;
-            this.paymentTypeDetail = paymentTypeDetail;
+            this.paymentDeviceDetails = paymentDeviceDetails;
+            this.shippingDetails = shippingDetails;
             this.redFraudPrevention = redFraudPrevention;
             this.Red_CustomerInfo = Red_CustomerInfo;
             this.Red_ShippingInfo = Red_ShippingInfo;
@@ -5606,10 +5972,9 @@ namespace GestPayServiceReference
             this.Red_CustomerData = Red_CustomerData;
             this.Red_CustomInfo = Red_CustomInfo;
             this.Red_Items = Red_Items;
-            this.Consel_MerchantPro = Consel_MerchantPro;
-            this.Consel_CustomerInfo = Consel_CustomerInfo;
-            this.payPalBillingAgreementDescription = payPalBillingAgreementDescription;
-            this.amazonPayBillingAgreementDescription = amazonPayBillingAgreementDescription;
+            this.applePay = applePay;
+            this.cardReaderPayments = cardReaderPayments;
+            this.googlePay = googlePay;
             this.OrderDetails = OrderDetails;
             this.apikey = apikey;
             this.transDetails = transDetails;
@@ -5619,31 +5984,31 @@ namespace GestPayServiceReference
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="EncryptResponse", WrapperNamespace="https://ecomm.sella.it/", IsWrapped=true)]
-    public partial class EncryptResponse
+    [System.ServiceModel.MessageContractAttribute(WrapperName="callPagamS2SResponse", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
+    public partial class callPagamS2SResponse
     {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomm.sella.it/", Order=0)]
-        public System.Xml.XmlNode EncryptResult;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=0)]
+        public System.Xml.XmlNode callPagamS2SResult;
         
-        public EncryptResponse()
+        public callPagamS2SResponse()
         {
         }
         
-        public EncryptResponse(System.Xml.XmlNode EncryptResult)
+        public callPagamS2SResponse(System.Xml.XmlNode callPagamS2SResult)
         {
-            this.EncryptResult = EncryptResult;
+            this.callPagamS2SResult = callPagamS2SResult;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    public interface WSCryptDecryptSoapChannel : GestPayServiceReference.WSCryptDecryptSoap, System.ServiceModel.IClientChannel
+    public interface WSs2sSoapChannel : GestPayWsS2SServiceReferenceTest.WSs2sSoap, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
-    public partial class WSCryptDecryptSoapClient : System.ServiceModel.ClientBase<GestPayServiceReference.WSCryptDecryptSoap>, GestPayServiceReference.WSCryptDecryptSoap
+    public partial class WSs2sSoapClient : System.ServiceModel.ClientBase<GestPayWsS2SServiceReferenceTest.WSs2sSoap>, GestPayWsS2SServiceReferenceTest.WSs2sSoap
     {
         
         /// <summary>
@@ -5653,39 +6018,66 @@ namespace GestPayServiceReference
         /// <param name="clientCredentials">Credenziali del client</param>
         static partial void ConfigureEndpoint(System.ServiceModel.Description.ServiceEndpoint serviceEndpoint, System.ServiceModel.Description.ClientCredentials clientCredentials);
         
-        public WSCryptDecryptSoapClient(EndpointConfiguration endpointConfiguration) : 
-                base(WSCryptDecryptSoapClient.GetBindingForEndpoint(endpointConfiguration), WSCryptDecryptSoapClient.GetEndpointAddress(endpointConfiguration))
+        public WSs2sSoapClient(EndpointConfiguration endpointConfiguration) : 
+                base(WSs2sSoapClient.GetBindingForEndpoint(endpointConfiguration), WSs2sSoapClient.GetEndpointAddress(endpointConfiguration))
         {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
         
-        public WSCryptDecryptSoapClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
-                base(WSCryptDecryptSoapClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
+        public WSs2sSoapClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
+                base(WSs2sSoapClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
         {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
         
-        public WSCryptDecryptSoapClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(WSCryptDecryptSoapClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
+        public WSs2sSoapClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(WSs2sSoapClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
         {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
         
-        public WSCryptDecryptSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public WSs2sSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress)
         {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<GestPayServiceReference.EncryptResponse> GestPayServiceReference.WSCryptDecryptSoap.EncryptAsync(GestPayServiceReference.EncryptRequest request)
+        System.Threading.Tasks.Task<GestPayWsS2SServiceReferenceTest.callRefundS2SResponse> GestPayWsS2SServiceReferenceTest.WSs2sSoap.callRefundS2SAsync(GestPayWsS2SServiceReferenceTest.callRefundS2SRequest request)
         {
-            return base.Channel.EncryptAsync(request);
+            return base.Channel.callRefundS2SAsync(request);
         }
         
-        public System.Threading.Tasks.Task<GestPayServiceReference.EncryptResponse> EncryptAsync(
+        public System.Threading.Tasks.Task<GestPayWsS2SServiceReferenceTest.callRefundS2SResponse> callRefundS2SAsync(string shopLogin, string uicCode, string amount, string shopTransactionId, string bankTransactionId, GestPayWsS2SServiceReferenceTest.RefundProductDetail OrderDetail, string RefundReason, string chargeBackFraud, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails)
+        {
+            GestPayWsS2SServiceReferenceTest.callRefundS2SRequest inValue = new GestPayWsS2SServiceReferenceTest.callRefundS2SRequest();
+            inValue.shopLogin = shopLogin;
+            inValue.uicCode = uicCode;
+            inValue.amount = amount;
+            inValue.shopTransactionId = shopTransactionId;
+            inValue.bankTransactionId = bankTransactionId;
+            inValue.OrderDetail = OrderDetail;
+            inValue.RefundReason = RefundReason;
+            inValue.chargeBackFraud = chargeBackFraud;
+            inValue.apikey = apikey;
+            inValue.paymentDeviceDetails = paymentDeviceDetails;
+            return ((GestPayWsS2SServiceReferenceTest.WSs2sSoap)(this)).callRefundS2SAsync(inValue);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callReadTrxS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails)
+        {
+            return base.Channel.callReadTrxS2SAsync(shopLogin, shopTransactionId, bankTransactionId, apikey, paymentDeviceDetails);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<GestPayWsS2SServiceReferenceTest.callPagamS2SResponse> GestPayWsS2SServiceReferenceTest.WSs2sSoap.callPagamS2SAsync(GestPayWsS2SServiceReferenceTest.callPagamS2SRequest request)
+        {
+            return base.Channel.callPagamS2SAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<GestPayWsS2SServiceReferenceTest.callPagamS2SResponse> callPagamS2SAsync(
                     string shopLogin, 
                     string uicCode, 
                     string amount, 
@@ -5697,29 +6089,35 @@ namespace GestPayServiceReference
                     string buyerEmail, 
                     string languageId, 
                     string cvv, 
-                    string customInfo, 
-                    string requestToken, 
-                    string ppSellerProtection, 
+                    string min, 
                     string transKey, 
-                    GestPayServiceReference.ShippingDetails shippingDetails, 
+                    string PARes, 
+                    string customInfo, 
+                    string IDEA, 
+                    string requestToken, 
+                    string tokenValue, 
+                    string clientIP, 
+                    string itemType, 
+                    string recurrent, 
+                    string subMerchantId, 
                     string[] paymentTypes, 
-                    GestPayServiceReference.PaymentTypeDetail paymentTypeDetail, 
+                    GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails, 
+                    GestPayWsS2SServiceReferenceTest.ShippingDetails shippingDetails, 
                     string redFraudPrevention, 
-                    GestPayServiceReference.RedCustomerInfo Red_CustomerInfo, 
-                    GestPayServiceReference.RedShippingInfo Red_ShippingInfo, 
-                    GestPayServiceReference.RedBillingInfo Red_BillingInfo, 
-                    GestPayServiceReference.RedCustomerData Red_CustomerData, 
+                    GestPayWsS2SServiceReferenceTest.RedCustomerInfo Red_CustomerInfo, 
+                    GestPayWsS2SServiceReferenceTest.RedShippingInfo Red_ShippingInfo, 
+                    GestPayWsS2SServiceReferenceTest.RedBillingInfo Red_BillingInfo, 
+                    GestPayWsS2SServiceReferenceTest.RedCustomerData Red_CustomerData, 
                     string[] Red_CustomInfo, 
-                    GestPayServiceReference.RedItems Red_Items, 
-                    string Consel_MerchantPro, 
-                    GestPayServiceReference.ConselCustomerInfo Consel_CustomerInfo, 
-                    string payPalBillingAgreementDescription, 
-                    string amazonPayBillingAgreementDescription, 
-                    GestPayServiceReference.EcommGestpayPaymentDetails OrderDetails, 
+                    GestPayWsS2SServiceReferenceTest.RedItems Red_Items, 
+                    GestPayWsS2SServiceReferenceTest.ApplePayRequest applePay, 
+                    GestPayWsS2SServiceReferenceTest.CardReaderPayments cardReaderPayments, 
+                    GestPayWsS2SServiceReferenceTest.GooglePayRequest googlePay, 
+                    GestPayWsS2SServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails, 
                     string apikey, 
-                    GestPayServiceReference.ThreeDSEncryptTransDetails transDetails)
+                    GestPayWsS2SServiceReferenceTest.TransDetails transDetails)
         {
-            GestPayServiceReference.EncryptRequest inValue = new GestPayServiceReference.EncryptRequest();
+            GestPayWsS2SServiceReferenceTest.callPagamS2SRequest inValue = new GestPayWsS2SServiceReferenceTest.callPagamS2SRequest();
             inValue.shopLogin = shopLogin;
             inValue.uicCode = uicCode;
             inValue.amount = amount;
@@ -5731,13 +6129,20 @@ namespace GestPayServiceReference
             inValue.buyerEmail = buyerEmail;
             inValue.languageId = languageId;
             inValue.cvv = cvv;
-            inValue.customInfo = customInfo;
-            inValue.requestToken = requestToken;
-            inValue.ppSellerProtection = ppSellerProtection;
+            inValue.min = min;
             inValue.transKey = transKey;
-            inValue.shippingDetails = shippingDetails;
+            inValue.PARes = PARes;
+            inValue.customInfo = customInfo;
+            inValue.IDEA = IDEA;
+            inValue.requestToken = requestToken;
+            inValue.tokenValue = tokenValue;
+            inValue.clientIP = clientIP;
+            inValue.itemType = itemType;
+            inValue.recurrent = recurrent;
+            inValue.subMerchantId = subMerchantId;
             inValue.paymentTypes = paymentTypes;
-            inValue.paymentTypeDetail = paymentTypeDetail;
+            inValue.paymentDeviceDetails = paymentDeviceDetails;
+            inValue.shippingDetails = shippingDetails;
             inValue.redFraudPrevention = redFraudPrevention;
             inValue.Red_CustomerInfo = Red_CustomerInfo;
             inValue.Red_ShippingInfo = Red_ShippingInfo;
@@ -5745,19 +6150,83 @@ namespace GestPayServiceReference
             inValue.Red_CustomerData = Red_CustomerData;
             inValue.Red_CustomInfo = Red_CustomInfo;
             inValue.Red_Items = Red_Items;
-            inValue.Consel_MerchantPro = Consel_MerchantPro;
-            inValue.Consel_CustomerInfo = Consel_CustomerInfo;
-            inValue.payPalBillingAgreementDescription = payPalBillingAgreementDescription;
-            inValue.amazonPayBillingAgreementDescription = amazonPayBillingAgreementDescription;
+            inValue.applePay = applePay;
+            inValue.cardReaderPayments = cardReaderPayments;
+            inValue.googlePay = googlePay;
             inValue.OrderDetails = OrderDetails;
             inValue.apikey = apikey;
             inValue.transDetails = transDetails;
-            return ((GestPayServiceReference.WSCryptDecryptSoap)(this)).EncryptAsync(inValue);
+            return ((GestPayWsS2SServiceReferenceTest.WSs2sSoap)(this)).callPagamS2SAsync(inValue);
         }
         
-        public System.Threading.Tasks.Task<System.Xml.XmlNode> DecryptAsync(string shopLogin, string CryptedString, string apikey)
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callDeleteS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string CancelReason, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails)
         {
-            return base.Channel.DecryptAsync(shopLogin, CryptedString, apikey);
+            return base.Channel.callDeleteS2SAsync(shopLogin, shopTransactionId, bankTransactionId, CancelReason, apikey, paymentDeviceDetails);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callSettleS2SAsync(string shopLogin, string uicCode, string amount, string shopTransID, string bankTransID, GestPayWsS2SServiceReferenceTest.FullFillmentDetails FullFillment, string apikey, GestPayWsS2SServiceReferenceTest.PaymentDeviceDetails paymentDeviceDetails)
+        {
+            return base.Channel.callSettleS2SAsync(shopLogin, uicCode, amount, shopTransID, bankTransID, FullFillment, apikey, paymentDeviceDetails);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callVerifycardS2SAsync(string shopLogin, string shopTransactionId, string cardNumber, string expMonth, string expYear, string CVV2, string apikey)
+        {
+            return base.Channel.callVerifycardS2SAsync(shopLogin, shopTransactionId, cardNumber, expMonth, expYear, CVV2, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callCheckCartaS2SAsync(string shopLogin, string shopTransactionId, string cardNumber, string expMonth, string expYear, string CVV2, string withAuth, string tokenValue, string apikey)
+        {
+            return base.Channel.callCheckCartaS2SAsync(shopLogin, shopTransactionId, cardNumber, expMonth, expYear, CVV2, withAuth, tokenValue, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callRenounceAsync()
+        {
+            return base.Channel.callRenounceAsync();
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> CallRequestTokenS2SAsync(string shopLogin, string requestToken, string cardNumber, string expiryMonth, string expiryYear, string cvv, string withAuth, string originalId, string description, string apikey)
+        {
+            return base.Channel.CallRequestTokenS2SAsync(shopLogin, requestToken, cardNumber, expiryMonth, expiryYear, cvv, withAuth, originalId, description, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callDeleteTokenS2SAsync(string tokenValue, string shopLogin, string apikey)
+        {
+            return base.Channel.callDeleteTokenS2SAsync(tokenValue, shopLogin, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateTokenS2SAsync(string shopLogin, string token, string expiryMonth, string expiryYear, string withAut, string apikey)
+        {
+            return base.Channel.CallUpdateTokenS2SAsync(shopLogin, token, expiryMonth, expiryYear, withAut, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> CallIdealListS2SAsync(string shopLogin, string apikey)
+        {
+            return base.Channel.CallIdealListS2SAsync(shopLogin, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> CallMyBankListS2SAsync(string shopLogin, string languageId, string apikey)
+        {
+            return base.Channel.CallMyBankListS2SAsync(shopLogin, languageId, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateCustomParamS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string paramName, string paramValue, string apikey)
+        {
+            return base.Channel.CallUpdateCustomParamS2SAsync(shopLogin, shopTransactionId, bankTransactionId, paramName, paramValue, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateOrderS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, GestPayWsS2SServiceReferenceTest.EcommGestpayPaymentDetails OrderDetails, string apikey)
+        {
+            return base.Channel.CallUpdateOrderS2SAsync(shopLogin, shopTransactionId, bankTransactionId, OrderDetails, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callExchangeRateS2SAsync(string shopLogin, string uicCode, string isoCode, string numericIsoCode, string apikey)
+        {
+            return base.Channel.callExchangeRateS2SAsync(shopLogin, uicCode, isoCode, numericIsoCode, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callDeviceActivationAsync(string terminalId)
+        {
+            return base.Channel.callDeviceActivationAsync(terminalId);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
@@ -5772,7 +6241,7 @@ namespace GestPayServiceReference
         
         private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.WSCryptDecryptSoap))
+            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap))
             {
                 System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
                 result.MaxBufferSize = int.MaxValue;
@@ -5782,7 +6251,7 @@ namespace GestPayServiceReference
                 result.Security.Mode = System.ServiceModel.BasicHttpSecurityMode.Transport;
                 return result;
             }
-            if ((endpointConfiguration == EndpointConfiguration.WSCryptDecryptSoap12))
+            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap12))
             {
                 System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
                 System.ServiceModel.Channels.TextMessageEncodingBindingElement textBindingElement = new System.ServiceModel.Channels.TextMessageEncodingBindingElement();
@@ -5800,13 +6269,13 @@ namespace GestPayServiceReference
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.WSCryptDecryptSoap))
+            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap))
             {
-                return new System.ServiceModel.EndpointAddress("https://ecomms2s.sella.it/gestpay/GestPayWS/WsCryptDecrypt.asmx");
+                return new System.ServiceModel.EndpointAddress("https://sandbox.gestpay.net/gestpay/gestpayws/WSs2s.asmx");
             }
-            if ((endpointConfiguration == EndpointConfiguration.WSCryptDecryptSoap12))
+            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap12))
             {
-                return new System.ServiceModel.EndpointAddress("https://ecomms2s.sella.it/gestpay/GestPayWS/WsCryptDecrypt.asmx");
+                return new System.ServiceModel.EndpointAddress("https://sandbox.gestpay.net/gestpay/gestpayws/WSs2s.asmx");
             }
             throw new System.InvalidOperationException(string.Format("L\'endpoint denominato \'{0}\' non è stato trovato.", endpointConfiguration));
         }
@@ -5814,9 +6283,9 @@ namespace GestPayServiceReference
         public enum EndpointConfiguration
         {
             
-            WSCryptDecryptSoap,
+            WSs2sSoap,
             
-            WSCryptDecryptSoap12,
+            WSs2sSoap12,
         }
     }
 }
