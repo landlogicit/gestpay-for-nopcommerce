@@ -265,7 +265,7 @@ namespace Nop.Plugin.Payments.GestPay
 
         public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.GestPay.PaymentMethodDescription");
 
-        public bool HideInWidgetList => throw new NotImplementedException();
+        public bool HideInWidgetList => true;
 
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
