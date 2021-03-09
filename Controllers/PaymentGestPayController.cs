@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GestPayServiceReference;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Plugin.Payments.GestPay.Helper;
 using Nop.Plugin.Payments.GestPay.Models;
+using Nop.Plugin.Payments.GestPay.Models.GestpayByLink.PaymentDetails;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -17,7 +22,9 @@ using Nop.Web.Framework.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Xml;
@@ -26,50 +33,62 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 {
     public class PaymentGestPayController : BasePaymentController
     {
-        private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
-        private readonly ISettingService _settingService;
-        private readonly IPaymentService _paymentService;
+        #region Fields
+        private readonly IAddressService _addressService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILogger _logger;
+        private readonly INotificationService _notificationService;
+        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly ILogger _logger;
-        private readonly IWebHelper _webHelper;
-        private readonly PaymentSettings _paymentSettings;
-        private readonly ILocalizationService _localizationService;
+        private readonly IPaymentService _paymentService;
+        private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
-        private readonly GestPayPaymentSettings _gestPayPaymentSettings;
-        private readonly INotificationService _notificationService;
+        private readonly IStoreService _storeService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
 
-        public PaymentGestPayController(IWorkContext workContext,
-            IStoreService storeService,
-            ISettingService settingService,
-            IPaymentService paymentService,
+        private readonly PaymentSettings _paymentSettings;
+        private readonly GestPayPaymentSettings _gestPayPaymentSettings;
+
+        #endregion
+
+        #region Ctor
+        public PaymentGestPayController(IAddressService addressService,
+            ILocalizationService localizationService,
+            ILogger logger,
+            INotificationService notificationService,
+            IOrderProcessingService orderProcessingService,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
-        IOrderProcessingService orderProcessingService,
-            ILogger logger, IWebHelper webHelper,
-            INotificationService notificationService,
-            PaymentSettings paymentSettings,
-            ILocalizationService localizationService,
+            IPaymentService paymentService,
+            ISettingService settingService,
             IStoreContext storeContext,
+            IStoreService storeService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            PaymentSettings paymentSettings,
             GestPayPaymentSettings gestPayPaymentSettings)
         {
-            _workContext = workContext;
-            _storeService = storeService;
-            _settingService = settingService;
-            _paymentService = paymentService;
-            _orderService = orderService;
-            _paymentPluginManager = paymentPluginManager;
-            _orderProcessingService = orderProcessingService;
+            _addressService = addressService;
+            _localizationService = localizationService;
             _logger = logger;
             _notificationService = notificationService;
-            _webHelper = webHelper;
-            _paymentSettings = paymentSettings;
-            _localizationService = localizationService;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _paymentPluginManager = paymentPluginManager;
+            _paymentService = paymentService;
+            _settingService = settingService;
             _storeContext = storeContext;
+            _storeService = storeService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _paymentSettings = paymentSettings;
             _gestPayPaymentSettings = gestPayPaymentSettings;
         }
+        #endregion
+
+        #region Methods 
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
@@ -111,7 +130,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {
@@ -158,13 +177,32 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return Configure();
         }
 
+        [AuthorizeAdmin]
+        [Area(AreaNames.Admin)]
+        [HttpPost]
+        public IActionResult GeneratePaymentLink(int orderId)
+        {
+            var order = _orderService.GetOrderById(orderId);
+            if (order != null)
+            {
+                ProcessPayment processPayment = new ProcessPayment(_addressService, _logger, _orderService, _gestPayPaymentSettings);
+                var errorCode = processPayment.CreatePayment(orderId);
+
+                if (errorCode == 0)
+                    return Json("Payment link generated & Email queued");
+                else
+                    return Json("Failed to generate payment link");
+            }
+            else
+                return Json("Order not found");
+        }
+
         public IActionResult CancelOrder(FormCollection form)
         {
             /* ??Annullare l'ordine o lasciarlo in sospeso come Plugin?? */
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
-        //[ValidateInput(false)]
         public IActionResult s2sHandler()
         {
             string errorCode = "", errorDesc = "";
@@ -180,10 +218,17 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             processor.GetResponseDetails(strRequest, out values);
             if (values != null && values.Count > 0)
             {
+                if (values.Count == 4)
+                {
+                    return RedirectToRoute("Plugin.Payments.GestPay.AcceptPaymenyByLink", new { a = values["a"], status = values["Status"], paymentId = values["paymentID"], paymentToken = values["paymentToken"] });
+                }
+
                 var shopLogin = values["a"];
                 var encString = values["b"];
                 string shopTransactionId = "", authorizationCode = "", bankTransactionId = "";
-                string transactionResult = "", buyerName = "", buyerEmail = "", riskified="",authorizationcode="";
+                string transactionResult = "", buyerName = "", buyerEmail = "", riskified = "", authorizationcode = "", threeDSAuthenticationLevel = "";
+
+                var acceptedThreeDSAuthLevels = new List<string> { "1H", "1F", "2F", "2C", "2E" };
                 var checkAmount = decimal.Zero;
 
                 var sb = new StringBuilder();
@@ -191,67 +236,44 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
                 if (processor.IsShopLoginChecked(shopLogin) && encString != null)
                 {
-                    dynamic endpoint;
-                    dynamic objDecrypt;
-                    if (_gestPayPaymentSettings.UseSandbox)
-                    {
-                        endpoint = GestPayServiceReferenceTest.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
-                        objDecrypt = new GestPayServiceReferenceTest.WSCryptDecryptSoapClient(endpoint);
-                    }
-                    else
-                    {
-                        endpoint = GestPayServiceReference.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
-                        objDecrypt = new GestPayServiceReference.WSCryptDecryptSoapClient(endpoint);
-                    }
-                        
+                    var endpoint = _gestPayPaymentSettings.UseSandbox ? WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12Test : WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                    var objDecrypt = new WSCryptDecryptSoapClient(endpoint);
 
                     string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
 
                     XmlDocument XMLReturn = new XmlDocument();
                     XMLReturn.LoadXml(xmlResponse.ToLower());
 
-                    //Id transazione inviato  
+                    //_logger.Information(xmlResponse.ToLower());
 
-                    XmlNode ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode");
-                    errorCode = ThisNode.InnerText;
-                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription");
-                    errorDesc = ThisNode.InnerText;
-                    
-                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
-                    if(ThisNode!=null)
-                        authorizationcode = ThisNode.InnerText;
-                    
-                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid");
-                    if(ThisNode!=null)
-                     shopTransactionId = ThisNode.InnerText;
+                    //Id transazione inviato  
+                    errorCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode")?.InnerText;
+                    errorDesc = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription")?.InnerText;
+                    //authorizationCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
+                    shopTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid")?.InnerText;
+
                     //_____ Messaggio OK _____//
                     if (errorCode == "0")
                     {
                         //Codice autorizzazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
-                        authorizationCode = ThisNode.InnerText;
+                        authorizationCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
                         //Codice transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid");
-                        bankTransactionId = ThisNode.InnerText;
+                        bankTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid")?.InnerText;
                         //Ammontare della transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount");
-                        var amount = ThisNode.InnerText;
+                        var amount = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount")?.InnerText;
                         //Risultato transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult");
-                        transactionResult = ThisNode.InnerText;
+                        transactionResult = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult")?.InnerText;
                         //Nome dell'utente
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername");
-                        buyerName = ThisNode.InnerText;
+                        buyerName = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername")?.InnerText;
                         //Email utilizzata nella transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail");
-                        buyerEmail = ThisNode.InnerText;
+                        buyerEmail = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail")?.InnerText;
 
                         //__________ ?validare il totale? __________//
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/riskresponsedescription");
-                        if(ThisNode!=null)
-                            riskified = ThisNode.InnerText;
+                        riskified = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/riskresponsedescription")?.InnerText;
 
-                        _logger.Information("Res = " + riskified);
+                        //  3DS authentication level (1H,1F,2F,2C,2E)
+                        threeDSAuthenticationLevel = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/threeds/authenticationresult/authenticationlevel")?.InnerText?.ToUpper();
+
                         try
                         {
                             checkAmount = decimal.Parse(amount, new CultureInfo("en-US"));
@@ -267,7 +289,6 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                         sb.AppendLine("GestPay failed.");
                         _logger.Error("GestPay S2S. Transaction not found", new NopException(sb.ToString()));
                     }
-                    // Response.Write(Server.HtmlEncode(xmlResponse));
                 }
 
                 //________ Inizio composizione messaggio dal server _________//				
@@ -275,9 +296,13 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 {
                     sb.AppendLine(kvp.Key + ": " + kvp.Value);
                 }
+
                 //Recupero lo stato del pagamento
                 var newPaymentStatus = GestPayHelper.GetPaymentStatus(transactionResult, "");
                 sb.AppendLine("New payment status: " + newPaymentStatus);
+                sb.AppendLine("Riskified = " + riskified);
+                sb.AppendLine("3DS Level = " + threeDSAuthenticationLevel);
+
                 //Cerco di recuperare l'ordine
                 var orderNumberGuid = Guid.Empty;
                 try
@@ -312,7 +337,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                                     order.AuthorizationTransactionCode = authorizationCode;
                                     _orderService.UpdateOrder(order);
 
-                                    if (!_gestPayPaymentSettings.EnableGuaranteedPayment)
+                                    if (!_gestPayPaymentSettings.EnableGuaranteedPayment || acceptedThreeDSAuthLevels.Contains(threeDSAuthenticationLevel))
                                         _orderProcessingService.MarkOrderAsPaid(order);
                                 }
                             }
@@ -337,6 +362,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                             }
                             break;
                     }
+
                     //__________________ salvo i valori restituiti __________________//
                     sb.AppendLine("GestPay response:");
                     //Codice Errore
@@ -356,13 +382,14 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                     sb.AppendLine("BuyerEmail: " + buyerEmail);
 
                     //Inserisco la nota sull'ordine 
-                    order.OrderNotes.Add(new OrderNote()
+                    var orderNote = new OrderNote
                     {
+                        OrderId = order.Id,
                         Note = sb.ToString(),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
-                    });
-                    _orderService.UpdateOrder(order);
+                    };
+                    _orderService.InsertOrderNote(orderNote);
                 }
                 else
                 {
@@ -384,7 +411,6 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return Content(String.Format("<html>{0}</html>", s2SResponse));
         }
 
-        //[ValidateInput(false)]
         public IActionResult EsitoGestPay(string esito = "check")
         {
             //___________ l'aggiornamento è già stato fatto via S2S ___________//
@@ -395,53 +421,40 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
             var processor = _paymentPluginManager.LoadPluginBySystemName("Payments.GestPay") as GestPayPaymentProcessor;
             if (processor == null ||
-                !_paymentPluginManager.IsPluginActive(processor) )
+                !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("GestPay module cannot be loaded");
 
             processor.GetResponseDetails(strRequest, out values);
             if (values != null && values.Count > 0)
             {
+                if (values.Count == 4)
+                {
+                    return RedirectToRoute("Plugin.Payments.GestPay.AcceptPaymenyByLink", new { a = values["a"], status = values["Status"], paymentId = values["paymentID"], paymentToken = values["paymentToken"] });
+                }
+
                 var shopLogin = values["a"];
                 var encString = values["b"];
 
                 if (processor.IsShopLoginChecked(shopLogin) && encString != null)
                 {
-                    dynamic endpoint;
-                    dynamic objDecrypt;
-                    if (_gestPayPaymentSettings.UseSandbox)
-                    {
-                        endpoint = GestPayServiceReferenceTest.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
-                        objDecrypt = new GestPayServiceReferenceTest.WSCryptDecryptSoapClient(endpoint);
-                    }
-                    else
-                    {
-                        endpoint = GestPayServiceReference.WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
-                        objDecrypt = new GestPayServiceReference.WSCryptDecryptSoapClient(endpoint);
-                    }
-                           
-                    
+                    var endpoint = _gestPayPaymentSettings.UseSandbox ? WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12Test : WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
+                    var objDecrypt = new WSCryptDecryptSoapClient(endpoint);
 
                     string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
+
                     XmlDocument XMLReturn = new XmlDocument();
                     XMLReturn.LoadXml(xmlResponse.ToLower());
 
                     //Id transazione inviato  
-                    
-                    XmlNode ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode");
-                    string errorCode = ThisNode.InnerText;
-                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription");
-                    string ErrorDesc = ThisNode.InnerText;
-                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
-
-                    ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid");
-                    string shopTransactionID = ThisNode.InnerText;
-
+                    string errorCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode")?.InnerText;
+                    string ErrorDesc = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription")?.InnerText;
+                    string shopTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid")?.InnerText;
 
                     //Recupero l'ordine
                     Guid orderNumberGuid = Guid.Empty;
                     try
                     {
-                        orderNumberGuid = new Guid(shopTransactionID);
+                        orderNumberGuid = new Guid(shopTransactionId);
                     }
                     catch { }
                     Order order = _orderService.GetOrderByGuid(orderNumberGuid);
@@ -449,23 +462,17 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                     if (errorCode == "0" && order != null)
                     {
                         //Codice autorizzazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode");
-                        var authorizationCode = ThisNode.InnerText;
+                        var authorizationCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
                         //Codice transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid");
-                        var bankTransactionId = ThisNode.InnerText;
+                        var bankTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid")?.InnerText;
                         //Ammontare della transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount");
-                        var amount = ThisNode.InnerText;
+                        var amount = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount")?.InnerText;
                         //Risultato transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult");
-                        var transactionResult = ThisNode.InnerText;
+                        var transactionResult = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult")?.InnerText;
                         //Nome dell'utente
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername");
-                        var buyerName = ThisNode.InnerText;
+                        var buyerName = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername")?.InnerText;
                         //Email utilizzata nella transazione
-                        ThisNode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail");
-                        var buyerEmail = ThisNode.InnerText;
+                        var buyerEmail = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail")?.InnerText;
 
                         //load settings for a chosen store scope
                         var storeScope = _storeContext.ActiveStoreScopeConfiguration;
@@ -486,7 +493,89 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return RedirectToAction("GeneralError", new { type = "2" });
         }
 
-        //[ValidateInput(false)]
+        public IActionResult AcceptPaymenyByLink(string a, string status, string paymentId, string paymentToken)
+        {
+            var endpoint = _gestPayPaymentSettings.UseSandbox ? "https://sandbox.gestpay.net/api/v1/payment/detail/" + paymentId : "https://ecomms2s.sella.it/api/v1/payment/detail/" + paymentId;
+
+            var responseStr = string.Empty;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
+            request.ContentType = "application/json";
+            request.Headers.Add("Authorization", "apikey " + _gestPayPaymentSettings.ApiKey);
+            request.Headers.Add("paymentToken", paymentToken);
+
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    Stream dataStream = response.GetResponseStream();
+                    StreamReader reader = new StreamReader(dataStream);
+                    responseStr = reader.ReadToEnd();
+                    reader.Close();
+                    dataStream.Close();
+
+                    PaymentDetailResponseModel paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
+
+                    Guid orderGuid;
+                    Guid.TryParse(paymentDetailResponse.payload.shopTransactionID, out orderGuid);
+                    var order = _orderService.GetOrderByGuid(orderGuid);
+
+                    if (order != null)
+                    {
+                        var sb = new StringBuilder();
+                        sb.AppendLine("GestPay s2s:");
+                        sb.AppendLine("Res = " + paymentDetailResponse.payload.risk.riskResponseDescription);
+                        sb.AppendLine("GestPay response:");
+                        sb.AppendLine("ErrorCode: " + paymentDetailResponse.error.code);
+                        sb.AppendLine("ErrorDesc: " + paymentDetailResponse.error.description);
+                        sb.AppendLine("TrxResult: " + paymentDetailResponse.payload.transactionResult);
+                        sb.AppendLine("BankTrxID: " + paymentDetailResponse.payload.bankTransactionID);
+                        sb.AppendLine("AuthCode: " + paymentDetailResponse.payload.authorizationCode);
+                        sb.AppendLine("Amount: " + paymentDetailResponse.payload.automaticOperation.amount);
+
+                        var amount = Convert.ToDecimal(paymentDetailResponse.payload.automaticOperation.amount);
+                        if (!Math.Round(amount, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                            sb.AppendLine(String.Format("Amount difference: {0}-{1}", Math.Round(amount, 2), Math.Round(order.OrderTotal, 2)));
+
+                        sb.AppendLine("BuyerName: " + paymentDetailResponse.payload.buyer.name);
+                        sb.AppendLine("BuyerEmail: " + paymentDetailResponse.payload.buyer.email);
+
+                        // Inserisco la nota sull'ordine 
+                        var orderNote = new OrderNote
+                        {
+                            OrderId = order.Id,
+                            Note = sb.ToString(),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        };
+                        _orderService.InsertOrderNote(orderNote);
+
+                        order.AuthorizationTransactionId = paymentDetailResponse.payload.bankTransactionID;
+                        order.AuthorizationTransactionCode = paymentDetailResponse.payload.authorizationCode;
+
+                        _orderService.UpdateOrder(order);
+
+                        if (!_gestPayPaymentSettings.EnableGuaranteedPayment && paymentDetailResponse.payload.transactionResult == "APPROVED")
+                            _orderProcessingService.MarkOrderAsPaid(order);
+
+                        return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+                    }
+                }
+                return Redirect("/");
+            }
+            catch (WebException ex)
+            {
+                using (var stream = ex.Response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    responseStr = reader.ReadToEnd();
+                }
+                PaymentDetailResponseModel paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
+                _logger.Error("Gestpay Pay Link Verify Error = " + paymentDetailResponse.error.code + " " + paymentDetailResponse.error.description, ex);
+
+                return RedirectToAction("GeneralError", "PaymentGestPay", new { type = "1", errc = HttpUtility.UrlEncode(paymentDetailResponse.error.code), errd = HttpUtility.UrlEncode(paymentDetailResponse.error.description) });
+            }
+        }
+
         public IActionResult GeneralError()
         {
             var model = new GeneralErrorModel
@@ -527,5 +616,6 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return View("~/Plugins/Payments.GestPay/Views/GeneralError.cshtml", model);
         }
 
+        #endregion
     }
 }

@@ -5,36 +5,9 @@
 @model ConfigurationModel
 @using Nop.Plugin.Payments.GestPay.Models;
 
+@inject Nop.Core.IStoreContext storeContext;
+
 @await Component.InvokeAsync("StoreScopeConfiguration")
-
-<script type="text/javascript">
-    $(document).ready(function () {
-
-    });
-</script>
-
-<style type="text/css">
-    table.gestpay {
-    }
-
-        table.gestpay th {
-            padding: 5px;
-        }
-
-        table.gestpay td {
-            padding: 3px;
-        }
-
-    div.gestpay {
-        float: left;
-        margin: 10px;
-        padding: 10px;
-    }
-
-        div.gestpay.left {
-            border-right: solid 1px #000;
-        }
-</style>
 
 <form asp-controller="PaymentGestPay" asp-action="Configure" method="post">
     <div class="panel-group">
@@ -51,15 +24,15 @@
                     <h2>Risposta all'esercente</h2>
                     La notifica, viene inoltrata con una chiamata server to server alla pagina opportunamente predisposta sul server dell'esercente
                     (l'url della pagina di notiﬁca è una delle informazioni che compongono il proﬁlo dell'esercente configurabile tramite l'ambiente di back ofﬁce di GestPay).<br />
-                    http://[www.yourStore.com]/Plugins/PaymentGestPay/s2sHandler
+                    <b>@(storeContext.CurrentStore.Url + "Plugins/PaymentGestPay/s2sHandler")</b>
                     <br />
 
                     <h2>Risposta all'acquirente</h2>
                     L'esito della transazione viene immediatamente notiﬁcato da GestPay visualizzando lo "scontrino virtuale" che riporta i dati essenziali della transazione.<br />
                     GestPay indirizzerà il browser dell'acquirente sul server dell'esercente per concludere il processo d'acquisto. <br />
                     L'esercente dovrà predisporre due url (e conﬁgurarle nel proﬁlo esercente) <br />
-                    http://[www.yourStore.com]/Plugins/PaymentGestPay/EsitoGestPay/OK (Esito positivo)<br />
-                    http://[www.yourStore.com]/Plugins/PaymentGestPay/EsitoGestPay/KO (Esito negativo)<br /><br />
+                    <b>@(storeContext.CurrentStore.Url + "Plugins/PaymentGestPay/EsitoGestPay/OK      (Esito positivo)")</b><br />
+                    <b>@(storeContext.CurrentStore.Url + "Plugins/PaymentGestPay/EsitoGestPay/KO      (Esito negativo)")</b><br /><br />
 
                     <h2>Profilo esercente</h2>
                     Ogni esercente ha la possibilità di configurare il proﬁlo accedendo all'ambiente di back office di GestPay.<br />
@@ -201,3 +174,26 @@
         </div>
     </div>
 </form>
+
+<style type="text/css">
+    table.gestpay {
+    }
+
+        table.gestpay th {
+            padding: 5px;
+        }
+
+        table.gestpay td {
+            padding: 3px;
+        }
+
+    div.gestpay {
+        float: left;
+        margin: 10px;
+        padding: 10px;
+    }
+
+        div.gestpay.left {
+            border-right: solid 1px #000;
+        }
+</style>

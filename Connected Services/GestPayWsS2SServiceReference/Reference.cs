@@ -6251,7 +6251,7 @@ namespace GestPayWsS2SServiceReference
                 result.Security.Mode = System.ServiceModel.BasicHttpSecurityMode.Transport;
                 return result;
             }
-            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap12))
+            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap12) || (endpointConfiguration == EndpointConfiguration.WSs2sSoap12Test))
             {
                 System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
                 System.ServiceModel.Channels.TextMessageEncodingBindingElement textBindingElement = new System.ServiceModel.Channels.TextMessageEncodingBindingElement();
@@ -6277,6 +6277,10 @@ namespace GestPayWsS2SServiceReference
             {
                 return new System.ServiceModel.EndpointAddress("https://ecomms2s.sella.it/gestpay/gestpayws/WSs2s.asmx");
             }
+            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap12Test))
+            {
+                return new System.ServiceModel.EndpointAddress("https://sandbox.gestpay.net/gestpay/gestpayws/WSs2s.asmx");
+            }
             throw new System.InvalidOperationException(string.Format("L\'endpoint denominato \'{0}\' non è stato trovato.", endpointConfiguration));
         }
         
@@ -6286,6 +6290,8 @@ namespace GestPayWsS2SServiceReference
             WSs2sSoap,
             
             WSs2sSoap12,
+
+            WSs2sSoap12Test,
         }
     }
 }
