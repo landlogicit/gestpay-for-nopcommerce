@@ -8,7 +8,7 @@
 @if(ViewBag.EnableGuaranteedPayment)
 {
     <script type="text/javascript">
-    //<![CDATA[
+  
     (function() {
       function riskifiedBeaconLoad() {
         var store_domain = '@ViewBag.StoreDomain';
@@ -27,6 +27,6 @@
       else
         window.addEventListener('load', riskifiedBeaconLoad, false);
     })();
-    //]]>
+
     </script>
 }

@@ -1,0 +1,21 @@
+﻿@model int
+
+<button type="button" class="btn btn-primary" onclick="GenerateLink(@Model)">Generate Link</button>
+
+<script>
+    function GenerateLink(id) {
+        var data = {
+            "orderId": id
+        };
+        addAntiForgeryToken(data);
+
+        $.ajax({
+            url: "@Html.Raw(Url.Action("GeneratePaymentLink", "PaymentGestPay", new { orderId = Model }))",
+            type: "POST",
+            data: data,
+            success: function (data) {
+                alert(data);
+            }
+        })
+    }
+</script>

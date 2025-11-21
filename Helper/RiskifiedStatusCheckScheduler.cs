@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using GestPayWsS2SServiceReference;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Orders;
 using Nop.Services.Tasks;
@@ -28,19 +29,8 @@ namespace Nop.Plugin.Payments.GestPay.Helper
             if (_gestPayPaymentSettings.EnableGuaranteedPayment)
             {
                 string errorCode;
-                dynamic endpoint;
-                dynamic client;
-                if (_gestPayPaymentSettings.UseSandbox)
-                {
-                    endpoint = GestPayWsS2SServiceReferenceTest.WSs2sSoapClient.EndpointConfiguration.WSs2sSoap12;
-                    client = new GestPayWsS2SServiceReferenceTest.WSs2sSoapClient(endpoint);
-                }
-                else
-                {
-                    endpoint = GestPayWsS2SServiceReference.WSs2sSoapClient.EndpointConfiguration.WSs2sSoap12;
-                    client = new GestPayWsS2SServiceReference.WSs2sSoapClient(endpoint);
-                }
-                
+                var endpoint = _gestPayPaymentSettings.UseSandbox ? WSs2sSoapClient.EndpointConfiguration.WSs2sSoap12Test : WSs2sSoapClient.EndpointConfiguration.WSs2sSoap12;
+                var client = new WSs2sSoapClient(endpoint);
 
                 var orders = _orderService.SearchOrders(osIds: new List<int> { (int)OrderStatus.Pending }, psIds: new List<int> { (int)PaymentStatus.Pending }, paymentMethodSystemName: "Payments.GestPay");
 
@@ -48,22 +38,18 @@ namespace Nop.Plugin.Payments.GestPay.Helper
                 {
                     if (!string.IsNullOrEmpty(order.AuthorizationTransactionId))
                     {
-                        string xmlResponse = client.callReadTrxS2SAsync(_gestPayPaymentSettings.ShopOperatorCode, order.OrderGuid.ToString(), order.AuthorizationTransactionId, _gestPayPaymentSettings.ApiKey, null).Result.OuterXml;
-                        
-                        XmlDocument xmlReturn = new XmlDocument();
-                        xmlReturn.LoadXml(xmlResponse.ToLower());
+                        var xmlResponse = client.callReadTrxS2SAsync(_gestPayPaymentSettings.ShopOperatorCode, order.OrderGuid.ToString(), order.AuthorizationTransactionId, _gestPayPaymentSettings.ApiKey, null).Result;
+
+                        //  Getting error in below code
+                        //XmlDocument xmlReturn = new XmlDocument();
+                        //xmlReturn.LoadXml(xmlResponse.ToLower());
 
                         //Id transazione inviato  
-                    
-                        XmlNode thisNode = xmlReturn.SelectSingleNode("/GestPayS2S/errorcode");
-                        errorCode = thisNode.InnerText;
-                        //Recupero la Descrizione errore
-                       
+                        errorCode = xmlResponse.SelectSingleNode("ErrorCode")?.InnerText;
+
                         if (errorCode == "0")
                         {
-                            thisNode = xmlReturn.SelectSingleNode("/GestPayS2S/risk/RiskResponseCode");
-
-                            var riskifiedCode = thisNode.InnerText;
+                            var riskifiedCode = xmlResponse.SelectSingleNode("/RISK/RiskResponseCode")?.InnerText?.ToLower();
 
                             if (riskifiedCode == "approved")
                             {
