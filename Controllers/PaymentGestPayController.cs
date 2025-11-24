@@ -226,7 +226,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 var shopLogin = values["a"];
                 var encString = values["b"];
                 string shopTransactionId = "", authorizationCode = "", bankTransactionId = "";
-                string transactionResult = "", buyerName = "", buyerEmail = "", riskified = "", authorizationcode = "", threeDSAuthenticationLevel = "";
+                string transactionResult = "", buyerName = "", buyerEmail = "", riskified = "", threeDSAuthenticationLevel = "";
 
                 var acceptedThreeDSAuthLevels = new List<string> { "1H", "1F", "2F", "2C", "2E" };
                 var checkAmount = decimal.Zero;
