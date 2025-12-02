@@ -27,6 +27,7 @@ using Task = System.Threading.Tasks.Task;
 using GestPayServiceReference;
 using GestPayWsS2SServiceReference;
 using Nop.Core.Domain.ScheduleTasks;
+using Nop.Plugin.Payments.GestPay.Components;
 using Nop.Services.ScheduleTasks;
 using static GestPayServiceReference.WSCryptDecryptSoapClient;
 namespace Nop.Plugin.Payments.GestPay
@@ -168,6 +169,12 @@ namespace Nop.Plugin.Payments.GestPay
         {
             return $"{_webHelper.GetStoreLocation()}Admin/PaymentGestPay/Configure";
         }
+
+        public Type GetPublicViewComponent()
+        {
+            return typeof(PaymentGestPayViewComponent);
+        }
+
         public async Task<string> GetPaymentMethodDescriptionAsync()
         {
             return await _localizationService.GetResourceAsync("Plugins.Payments.GestPay.PaymentMethodDescription");
@@ -363,19 +370,21 @@ namespace Nop.Plugin.Payments.GestPay
             });
         }
 
-        public string GetWidgetViewComponentName(string widgetZone)
+        public Type GetWidgetViewComponent(string widgetZone)
         {
-            if (widgetZone == PublicWidgetZones.Footer)
-                return "GestpayGuaranteedPayment";
-            if (widgetZone == AdminWidgetZones.OrderDetailsButtons)
-                return "GestpayPaymentLink";
-            return "";
+            if (widgetZone is null)
+                throw new ArgumentNullException(nameof(widgetZone));
+
+            if (widgetZone.Equals(PublicWidgetZones.Footer))
+                return typeof(GestpayGuaranteedPaymentViewComponent);
+
+            if (widgetZone.Equals(AdminWidgetZones.OrderDetailsButtons))
+                return typeof(GestpayPaymentLinkViewComponent);
+
+
+            return null;
         }
 
-        public string GetPublicViewComponentName()
-        {
-            return "PaymentGestPay";
-        }
 
         public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
         {
