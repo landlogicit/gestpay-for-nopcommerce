@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Nop.Plugin.Payments.GestPay.Helper
@@ -17,8 +18,8 @@ namespace Nop.Plugin.Payments.GestPay.Helper
         private readonly IAddressService _addressService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
-
         private readonly GestPayPaymentSettings _gestpayPayByLinkPaymentSettings;
+        private static readonly HttpClient _httpClient = new HttpClient(); // HttpClient statico
 
         public ProcessPayment(IAddressService addressService,
             ILogger logger,
@@ -31,7 +32,7 @@ namespace Nop.Plugin.Payments.GestPay.Helper
             _gestpayPayByLinkPaymentSettings = gestpayPayByLinkPaymentSettings;
         }
 
-        public async Task<int> CreatePayment(int orderId)
+        public async Task<int> CreatePaymentAsync(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
 
@@ -74,40 +75,30 @@ namespace Nop.Plugin.Payments.GestPay.Helper
             model.paymentChannel = paymentChannel;
 
             var responseStr = string.Empty;
-            var request = (HttpWebRequest)WebRequest.Create(endpoint);
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", "apikey " + _gestpayPayByLinkPaymentSettings.ApiKey);
-            request.Method = "POST";
-
             var json = JsonConvert.SerializeObject(model);
-            await using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                streamWriter.Write(json);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, endpoint);
+            httpRequest.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            httpRequest.Headers.Add("Authorization", "apikey " + _gestpayPayByLinkPaymentSettings.ApiKey);
 
             try
             {
-                using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                var dataStream = response.GetResponseStream();
-                var reader = new StreamReader(dataStream);
-                responseStr = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
+                using var response = await _httpClient.SendAsync(httpRequest);
+                response.EnsureSuccessStatusCode();
+                responseStr = await response.Content.ReadAsStringAsync();
 
                 var paymentResponse = JsonConvert.DeserializeObject<PaymentCreateResponseModel>(responseStr);
                 return Convert.ToInt32(paymentResponse.error.code);
             }
-            catch (WebException ex)
+            catch (HttpRequestException ex)
             {
-                await using (var stream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
+                if (ex.Data.Contains("Response"))
                 {
-                    responseStr = reader.ReadToEnd();
+                    responseStr = ex.Data["Response"]?.ToString();
                 }
-                var paymentResponse = JsonConvert.DeserializeObject<PaymentCreateResponseModel>(responseStr);
-                await _logger.ErrorAsync("Gestpay Pay Link Error = " + paymentResponse.error.code + " " + paymentResponse.error.description, ex);
+                var paymentResponse = !string.IsNullOrEmpty(responseStr)
+                    ? JsonConvert.DeserializeObject<PaymentCreateResponseModel>(responseStr)
+                    : null;
+                await _logger.ErrorAsync("Gestpay Pay Link Error = " + paymentResponse?.error?.code + " " + paymentResponse?.error?.description, ex);
                 return -1;
             }
         }

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -183,7 +184,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             if (order != null)
             {
                 var processPayment = new ProcessPayment(_addressService, _logger, _orderService, _gestPayPaymentSettings);
-                var errorCode = await processPayment.CreatePayment(orderId);
+                var errorCode = await processPayment.CreatePaymentAsync(orderId);
 
                 if (errorCode == 0)
                     return Json("Payment link generated & Email queued");
@@ -496,88 +497,92 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return RedirectToAction("GeneralError", new { type = "2" });
         }
 
-        public async Task<IActionResult> AcceptPaymenyByLink(string a, string status, string paymentId, string paymentToken)
+        public async Task<IActionResult> AcceptPaymenyByLinkAsync(string a, string status, string paymentId, string paymentToken)
         {
             var endpoint = _gestPayPaymentSettings.UseSandbox ? "https://sandbox.gestpay.net/api/v1/payment/detail/" + paymentId : "https://ecomms2s.sella.it/api/v1/payment/detail/" + paymentId;
 
             var responseStr = string.Empty;
-            var request = (HttpWebRequest)WebRequest.Create(endpoint);
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", "apikey " + _gestPayPaymentSettings.ApiKey);
-            request.Headers.Add("paymentToken", paymentToken);
-
             try
             {
-                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var httpClient = new HttpClient())
                 {
-                    var dataStream = response.GetResponseStream();
-                    var reader = new StreamReader(dataStream);
-                    responseStr = reader.ReadToEnd();
-                    reader.Close();
-                    dataStream.Close();
+                    var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+                    request.Headers.Add("Authorization", "apikey " + _gestPayPaymentSettings.ApiKey);
+                    request.Headers.Add("paymentToken", paymentToken);
 
-                    var paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
-
-                    Guid orderGuid;
-                    Guid.TryParse(paymentDetailResponse.payload.shopTransactionID, out orderGuid);
-                    var order = await _orderService.GetOrderByGuidAsync(orderGuid);
-
-                    if (order != null)
+                    using (var response = await httpClient.SendAsync(request))
                     {
-                        var sb = new StringBuilder();
-                        sb.AppendLine("GestPay s2s:");
-                        sb.AppendLine("Res = " + paymentDetailResponse.payload.risk.riskResponseDescription);
-                        sb.AppendLine("GestPay response:");
-                        sb.AppendLine("ErrorCode: " + paymentDetailResponse.error.code);
-                        sb.AppendLine("ErrorDesc: " + paymentDetailResponse.error.description);
-                        sb.AppendLine("TrxResult: " + paymentDetailResponse.payload.transactionResult);
-                        sb.AppendLine("BankTrxID: " + paymentDetailResponse.payload.bankTransactionID);
-                        sb.AppendLine("AuthCode: " + paymentDetailResponse.payload.authorizationCode);
-                        sb.AppendLine("Amount: " + paymentDetailResponse.payload.automaticOperation.amount);
+                        response.EnsureSuccessStatusCode();
+                        responseStr = await response.Content.ReadAsStringAsync();
 
-                        var amount = Convert.ToDecimal(paymentDetailResponse.payload.automaticOperation.amount);
-                        if (!Math.Round(amount, 2).Equals(Math.Round(order.OrderTotal, 2)))
-                            sb.AppendLine(String.Format("Amount difference: {0}-{1}", Math.Round(amount, 2), Math.Round(order.OrderTotal, 2)));
+                        var paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
 
-                        sb.AppendLine("BuyerName: " + paymentDetailResponse.payload.buyer.name);
-                        sb.AppendLine("BuyerEmail: " + paymentDetailResponse.payload.buyer.email);
+                        Guid orderGuid;
+                        Guid.TryParse(paymentDetailResponse.payload.shopTransactionID, out orderGuid);
+                        var order = await _orderService.GetOrderByGuidAsync(orderGuid);
 
-                        // Inserisco la nota sull'ordine 
-                        var orderNote = new OrderNote
+                        if (order != null)
                         {
-                            OrderId = order.Id,
-                            Note = sb.ToString(),
-                            DisplayToCustomer = false,
-                            CreatedOnUtc = DateTime.UtcNow
-                        };
-                        await _orderService.InsertOrderNoteAsync(orderNote);
+                            var sb = new StringBuilder();
+                            sb.AppendLine("GestPay s2s:");
+                            sb.AppendLine("Res = " + paymentDetailResponse.payload.risk.riskResponseDescription);
+                            sb.AppendLine("GestPay response:");
+                            sb.AppendLine("ErrorCode: " + paymentDetailResponse.error.code);
+                            sb.AppendLine("ErrorDesc: " + paymentDetailResponse.error.description);
+                            sb.AppendLine("TrxResult: " + paymentDetailResponse.payload.transactionResult);
+                            sb.AppendLine("BankTrxID: " + paymentDetailResponse.payload.bankTransactionID);
+                            sb.AppendLine("AuthCode: " + paymentDetailResponse.payload.authorizationCode);
+                            sb.AppendLine("Amount: " + paymentDetailResponse.payload.automaticOperation.amount);
 
-                        order.AuthorizationTransactionId = paymentDetailResponse.payload.bankTransactionID;
-                        order.AuthorizationTransactionCode = paymentDetailResponse.payload.authorizationCode;
+                            var amount = Convert.ToDecimal(paymentDetailResponse.payload.automaticOperation.amount);
+                            if (!Math.Round(amount, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                                sb.AppendLine(String.Format("Amount difference: {0}-{1}", Math.Round(amount, 2), Math.Round(order.OrderTotal, 2)));
 
-                        await _orderService.UpdateOrderAsync(order);
+                            sb.AppendLine("BuyerName: " + paymentDetailResponse.payload.buyer.name);
+                            sb.AppendLine("BuyerEmail: " + paymentDetailResponse.payload.buyer.email);
 
-                        if (!_gestPayPaymentSettings.EnableGuaranteedPayment && paymentDetailResponse.payload.transactionResult == "APPROVED")
-                           await _orderProcessingService.MarkOrderAsPaidAsync(order);
+                            // Inserisco la nota sull'ordine 
+                            var orderNote = new OrderNote
+                            {
+                                OrderId = order.Id,
+                                Note = sb.ToString(),
+                                DisplayToCustomer = false,
+                                CreatedOnUtc = DateTime.UtcNow
+                            };
+                            await _orderService.InsertOrderNoteAsync(orderNote);
 
-                        return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+                            order.AuthorizationTransactionId = paymentDetailResponse.payload.bankTransactionID;
+                            order.AuthorizationTransactionCode = paymentDetailResponse.payload.authorizationCode;
+
+                            await _orderService.UpdateOrderAsync(order);
+
+                            if (!_gestPayPaymentSettings.EnableGuaranteedPayment && paymentDetailResponse.payload.transactionResult == "APPROVED")
+                                await _orderProcessingService.MarkOrderAsPaidAsync(order);
+
+                            return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
+                        }
                     }
                 }
                 return Redirect("/");
             }
-            catch (WebException ex)
+            catch (HttpRequestException ex)
             {
-                await using (var stream = ex.Response?.GetResponseStream())
-                    if (stream != null)
-                    {
-                        using var reader = new StreamReader(stream);
-                        responseStr = reader.ReadToEnd();
-                    }
+                // HttpClient exception
+                await _logger.ErrorAsync("Gestpay Pay Link Verify HttpRequestException", ex);
+                return RedirectToAction("GeneralError", "PaymentGestPay", new { type = "1", errc = "HttpRequestException", errd = HttpUtility.UrlEncode(ex.Message) });
+            }
+            catch (Exception ex)
+            {
+                // Try to parse error response if possible
+                if (!string.IsNullOrEmpty(responseStr))
+                {
+                    var paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
+                    await _logger.ErrorAsync("Gestpay Pay Link Verify Error = " + paymentDetailResponse?.error?.code + " " + paymentDetailResponse?.error?.description, ex);
 
-                var paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
-                await _logger.ErrorAsync("Gestpay Pay Link Verify Error = " + paymentDetailResponse.error.code + " " + paymentDetailResponse.error.description, ex);
-
-                return RedirectToAction("GeneralError", "PaymentGestPay", new { type = "1", errc = HttpUtility.UrlEncode(paymentDetailResponse.error.code), errd = HttpUtility.UrlEncode(paymentDetailResponse.error.description) });
+                    return RedirectToAction("GeneralError", "PaymentGestPay", new { type = "1", errc = HttpUtility.UrlEncode(paymentDetailResponse?.error?.code), errd = HttpUtility.UrlEncode(paymentDetailResponse?.error?.description) });
+                }
+                await _logger.ErrorAsync("Gestpay Pay Link Verify Unknown Error", ex);
+                return RedirectToAction("GeneralError", "PaymentGestPay", new { type = "1", errc = "Unknown", errd = HttpUtility.UrlEncode(ex.Message) });
             }
         }
 

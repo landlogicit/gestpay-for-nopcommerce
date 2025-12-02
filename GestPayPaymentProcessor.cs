@@ -4,7 +4,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Tasks;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -24,10 +23,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
-using Nop.Services.Tasks;
 using Task = System.Threading.Tasks.Task;
 using GestPayServiceReference;
 using GestPayWsS2SServiceReference;
+using Nop.Core.Domain.ScheduleTasks;
+using Nop.Services.ScheduleTasks;
 using static GestPayServiceReference.WSCryptDecryptSoapClient;
 namespace Nop.Plugin.Payments.GestPay
 {
@@ -36,6 +36,7 @@ namespace Nop.Plugin.Payments.GestPay
         #region Fields
 
         private readonly GestPayPaymentSettings _gestPayPaymentSettings;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IAddressService _addressService;
         private readonly ICustomerService _customerService;
         private readonly ICountryService _countryService;
@@ -70,7 +71,7 @@ namespace Nop.Plugin.Payments.GestPay
             IScheduleTaskService scheduleTaskService,
             ISettingService settingService,
             IStateProvinceService stateProvinceService,
-            IStoreContext storeContext,
+            IStoreContext storeContext,IOrderTotalCalculationService orderTotalCalculationService,
             IWebHelper webHelper)
         {
             _gestPayPaymentSettings = gestPayPaymentSettings;
@@ -89,6 +90,7 @@ namespace Nop.Plugin.Payments.GestPay
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _webHelper = webHelper;
+            _orderTotalCalculationService = orderTotalCalculationService;
         }
 
         #endregion
@@ -186,7 +188,7 @@ namespace Nop.Plugin.Payments.GestPay
             await _settingService.SaveSettingAsync(settings);
 
             //locales
-            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Payments.GestPay.Fields.RedirectionTip"] = "Sarai ridirezionato al circuito di pagamento di BancaSella per completare il pagamento dell'ordine.",
                 ["Plugins.Payments.GestPay.Fields.UseSandbox"] = "Usa Ambiente di test",
@@ -343,7 +345,7 @@ namespace Nop.Plugin.Payments.GestPay
 
         public async Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
         {
-            return await _paymentService.CalculateAdditionalFeeAsync(cart,
+            return await _orderTotalCalculationService.CalculatePaymentAdditionalFeeAsync(cart,
                 _gestPayPaymentSettings.AdditionalFee, _gestPayPaymentSettings.AdditionalFeePercentage);
         }
 

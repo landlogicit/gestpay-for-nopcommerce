@@ -2,8 +2,8 @@
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Orders;
-using Nop.Services.Tasks;
 using System.Collections.Generic;
+using Nop.Services.ScheduleTasks;
 using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Plugin.Payments.GestPay.Helper

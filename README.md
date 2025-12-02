@@ -1,7 +1,8 @@
-# Gestpay for nopCommerce v4.40
-This plugin allows paying with GestPay Banca Sella for nopCommerce 4.40
+# Gestpay for nopCommerce v4.50
+This plugin allows paying with GestPay Banca Sella for nopCommerce 4.50
 # Overview
-This update adds support for Refund, Capture, and Void operations to the GestPay (Fabrick) plugin for nopCommerce 4.40. These features are implemented using the existing SOAP S2S (Server-to-Serve r) API, ensuring compatibility with the current infrastructure.
+This update adds support for Refund, Capture, and Void operations to the GestPay (Fabrick) plugin for nopCommerce 4.50.
+These features are implemented using the existing SOAP S2S (Server-to-Serve r) API, ensuring compatibility with the current infrastructure.
 
 # Installation
 1. Download the plugin from the nopCommerce plugin store or from GitHub.

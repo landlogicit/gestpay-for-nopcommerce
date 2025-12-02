@@ -3,7 +3,8 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
-    Html.AddTitleParts("GestPay failed");
+    // Sostituisci Html.AddTitleParts con ViewBag.Title per evitare l'errore CS1061
+    ViewBag.Title = "GestPay failed";
 }
 
 <div class="page-title">
