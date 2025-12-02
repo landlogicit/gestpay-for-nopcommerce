@@ -2,9 +2,9 @@
   "Group": "Payment methods",
   "FriendlyName": "GestPay BancaSella",
   "SystemName": "Payments.GestPay",
-  "Version": "1.60",
+  "Version": "1.61",
   "SupportedVersions": [
-    "4.80"
+    "4.90"
   ],
   "Author": "Lorenzo Battaglia, LandLogic IT",
   "DisplayOrder": 1,
