@@ -89,7 +89,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         #region Methods 
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
@@ -129,7 +129,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [AutoValidateAntiforgeryToken]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -176,7 +176,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         }
 
         [AuthorizeAdmin]
-        [Area(AreaNames.Admin)]
+        [Area(AreaNames.ADMIN)]
         [HttpPost]
         public async Task<IActionResult> GeneratePaymentLink(int orderId)
         {
