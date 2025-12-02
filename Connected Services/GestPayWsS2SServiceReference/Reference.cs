@@ -11,7 +11,7 @@ namespace GestPayWsS2SServiceReference
 {
     
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="https://ecomms2s.sella.it/", ConfigurationName="GestPayWsS2SServiceReference.WSs2sSoap")]
     public interface WSs2sSoap
     {
@@ -22,7 +22,7 @@ namespace GestPayWsS2SServiceReference
         
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callReadTrxS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<System.Xml.XmlNode> callReadTrxS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails);
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callReadTrxS2SAsync(string shopLogin, string shopTransactionId, string shopTransactionId_2, string bankTransactionId, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails);
         
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callPagamS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -34,7 +34,7 @@ namespace GestPayWsS2SServiceReference
         
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callSettleS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<System.Xml.XmlNode> callSettleS2SAsync(string shopLogin, string uicCode, string amount, string shopTransID, string bankTransID, GestPayWsS2SServiceReference.FullFillmentDetails FullFillment, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails);
+        System.Threading.Tasks.Task<System.Xml.XmlNode> callSettleS2SAsync(string shopLogin, string uicCode, string amount, string shopTransID, string bankTransID, string settlementID, GestPayWsS2SServiceReference.FullFillmentDetails FullFillment, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails);
         
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/callVerifycardS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -59,6 +59,10 @@ namespace GestPayWsS2SServiceReference
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallUpdateTokenS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateTokenS2SAsync(string shopLogin, string token, string expiryMonth, string expiryYear, string withAut, string apikey);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallCheckTokenS2S", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<System.Xml.XmlNode> CallCheckTokenS2SAsync(string shopLogin, string tokenValue, string apikey);
         
         [System.ServiceModel.OperationContractAttribute(Action="https://ecomms2s.sella.it/CallIdealListS2S", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -86,7 +90,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RefundProductDetail
@@ -110,7 +114,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ProductDetail
@@ -153,6 +157,10 @@ namespace GestPayWsS2SServiceReference
         private string deliveryAtField;
         
         private DigitalGiftCardDetails digitalGiftCardDetailsField;
+        
+        private string imageUrlField;
+        
+        private string productInfoUrlField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -419,10 +427,38 @@ namespace GestPayWsS2SServiceReference
                 this.digitalGiftCardDetailsField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public string ImageUrl
+        {
+            get
+            {
+                return this.imageUrlField;
+            }
+            set
+            {
+                this.imageUrlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public string ProductInfoUrl
+        {
+            get
+            {
+                return this.productInfoUrlField;
+            }
+            set
+            {
+                this.productInfoUrlField = value;
+            }
+        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class DigitalGiftCardDetails
@@ -494,7 +530,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class Recipient
@@ -550,7 +586,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class FullfillmentDetail
@@ -670,7 +706,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class FullFillmentDetails
@@ -694,7 +730,143 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class mkpSplit
+    {
+        
+        private string mkpSubMerchantField;
+        
+        private string mkpStatementDescriptorField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string mkpSubMerchant
+        {
+            get
+            {
+                return this.mkpSubMerchantField;
+            }
+            set
+            {
+                this.mkpSubMerchantField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string mkpStatementDescriptor
+        {
+            get
+            {
+                return this.mkpStatementDescriptorField;
+            }
+            set
+            {
+                this.mkpStatementDescriptorField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class RefMaster
+    {
+        
+        private string mkpBankIdField;
+        
+        private string mkpPaymentIdField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string mkpBankId
+        {
+            get
+            {
+                return this.mkpBankIdField;
+            }
+            set
+            {
+                this.mkpBankIdField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string mkpPaymentId
+        {
+            get
+            {
+                return this.mkpPaymentIdField;
+            }
+            set
+            {
+                this.mkpPaymentIdField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class Marketplace
+    {
+        
+        private string mkpTypeField;
+        
+        private RefMaster mkpRefMasterField;
+        
+        private mkpSplit[] mkpSplitsField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string mkpType
+        {
+            get
+            {
+                return this.mkpTypeField;
+            }
+            set
+            {
+                this.mkpTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public RefMaster mkpRefMaster
+        {
+            get
+            {
+                return this.mkpRefMasterField;
+            }
+            set
+            {
+                this.mkpRefMasterField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
+        public mkpSplit[] mkpSplits
+        {
+            get
+            {
+                return this.mkpSplitsField;
+            }
+            set
+            {
+                this.mkpSplitsField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class PreviousTransDetails
@@ -798,7 +970,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RecurringTransaction
@@ -854,7 +1026,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class MerchantRiskIndicator
@@ -1006,7 +1178,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class AccInfo
@@ -1270,7 +1442,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class CardHolder
@@ -1406,7 +1578,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ThreeDSShippingAddress
@@ -1526,7 +1698,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ThreeDSBillingAddress
@@ -1646,7 +1818,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class BuyerProfileDetails
@@ -1718,7 +1890,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class BuyerDetails
@@ -1822,7 +1994,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ThreeDsContainer
@@ -1942,7 +2114,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ThreeDSAuthResult
@@ -2062,13 +2234,15 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class TransDetails
     {
         
         private string typeField;
+        
+        private string authenticationAmountField;
         
         private ThreeDSAuthResult threeDSAuthResultField;
         
@@ -2094,6 +2268,20 @@ namespace GestPayWsS2SServiceReference
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string authenticationAmount
+        {
+            get
+            {
+                return this.authenticationAmountField;
+            }
+            set
+            {
+                this.authenticationAmountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public ThreeDSAuthResult threeDSAuthResult
         {
             get
@@ -2107,7 +2295,7 @@ namespace GestPayWsS2SServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public ThreeDsContainer threeDsContainer
         {
             get
@@ -2121,7 +2309,7 @@ namespace GestPayWsS2SServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public RecurringTransaction recurringTransaction
         {
             get
@@ -2135,7 +2323,7 @@ namespace GestPayWsS2SServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
         public PreviousTransDetails previousTransDetails
         {
             get
@@ -2150,7 +2338,135 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ProviderPaymentDetails
+    {
+        
+        private string methodField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string Method
+        {
+            get
+            {
+                return this.methodField;
+            }
+            set
+            {
+                this.methodField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class ProviderPageDetails
+    {
+        
+        private string logoUrlField;
+        
+        private string backgroundUrlField;
+        
+        private string backgroundWidthField;
+        
+        private string pageTitleField;
+        
+        private string privacyUrlField;
+        
+        private string termsAndCondsUrlField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string LogoUrl
+        {
+            get
+            {
+                return this.logoUrlField;
+            }
+            set
+            {
+                this.logoUrlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string BackgroundUrl
+        {
+            get
+            {
+                return this.backgroundUrlField;
+            }
+            set
+            {
+                this.backgroundUrlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string BackgroundWidth
+        {
+            get
+            {
+                return this.backgroundWidthField;
+            }
+            set
+            {
+                this.backgroundWidthField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string PageTitle
+        {
+            get
+            {
+                return this.pageTitleField;
+            }
+            set
+            {
+                this.pageTitleField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string PrivacyUrl
+        {
+            get
+            {
+                return this.privacyUrlField;
+            }
+            set
+            {
+                this.privacyUrlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public string TermsAndCondsUrl
+        {
+            get
+            {
+                return this.termsAndCondsUrlField;
+            }
+            set
+            {
+                this.termsAndCondsUrlField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class PassengerDetail
@@ -2334,7 +2650,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class TravelTicketDetail
@@ -2614,7 +2930,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class AccommodationDetail
@@ -2830,7 +3146,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ShippingLine
@@ -2886,7 +3202,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class DiscountCode
@@ -2926,7 +3242,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class BillingAddress
@@ -3222,7 +3538,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ShippingAddress
@@ -3261,6 +3577,8 @@ namespace GestPayWsS2SServiceReference
         private string companyField;
         
         private string stateCodeField;
+        
+        private string shippingMethodField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -3499,10 +3817,24 @@ namespace GestPayWsS2SServiceReference
                 this.stateCodeField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public string ShippingMethod
+        {
+            get
+            {
+                return this.shippingMethodField;
+            }
+            set
+            {
+                this.shippingMethodField = value;
+            }
+        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class CustomerSocial
@@ -3718,7 +4050,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class CustomerDetail
@@ -3756,7 +4088,15 @@ namespace GestPayWsS2SServiceReference
         
         private string accountTypeField;
         
+        private string birthTownField;
+        
+        private string birthStateField;
+        
         private CustomerSocial socialField;
+        
+        private string typeField;
+        
+        private string ibanField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -3984,6 +4324,34 @@ namespace GestPayWsS2SServiceReference
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public string BirthTown
+        {
+            get
+            {
+                return this.birthTownField;
+            }
+            set
+            {
+                this.birthTownField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=17)]
+        public string BirthState
+        {
+            get
+            {
+                return this.birthStateField;
+            }
+            set
+            {
+                this.birthStateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=18)]
         public CustomerSocial Social
         {
             get
@@ -3995,10 +4363,38 @@ namespace GestPayWsS2SServiceReference
                 this.socialField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=19)]
+        public string Type
+        {
+            get
+            {
+                return this.typeField;
+            }
+            set
+            {
+                this.typeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=20)]
+        public string Iban
+        {
+            get
+            {
+                return this.ibanField;
+            }
+            set
+            {
+                this.ibanField = value;
+            }
+        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class FraudPrevention
@@ -4134,7 +4530,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class EcommGestpayPaymentDetails
@@ -4159,6 +4555,14 @@ namespace GestPayWsS2SServiceReference
         private TravelTicketDetail[] travelTicketDetailsField;
         
         private PassengerDetail[] passengerDetailsField;
+        
+        private ProviderPageDetails providerPageDetailsField;
+        
+        private string providerDataField;
+        
+        private ProviderPaymentDetails providerPaymentDetailsField;
+        
+        private string bankTransferDescriptionField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -4299,10 +4703,106 @@ namespace GestPayWsS2SServiceReference
                 this.passengerDetailsField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public ProviderPageDetails providerPageDetails
+        {
+            get
+            {
+                return this.providerPageDetailsField;
+            }
+            set
+            {
+                this.providerPageDetailsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public string ProviderData
+        {
+            get
+            {
+                return this.providerDataField;
+            }
+            set
+            {
+                this.providerDataField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public ProviderPaymentDetails ProviderPaymentDetails
+        {
+            get
+            {
+                return this.providerPaymentDetailsField;
+            }
+            set
+            {
+                this.providerPaymentDetailsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public string BankTransferDescription
+        {
+            get
+            {
+                return this.bankTransferDescriptionField;
+            }
+            set
+            {
+                this.bankTransferDescriptionField = value;
+            }
+        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
+    public partial class SDDPaymentDetails
+    {
+        
+        private string signatureDateField;
+        
+        private string signaturePlaceField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string SignatureDate
+        {
+            get
+            {
+                return this.signatureDateField;
+            }
+            set
+            {
+                this.signatureDateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string SignaturePlace
+        {
+            get
+            {
+                return this.signaturePlaceField;
+            }
+            set
+            {
+                this.signaturePlaceField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class TokenizationData
@@ -4326,13 +4826,15 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class GooglePayRequest
     {
         
         private TokenizationData tokenizationDataField;
+        
+        private string walletTypeField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -4347,10 +4849,24 @@ namespace GestPayWsS2SServiceReference
                 this.tokenizationDataField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string WalletType
+        {
+            get
+            {
+                return this.walletTypeField;
+            }
+            set
+            {
+                this.walletTypeField = value;
+            }
+        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class CardData
@@ -4406,7 +4922,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class DeviceProvidedInfo
@@ -4462,7 +4978,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class CardReaderPayments
@@ -4518,13 +5034,15 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ApplePayRequest
     {
         
         private string applePayPKPaymentTokenField;
+        
+        private object pKPaymentTokenField;
         
         private string onlinePaymentCryptogramField;
         
@@ -4550,6 +5068,20 @@ namespace GestPayWsS2SServiceReference
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public object PKPaymentToken
+        {
+            get
+            {
+                return this.pKPaymentTokenField;
+            }
+            set
+            {
+                this.pKPaymentTokenField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public string onlinePaymentCryptogram
         {
             get
@@ -4563,7 +5095,7 @@ namespace GestPayWsS2SServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public string eciIndicator
         {
             get
@@ -4577,7 +5109,7 @@ namespace GestPayWsS2SServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public string requestToken
         {
             get
@@ -4591,7 +5123,7 @@ namespace GestPayWsS2SServiceReference
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
         public string token
         {
             get
@@ -4606,7 +5138,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedItem
@@ -4774,7 +5306,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedItems
@@ -4814,7 +5346,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedCustomerData
@@ -4918,7 +5450,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedBillingInfo
@@ -5150,7 +5682,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedShippingInfo
@@ -5366,7 +5898,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class RedCustomerInfo
@@ -5550,7 +6082,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class ShippingDetails
@@ -5670,7 +6202,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="https://ecomms2s.sella.it/")]
     public partial class PaymentDeviceDetails
@@ -5694,7 +6226,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="callRefundS2S", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
     public partial class callRefundS2SRequest
@@ -5716,32 +6248,36 @@ namespace GestPayWsS2SServiceReference
         public string bankTransactionId;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=5)]
+        public string settlementID;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=6)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public GestPayWsS2SServiceReference.RefundProductDetail OrderDetail;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=6)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=7)]
         public string RefundReason;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=7)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=8)]
         public string chargeBackFraud;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=8)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=9)]
         public string apikey;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=9)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=10)]
         public GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails;
         
         public callRefundS2SRequest()
         {
         }
         
-        public callRefundS2SRequest(string shopLogin, string uicCode, string amount, string shopTransactionId, string bankTransactionId, GestPayWsS2SServiceReference.RefundProductDetail OrderDetail, string RefundReason, string chargeBackFraud, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
+        public callRefundS2SRequest(string shopLogin, string uicCode, string amount, string shopTransactionId, string bankTransactionId, string settlementID, GestPayWsS2SServiceReference.RefundProductDetail OrderDetail, string RefundReason, string chargeBackFraud, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
         {
             this.shopLogin = shopLogin;
             this.uicCode = uicCode;
             this.amount = amount;
             this.shopTransactionId = shopTransactionId;
             this.bankTransactionId = bankTransactionId;
+            this.settlementID = settlementID;
             this.OrderDetail = OrderDetail;
             this.RefundReason = RefundReason;
             this.chargeBackFraud = chargeBackFraud;
@@ -5751,7 +6287,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="callRefundS2SResponse", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
     public partial class callRefundS2SResponse
@@ -5771,7 +6307,7 @@ namespace GestPayWsS2SServiceReference
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="callPagamS2S", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
     public partial class callPagamS2SRequest
@@ -5790,111 +6326,132 @@ namespace GestPayWsS2SServiceReference
         public string shopTransactionId;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=4)]
-        public string cardNumber;
+        public string shopTransactionId_2;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=5)]
-        public string expiryMonth;
+        public string cardNumber;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=6)]
-        public string expiryYear;
+        public string expiryMonth;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=7)]
-        public string buyerName;
+        public string expiryYear;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=8)]
-        public string buyerEmail;
+        public string buyerName;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=9)]
-        public string languageId;
+        public string buyerEmail;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=10)]
-        public string cvv;
+        public string languageId;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=11)]
-        public string min;
+        public string cvv;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=12)]
-        public string transKey;
+        public string cof;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=13)]
-        public string PARes;
+        public string min;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=14)]
-        public string customInfo;
+        public string transKey;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=15)]
-        public string IDEA;
+        public string PARes;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=16)]
-        public string requestToken;
+        public string customInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=17)]
-        public string tokenValue;
+        public string IDEA;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=18)]
-        public string clientIP;
+        public string requestToken;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=19)]
-        public string itemType;
+        public string tokenValue;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=20)]
-        public string recurrent;
+        public string executionDate;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=21)]
-        public string subMerchantId;
+        public string clientIP;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=22)]
+        public string itemType;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=23)]
+        public string recurrent;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=24)]
+        public string subMerchantId;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=25)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public string ppSellerProtection;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=26)]
         [System.Xml.Serialization.XmlArrayItemAttribute("paymentType", IsNullable=false)]
         public string[] paymentTypes;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=23)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=27)]
         public GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=24)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=28)]
         public GestPayWsS2SServiceReference.ShippingDetails shippingDetails;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=25)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=29)]
         public string redFraudPrevention;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=26)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=30)]
         public GestPayWsS2SServiceReference.RedCustomerInfo Red_CustomerInfo;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=27)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=31)]
         public GestPayWsS2SServiceReference.RedShippingInfo Red_ShippingInfo;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=28)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=32)]
         public GestPayWsS2SServiceReference.RedBillingInfo Red_BillingInfo;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=29)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=33)]
         public GestPayWsS2SServiceReference.RedCustomerData Red_CustomerData;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=30)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=34)]
         [System.Xml.Serialization.XmlArrayItemAttribute("UserCustomData", IsNullable=false)]
         public string[] Red_CustomInfo;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=31)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=35)]
         public GestPayWsS2SServiceReference.RedItems Red_Items;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=32)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=36)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public GestPayWsS2SServiceReference.ApplePayRequest applePay;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=33)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=37)]
         public GestPayWsS2SServiceReference.CardReaderPayments cardReaderPayments;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=34)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=38)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public GestPayWsS2SServiceReference.GooglePayRequest googlePay;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=35)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=39)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public GestPayWsS2SServiceReference.SDDPaymentDetails SDD;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=40)]
         public GestPayWsS2SServiceReference.EcommGestpayPaymentDetails OrderDetails;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=36)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=41)]
         public string apikey;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=37)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=42)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public GestPayWsS2SServiceReference.TransDetails transDetails;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://ecomms2s.sella.it/", Order=43)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public GestPayWsS2SServiceReference.Marketplace marketPlace;
         
         public callPagamS2SRequest()
         {
@@ -5905,6 +6462,7 @@ namespace GestPayWsS2SServiceReference
                     string uicCode, 
                     string amount, 
                     string shopTransactionId, 
+                    string shopTransactionId_2, 
                     string cardNumber, 
                     string expiryMonth, 
                     string expiryYear, 
@@ -5912,6 +6470,7 @@ namespace GestPayWsS2SServiceReference
                     string buyerEmail, 
                     string languageId, 
                     string cvv, 
+                    string cof, 
                     string min, 
                     string transKey, 
                     string PARes, 
@@ -5919,10 +6478,12 @@ namespace GestPayWsS2SServiceReference
                     string IDEA, 
                     string requestToken, 
                     string tokenValue, 
+                    string executionDate, 
                     string clientIP, 
                     string itemType, 
                     string recurrent, 
                     string subMerchantId, 
+                    string ppSellerProtection, 
                     string[] paymentTypes, 
                     GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails, 
                     GestPayWsS2SServiceReference.ShippingDetails shippingDetails, 
@@ -5936,14 +6497,17 @@ namespace GestPayWsS2SServiceReference
                     GestPayWsS2SServiceReference.ApplePayRequest applePay, 
                     GestPayWsS2SServiceReference.CardReaderPayments cardReaderPayments, 
                     GestPayWsS2SServiceReference.GooglePayRequest googlePay, 
+                    GestPayWsS2SServiceReference.SDDPaymentDetails SDD, 
                     GestPayWsS2SServiceReference.EcommGestpayPaymentDetails OrderDetails, 
                     string apikey, 
-                    GestPayWsS2SServiceReference.TransDetails transDetails)
+                    GestPayWsS2SServiceReference.TransDetails transDetails, 
+                    GestPayWsS2SServiceReference.Marketplace marketPlace)
         {
             this.shopLogin = shopLogin;
             this.uicCode = uicCode;
             this.amount = amount;
             this.shopTransactionId = shopTransactionId;
+            this.shopTransactionId_2 = shopTransactionId_2;
             this.cardNumber = cardNumber;
             this.expiryMonth = expiryMonth;
             this.expiryYear = expiryYear;
@@ -5951,6 +6515,7 @@ namespace GestPayWsS2SServiceReference
             this.buyerEmail = buyerEmail;
             this.languageId = languageId;
             this.cvv = cvv;
+            this.cof = cof;
             this.min = min;
             this.transKey = transKey;
             this.PARes = PARes;
@@ -5958,10 +6523,12 @@ namespace GestPayWsS2SServiceReference
             this.IDEA = IDEA;
             this.requestToken = requestToken;
             this.tokenValue = tokenValue;
+            this.executionDate = executionDate;
             this.clientIP = clientIP;
             this.itemType = itemType;
             this.recurrent = recurrent;
             this.subMerchantId = subMerchantId;
+            this.ppSellerProtection = ppSellerProtection;
             this.paymentTypes = paymentTypes;
             this.paymentDeviceDetails = paymentDeviceDetails;
             this.shippingDetails = shippingDetails;
@@ -5975,14 +6542,16 @@ namespace GestPayWsS2SServiceReference
             this.applePay = applePay;
             this.cardReaderPayments = cardReaderPayments;
             this.googlePay = googlePay;
+            this.SDD = SDD;
             this.OrderDetails = OrderDetails;
             this.apikey = apikey;
             this.transDetails = transDetails;
+            this.marketPlace = marketPlace;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="callPagamS2SResponse", WrapperNamespace="https://ecomms2s.sella.it/", IsWrapped=true)]
     public partial class callPagamS2SResponse
@@ -6001,13 +6570,13 @@ namespace GestPayWsS2SServiceReference
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     public interface WSs2sSoapChannel : GestPayWsS2SServiceReference.WSs2sSoap, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.1")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     public partial class WSs2sSoapClient : System.ServiceModel.ClientBase<GestPayWsS2SServiceReference.WSs2sSoap>, GestPayWsS2SServiceReference.WSs2sSoap
     {
         
@@ -6050,7 +6619,7 @@ namespace GestPayWsS2SServiceReference
             return base.Channel.callRefundS2SAsync(request);
         }
         
-        public System.Threading.Tasks.Task<GestPayWsS2SServiceReference.callRefundS2SResponse> callRefundS2SAsync(string shopLogin, string uicCode, string amount, string shopTransactionId, string bankTransactionId, GestPayWsS2SServiceReference.RefundProductDetail OrderDetail, string RefundReason, string chargeBackFraud, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
+        public System.Threading.Tasks.Task<GestPayWsS2SServiceReference.callRefundS2SResponse> callRefundS2SAsync(string shopLogin, string uicCode, string amount, string shopTransactionId, string bankTransactionId, string settlementID, GestPayWsS2SServiceReference.RefundProductDetail OrderDetail, string RefundReason, string chargeBackFraud, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
         {
             GestPayWsS2SServiceReference.callRefundS2SRequest inValue = new GestPayWsS2SServiceReference.callRefundS2SRequest();
             inValue.shopLogin = shopLogin;
@@ -6058,6 +6627,7 @@ namespace GestPayWsS2SServiceReference
             inValue.amount = amount;
             inValue.shopTransactionId = shopTransactionId;
             inValue.bankTransactionId = bankTransactionId;
+            inValue.settlementID = settlementID;
             inValue.OrderDetail = OrderDetail;
             inValue.RefundReason = RefundReason;
             inValue.chargeBackFraud = chargeBackFraud;
@@ -6066,9 +6636,9 @@ namespace GestPayWsS2SServiceReference
             return ((GestPayWsS2SServiceReference.WSs2sSoap)(this)).callRefundS2SAsync(inValue);
         }
         
-        public System.Threading.Tasks.Task<System.Xml.XmlNode> callReadTrxS2SAsync(string shopLogin, string shopTransactionId, string bankTransactionId, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callReadTrxS2SAsync(string shopLogin, string shopTransactionId, string shopTransactionId_2, string bankTransactionId, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
         {
-            return base.Channel.callReadTrxS2SAsync(shopLogin, shopTransactionId, bankTransactionId, apikey, paymentDeviceDetails);
+            return base.Channel.callReadTrxS2SAsync(shopLogin, shopTransactionId, shopTransactionId_2, bankTransactionId, apikey, paymentDeviceDetails);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -6082,6 +6652,7 @@ namespace GestPayWsS2SServiceReference
                     string uicCode, 
                     string amount, 
                     string shopTransactionId, 
+                    string shopTransactionId_2, 
                     string cardNumber, 
                     string expiryMonth, 
                     string expiryYear, 
@@ -6089,6 +6660,7 @@ namespace GestPayWsS2SServiceReference
                     string buyerEmail, 
                     string languageId, 
                     string cvv, 
+                    string cof, 
                     string min, 
                     string transKey, 
                     string PARes, 
@@ -6096,10 +6668,12 @@ namespace GestPayWsS2SServiceReference
                     string IDEA, 
                     string requestToken, 
                     string tokenValue, 
+                    string executionDate, 
                     string clientIP, 
                     string itemType, 
                     string recurrent, 
                     string subMerchantId, 
+                    string ppSellerProtection, 
                     string[] paymentTypes, 
                     GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails, 
                     GestPayWsS2SServiceReference.ShippingDetails shippingDetails, 
@@ -6113,15 +6687,18 @@ namespace GestPayWsS2SServiceReference
                     GestPayWsS2SServiceReference.ApplePayRequest applePay, 
                     GestPayWsS2SServiceReference.CardReaderPayments cardReaderPayments, 
                     GestPayWsS2SServiceReference.GooglePayRequest googlePay, 
+                    GestPayWsS2SServiceReference.SDDPaymentDetails SDD, 
                     GestPayWsS2SServiceReference.EcommGestpayPaymentDetails OrderDetails, 
                     string apikey, 
-                    GestPayWsS2SServiceReference.TransDetails transDetails)
+                    GestPayWsS2SServiceReference.TransDetails transDetails, 
+                    GestPayWsS2SServiceReference.Marketplace marketPlace)
         {
             GestPayWsS2SServiceReference.callPagamS2SRequest inValue = new GestPayWsS2SServiceReference.callPagamS2SRequest();
             inValue.shopLogin = shopLogin;
             inValue.uicCode = uicCode;
             inValue.amount = amount;
             inValue.shopTransactionId = shopTransactionId;
+            inValue.shopTransactionId_2 = shopTransactionId_2;
             inValue.cardNumber = cardNumber;
             inValue.expiryMonth = expiryMonth;
             inValue.expiryYear = expiryYear;
@@ -6129,6 +6706,7 @@ namespace GestPayWsS2SServiceReference
             inValue.buyerEmail = buyerEmail;
             inValue.languageId = languageId;
             inValue.cvv = cvv;
+            inValue.cof = cof;
             inValue.min = min;
             inValue.transKey = transKey;
             inValue.PARes = PARes;
@@ -6136,10 +6714,12 @@ namespace GestPayWsS2SServiceReference
             inValue.IDEA = IDEA;
             inValue.requestToken = requestToken;
             inValue.tokenValue = tokenValue;
+            inValue.executionDate = executionDate;
             inValue.clientIP = clientIP;
             inValue.itemType = itemType;
             inValue.recurrent = recurrent;
             inValue.subMerchantId = subMerchantId;
+            inValue.ppSellerProtection = ppSellerProtection;
             inValue.paymentTypes = paymentTypes;
             inValue.paymentDeviceDetails = paymentDeviceDetails;
             inValue.shippingDetails = shippingDetails;
@@ -6153,9 +6733,11 @@ namespace GestPayWsS2SServiceReference
             inValue.applePay = applePay;
             inValue.cardReaderPayments = cardReaderPayments;
             inValue.googlePay = googlePay;
+            inValue.SDD = SDD;
             inValue.OrderDetails = OrderDetails;
             inValue.apikey = apikey;
             inValue.transDetails = transDetails;
+            inValue.marketPlace = marketPlace;
             return ((GestPayWsS2SServiceReference.WSs2sSoap)(this)).callPagamS2SAsync(inValue);
         }
         
@@ -6164,9 +6746,9 @@ namespace GestPayWsS2SServiceReference
             return base.Channel.callDeleteS2SAsync(shopLogin, shopTransactionId, bankTransactionId, CancelReason, apikey, paymentDeviceDetails);
         }
         
-        public System.Threading.Tasks.Task<System.Xml.XmlNode> callSettleS2SAsync(string shopLogin, string uicCode, string amount, string shopTransID, string bankTransID, GestPayWsS2SServiceReference.FullFillmentDetails FullFillment, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> callSettleS2SAsync(string shopLogin, string uicCode, string amount, string shopTransID, string bankTransID, string settlementID, GestPayWsS2SServiceReference.FullFillmentDetails FullFillment, string apikey, GestPayWsS2SServiceReference.PaymentDeviceDetails paymentDeviceDetails)
         {
-            return base.Channel.callSettleS2SAsync(shopLogin, uicCode, amount, shopTransID, bankTransID, FullFillment, apikey, paymentDeviceDetails);
+            return base.Channel.callSettleS2SAsync(shopLogin, uicCode, amount, shopTransID, bankTransID, settlementID, FullFillment, apikey, paymentDeviceDetails);
         }
         
         public System.Threading.Tasks.Task<System.Xml.XmlNode> callVerifycardS2SAsync(string shopLogin, string shopTransactionId, string cardNumber, string expMonth, string expYear, string CVV2, string apikey)
@@ -6197,6 +6779,11 @@ namespace GestPayWsS2SServiceReference
         public System.Threading.Tasks.Task<System.Xml.XmlNode> CallUpdateTokenS2SAsync(string shopLogin, string token, string expiryMonth, string expiryYear, string withAut, string apikey)
         {
             return base.Channel.CallUpdateTokenS2SAsync(shopLogin, token, expiryMonth, expiryYear, withAut, apikey);
+        }
+        
+        public System.Threading.Tasks.Task<System.Xml.XmlNode> CallCheckTokenS2SAsync(string shopLogin, string tokenValue, string apikey)
+        {
+            return base.Channel.CallCheckTokenS2SAsync(shopLogin, tokenValue, apikey);
         }
         
         public System.Threading.Tasks.Task<System.Xml.XmlNode> CallIdealListS2SAsync(string shopLogin, string apikey)
@@ -6234,10 +6821,12 @@ namespace GestPayWsS2SServiceReference
             return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginOpen(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndOpen));
         }
         
+        #if !NET6_0_OR_GREATER
         public virtual System.Threading.Tasks.Task CloseAsync()
         {
             return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginClose(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndClose));
         }
+        #endif
         
         private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
         {
@@ -6251,7 +6840,7 @@ namespace GestPayWsS2SServiceReference
                 result.Security.Mode = System.ServiceModel.BasicHttpSecurityMode.Transport;
                 return result;
             }
-            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap12) || (endpointConfiguration == EndpointConfiguration.WSs2sSoap12Test))
+            if ((endpointConfiguration == EndpointConfiguration.WSs2sSoap12))
             {
                 System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
                 System.ServiceModel.Channels.TextMessageEncodingBindingElement textBindingElement = new System.ServiceModel.Channels.TextMessageEncodingBindingElement();
@@ -6291,7 +6880,7 @@ namespace GestPayWsS2SServiceReference
             
             WSs2sSoap12,
 
-            WSs2sSoap12Test,
+            WSs2sSoap12Test
         }
     }
 }

@@ -1,23 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Nop.Core;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Orders;
+﻿using Newtonsoft.Json;
 using Nop.Plugin.Payments.GestPay.Models.GestpayByLink;
 using Nop.Services.Common;
-using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Messages;
 using Nop.Services.Orders;
-using Nop.Services.Stores;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Nop.Plugin.Payments.GestPay.Helper
 {
@@ -40,14 +31,14 @@ namespace Nop.Plugin.Payments.GestPay.Helper
             _gestpayPayByLinkPaymentSettings = gestpayPayByLinkPaymentSettings;
         }
 
-        public int CreatePayment(int orderId)
+        public async Task<int> CreatePayment(int orderId)
         {
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderByIdAsync(orderId);
 
             if (order == null)
-                throw new ArgumentNullException("Order");
+                throw new ArgumentNullException("order");
 
-            var nopBillingAddress = _addressService.GetAddressById(order.BillingAddressId);
+            var nopBillingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
             var amount = Math.Round(order.OrderTotal, 2);
             var shopTransactionId = order.OrderGuid.ToString();
@@ -59,14 +50,14 @@ namespace Nop.Plugin.Payments.GestPay.Helper
 
             var endpoint = _gestpayPayByLinkPaymentSettings.UseSandbox ? "https://sandbox.gestpay.net/api/v1/payment/create/" : "https://ecomms2s.sella.it/api/v1/payment/create/";
 
-            OrderDetails orderDetails = new OrderDetails();
+            var orderDetails = new OrderDetails();
 
-            CustomInfo customInfo = new CustomInfo();
-            Dictionary<string, string> myDict = new Dictionary<string, string>();
+            var customInfo = new CustomInfo();
+            var myDict = new Dictionary<string, string>();
             myDict.Add("OrderNumber", order.CustomOrderNumber);
             customInfo.customInfo = myDict;
 
-            PaymentCreateRequestModel model = new PaymentCreateRequestModel();
+            var model = new PaymentCreateRequestModel();
             model.shopLogin = _gestpayPayByLinkPaymentSettings.ShopOperatorCode;
             model.currency = "EUR";
             model.amount = amount.ToString("0.00", CultureInfo.InvariantCulture);
@@ -78,18 +69,18 @@ namespace Nop.Plugin.Payments.GestPay.Helper
             model.customInfo = customInfo;
             model.orderDetails = orderDetails;
 
-            PaymentChannel paymentChannel = new PaymentChannel();
+            var paymentChannel = new PaymentChannel();
             paymentChannel.channelType = new List<string> { "EMAIL" };
             model.paymentChannel = paymentChannel;
 
             var responseStr = string.Empty;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
+            var request = (HttpWebRequest)WebRequest.Create(endpoint);
             request.ContentType = "application/json";
             request.Headers.Add("Authorization", "apikey " + _gestpayPayByLinkPaymentSettings.ApiKey);
             request.Method = "POST";
 
             var json = JsonConvert.SerializeObject(model);
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            await using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamWriter.Write(json);
                 streamWriter.Flush();
@@ -98,27 +89,25 @@ namespace Nop.Plugin.Payments.GestPay.Helper
 
             try
             {
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    Stream dataStream = response.GetResponseStream();
-                    StreamReader reader = new StreamReader(dataStream);
-                    responseStr = reader.ReadToEnd();
-                    reader.Close();
-                    dataStream.Close();
+                using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                var dataStream = response.GetResponseStream();
+                var reader = new StreamReader(dataStream);
+                responseStr = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
 
-                    PaymentCreateResponseModel paymentResponse = JsonConvert.DeserializeObject<PaymentCreateResponseModel>(responseStr);
-                    return Convert.ToInt32(paymentResponse.error.code);
-                }
+                var paymentResponse = JsonConvert.DeserializeObject<PaymentCreateResponseModel>(responseStr);
+                return Convert.ToInt32(paymentResponse.error.code);
             }
             catch (WebException ex)
             {
-                using (var stream = ex.Response.GetResponseStream())
+                await using (var stream = ex.Response.GetResponseStream())
                 using (var reader = new StreamReader(stream))
                 {
                     responseStr = reader.ReadToEnd();
                 }
-                PaymentCreateResponseModel paymentResponse = JsonConvert.DeserializeObject<PaymentCreateResponseModel>(responseStr);
-                _logger.Error("Gestpay Pay Link Error = " + paymentResponse.error.code + " " + paymentResponse.error.description, ex);
+                var paymentResponse = JsonConvert.DeserializeObject<PaymentCreateResponseModel>(responseStr);
+                await _logger.ErrorAsync("Gestpay Pay Link Error = " + paymentResponse.error.code + " " + paymentResponse.error.description, ex);
                 return -1;
             }
         }

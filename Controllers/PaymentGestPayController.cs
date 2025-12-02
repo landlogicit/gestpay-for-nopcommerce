@@ -15,7 +15,6 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -23,9 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
@@ -41,14 +40,14 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
-        private readonly IPaymentService _paymentService;
+        //private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
+        //private readonly IStoreService _storeService;
+        //private readonly IWebHelper _webHelper;
+        //private readonly IWorkContext _workContext;
 
-        private readonly PaymentSettings _paymentSettings;
+        //private readonly PaymentSettings _paymentSettings;
         private readonly GestPayPaymentSettings _gestPayPaymentSettings;
 
         #endregion
@@ -61,13 +60,11 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
-            IPaymentService paymentService,
+           
             ISettingService settingService,
             IStoreContext storeContext,
-            IStoreService storeService,
-            IWebHelper webHelper,
-            IWorkContext workContext,
-            PaymentSettings paymentSettings,
+           
+            
             GestPayPaymentSettings gestPayPaymentSettings)
         {
             _addressService = addressService;
@@ -77,13 +74,13 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
-            _paymentService = paymentService;
+            //_paymentService = paymentService;
             _settingService = settingService;
             _storeContext = storeContext;
-            _storeService = storeService;
-            _webHelper = webHelper;
-            _workContext = workContext;
-            _paymentSettings = paymentSettings;
+            //_storeService = storeService;
+            //_webHelper = webHelper;
+            //_workContext = workContext;
+            //_paymentSettings = paymentSettings;
             _gestPayPaymentSettings = gestPayPaymentSettings;
         }
         #endregion
@@ -92,11 +89,11 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var gestPayPaymentSettings = _settingService.LoadSetting<GestPayPaymentSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var gestPayPaymentSettings = await _settingService.LoadSettingAsync<GestPayPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
             {
@@ -114,15 +111,15 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
 
             if (storeScope > 0)
             {
-                model.UseSandboxOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.UseSandbox, storeScope);
-                model.UseStarterOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.UseStarter, storeScope);
-                model.ShopOperatorCodeOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.ShopOperatorCode, storeScope);
-                model.AdditionalFeeOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.AdditionalFee, storeScope);
-                model.AdditionalFeePercentageOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-                model.LanguageCodeOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.LanguageCode, storeScope);
-                model.CurrencyUiCcodeOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.CurrencyUiCcode, storeScope);
-                model.ApiKeyOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.ApiKey, storeScope);
-                model.EnableGuaranteedPaymentOverrideForStore = _settingService.SettingExists(gestPayPaymentSettings, x => x.EnableGuaranteedPayment, storeScope);
+                model.UseSandboxOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.UseSandbox, storeScope);
+                model.UseStarterOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.UseStarter, storeScope);
+                model.ShopOperatorCodeOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.ShopOperatorCode, storeScope);
+                model.AdditionalFeeOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.AdditionalFee, storeScope);
+                model.AdditionalFeePercentageOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+                model.LanguageCodeOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.LanguageCode, storeScope);
+                model.CurrencyUiCcodeOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.CurrencyUiCcode, storeScope);
+                model.ApiKeyOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.ApiKey, storeScope);
+                model.EnableGuaranteedPaymentOverrideForStore = await _settingService.SettingExistsAsync(gestPayPaymentSettings, x => x.EnableGuaranteedPayment, storeScope);
             }
 
             return View("~/Plugins/Payments.GestPay/Views/Configure.cshtml", model);
@@ -132,14 +129,14 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
         [AuthorizeAdmin]
         [AutoValidateAntiforgeryToken]
         [Area(AreaNames.Admin)]
-        public IActionResult Configure(ConfigurationModel model)
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var gestPayPaymentSettings = _settingService.LoadSetting<GestPayPaymentSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var gestPayPaymentSettings = await _settingService.LoadSettingAsync<GestPayPaymentSettings>(storeScope);
 
             //save settings
             gestPayPaymentSettings.UseSandbox = model.UseSandbox;
@@ -155,46 +152,45 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.UseSandbox, model.UseSandboxOverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.UseStarter, model.UseStarterOverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.ShopOperatorCode, model.ShopOperatorCodeOverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.AdditionalFee, model.AdditionalFeeOverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentageOverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.LanguageCode, model.LanguageCodeOverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.CurrencyUiCcode, model.CurrencyUiCcodeOverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(gestPayPaymentSettings, x => x.EnableGuaranteedPayment, model.EnableGuaranteedPaymentOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.UseSandbox, model.UseSandboxOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.UseStarter, model.UseStarterOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.ShopOperatorCode, model.ShopOperatorCodeOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.AdditionalFee, model.AdditionalFeeOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentageOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.LanguageCode, model.LanguageCodeOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.CurrencyUiCcode, model.CurrencyUiCcodeOverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(gestPayPaymentSettings, x => x.EnableGuaranteedPayment, model.EnableGuaranteedPaymentOverrideForStore, storeScope, false);
 
             if (model.ApiKeyOverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(gestPayPaymentSettings, x => x.ApiKey, storeScope, false);
+                await _settingService.SaveSettingAsync(gestPayPaymentSettings, x => x.ApiKey, storeScope, false);
             else if (storeScope > 0)
-                _settingService.DeleteSetting(gestPayPaymentSettings, x => x.ApiKey, storeScope);
+                await _settingService.DeleteSettingAsync(gestPayPaymentSettings, x => x.ApiKey, storeScope);
 
             //now clear settings cache
-            _settingService.ClearCache();
+            await _settingService.ClearCacheAsync();
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         [HttpPost]
-        public IActionResult GeneratePaymentLink(int orderId)
+        public async Task<IActionResult> GeneratePaymentLink(int orderId)
         {
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order != null)
             {
-                ProcessPayment processPayment = new ProcessPayment(_addressService, _logger, _orderService, _gestPayPaymentSettings);
-                var errorCode = processPayment.CreatePayment(orderId);
+                var processPayment = new ProcessPayment(_addressService, _logger, _orderService, _gestPayPaymentSettings);
+                var errorCode = await processPayment.CreatePayment(orderId);
 
                 if (errorCode == 0)
                     return Json("Payment link generated & Email queued");
-                else
-                    return Json("Failed to generate payment link");
+                return Json("Failed to generate payment link");
             }
-            else
-                return Json("Order not found");
+
+            return Json("Order not found");
         }
 
         public IActionResult CancelOrder(FormCollection form)
@@ -203,14 +199,14 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
-        public IActionResult s2sHandler()
+        public async Task<IActionResult> S2SHandler()
         {
             string errorCode = "", errorDesc = "";
 
-            string strRequest = Request.QueryString.ToString().Replace("?", "");
+            var strRequest = Request.QueryString.ToString().Replace("?", "");
             Dictionary<string, string> values;
 
-            var processor = _paymentPluginManager.LoadPluginBySystemName("Payments.GestPay") as GestPayPaymentProcessor;
+            var processor = (await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.GestPay")) as GestPayPaymentProcessor;
             if (processor == null ||
                 !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("GestPay module cannot be loaded");
@@ -226,9 +222,9 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 var shopLogin = values["a"];
                 var encString = values["b"];
                 string shopTransactionId = "", authorizationCode = "", bankTransactionId = "";
-                string transactionResult = "", buyerName = "", buyerEmail = "", riskified = "", threeDSAuthenticationLevel = "";
+                string transactionResult = "", buyerName = "", buyerEmail = "", riskified = "", threeDsAuthenticationLevel = "";
 
-                var acceptedThreeDSAuthLevels = new List<string> { "1H", "1F", "2F", "2C", "2E" };
+                var acceptedThreeDsAuthLevels = new List<string> { "1H", "1F", "2F", "2C", "2E" };
                 var checkAmount = decimal.Zero;
 
                 var sb = new StringBuilder();
@@ -239,55 +235,55 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                     var endpoint = _gestPayPaymentSettings.UseSandbox ? WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12Test : WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
                     var objDecrypt = new WSCryptDecryptSoapClient(endpoint);
 
-                    string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
+                    var xmlResponse = (await objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey)).OuterXml;
 
-                    XmlDocument XMLReturn = new XmlDocument();
-                    XMLReturn.LoadXml(xmlResponse.ToLower());
+                    var xmlReturn = new XmlDocument();
+                    xmlReturn.LoadXml(xmlResponse.ToLower());
 
                     //_logger.Information(xmlResponse.ToLower());
 
                     //Id transazione inviato  
-                    errorCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode")?.InnerText;
-                    errorDesc = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription")?.InnerText;
+                    errorCode = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode")?.InnerText;
+                    errorDesc = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription")?.InnerText;
                     //authorizationCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
-                    shopTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid")?.InnerText;
+                    shopTransactionId = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid")?.InnerText;
 
                     //_____ Messaggio OK _____//
                     if (errorCode == "0")
                     {
                         //Codice autorizzazione
-                        authorizationCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
+                        authorizationCode = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
                         //Codice transazione
-                        bankTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid")?.InnerText;
+                        bankTransactionId = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid")?.InnerText;
                         //Ammontare della transazione
-                        var amount = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount")?.InnerText;
+                        var amount = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/amount")?.InnerText;
                         //Risultato transazione
-                        transactionResult = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult")?.InnerText;
+                        transactionResult = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult")?.InnerText;
                         //Nome dell'utente
-                        buyerName = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername")?.InnerText;
+                        buyerName = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername")?.InnerText;
                         //Email utilizzata nella transazione
-                        buyerEmail = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail")?.InnerText;
+                        buyerEmail = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail")?.InnerText;
 
                         //__________ ?validare il totale? __________//
-                        riskified = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/riskresponsedescription")?.InnerText;
+                        riskified = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/riskresponsedescription")?.InnerText;
 
                         //  3DS authentication level (1H,1F,2F,2C,2E)
-                        threeDSAuthenticationLevel = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/threeds/authenticationresult/authenticationlevel")?.InnerText?.ToUpper();
+                        threeDsAuthenticationLevel = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/threeds/authenticationresult/authenticationlevel")?.InnerText.ToUpper();
 
                         try
                         {
-                            checkAmount = decimal.Parse(amount, new CultureInfo("en-US"));
+                            if (amount != null) checkAmount = decimal.Parse(amount, new CultureInfo("en-US"));
                         }
                         catch (Exception exc)
                         {
-                            _logger.Error("GestPay s2s. Error getting Amount", exc);
+                            await _logger.ErrorAsync("GestPay s2s. Error getting Amount", exc);
                         }
                         sb.AppendLine("GestPay success.");
                     }
                     else
                     {
                         sb.AppendLine("GestPay failed.");
-                        _logger.Error("GestPay S2S. Transaction not found", new NopException(sb.ToString()));
+                        await _logger.ErrorAsync("GestPay S2S. Transaction not found", new NopException(sb.ToString()));
                     }
                 }
 
@@ -301,7 +297,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 var newPaymentStatus = GestPayHelper.GetPaymentStatus(transactionResult, "");
                 sb.AppendLine("New payment status: " + newPaymentStatus);
                 sb.AppendLine("Riskified = " + riskified);
-                sb.AppendLine("3DS Level = " + threeDSAuthenticationLevel);
+                sb.AppendLine("3DS Level = " + threeDsAuthenticationLevel);
 
                 //Cerco di recuperare l'ordine
                 var orderNumberGuid = Guid.Empty;
@@ -309,9 +305,12 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                 {
                     orderNumberGuid = new Guid(shopTransactionId);
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
 
-                var order = _orderService.GetOrderByGuid(orderNumberGuid);
+                var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
                 //_________ aggiorno lo stato dell'ordine _________//
                 if (order != null)
                 {
@@ -325,7 +324,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                             {
                                 if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
                                 {
-                                    _orderProcessingService.MarkAsAuthorized(order);
+                                    await _orderProcessingService.MarkAsAuthorizedAsync(order);
                                 }
                             }
                             break;
@@ -335,10 +334,10 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                                 {
                                     order.AuthorizationTransactionId = bankTransactionId;
                                     order.AuthorizationTransactionCode = authorizationCode;
-                                    _orderService.UpdateOrder(order);
+                                    await _orderService.UpdateOrderAsync(order);
 
-                                    if (!_gestPayPaymentSettings.EnableGuaranteedPayment || acceptedThreeDSAuthLevels.Contains(threeDSAuthenticationLevel))
-                                        _orderProcessingService.MarkOrderAsPaid(order);
+                                    if (!_gestPayPaymentSettings.EnableGuaranteedPayment || acceptedThreeDsAuthLevels.Contains(threeDsAuthenticationLevel))
+                                       await _orderProcessingService.MarkOrderAsPaidAsync(order);
                                 }
                             }
                             break;
@@ -346,7 +345,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                             {
                                 if (_orderProcessingService.CanRefundOffline(order))
                                 {
-                                    _orderProcessingService.RefundOffline(order);
+                                    await _orderProcessingService.RefundOfflineAsync(order);
                                 }
                             }
                             break;
@@ -357,7 +356,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                                  * C'è da decidere se avvisare o meno l'utente _*/
                                 if (_orderProcessingService.CanCancelOrder(order))
                                 {
-                                    _orderProcessingService.CancelOrder(order, true);
+                                   await _orderProcessingService.CancelOrderAsync(order, true);
                                 }
                             }
                             break;
@@ -389,16 +388,16 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     };
-                    _orderService.InsertOrderNote(orderNote);
+                    await _orderService.InsertOrderNoteAsync(orderNote);
                 }
                 else
                 {
-                    _logger.Error("GestPay S2S. Order is not found", new NopException(sb.ToString()));
+                    await _logger.ErrorAsync("GestPay S2S. Order is not found", new NopException(sb.ToString()));
                 }
             }
             else
             {
-                _logger.Error("GestPay S2S failed.", new NopException(strRequest));
+                await _logger.ErrorAsync("GestPay S2S failed.", new NopException(strRequest));
             }
 
             //_________ Imposto il risultato __________//
@@ -411,7 +410,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return Content(String.Format("<html>{0}</html>", s2SResponse));
         }
 
-        public IActionResult EsitoGestPay(string esito = "check")
+        public async Task<IActionResult> EsitoGestPay(string esito = "check")
         {
             //___________ l'aggiornamento è già stato fatto via S2S ___________//
             //byte[] param = Request.BinaryRead(Request.ContentLength);
@@ -419,7 +418,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             var strRequest = Request.QueryString.ToString().Replace("?", "");
             Dictionary<string, string> values;
 
-            var processor = _paymentPluginManager.LoadPluginBySystemName("Payments.GestPay") as GestPayPaymentProcessor;
+            var processor = (await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.GestPay")) as GestPayPaymentProcessor;
             if (processor == null ||
                 !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("GestPay module cannot be loaded");
@@ -440,43 +439,47 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                     var endpoint = _gestPayPaymentSettings.UseSandbox ? WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12Test : WSCryptDecryptSoapClient.EndpointConfiguration.WSCryptDecryptSoap12;
                     var objDecrypt = new WSCryptDecryptSoapClient(endpoint);
 
-                    string xmlResponse = objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey).Result.OuterXml;
+                    var xmlResponse = (await objDecrypt.DecryptAsync(shopLogin, encString, _gestPayPaymentSettings.ApiKey)).OuterXml;
 
-                    XmlDocument XMLReturn = new XmlDocument();
-                    XMLReturn.LoadXml(xmlResponse.ToLower());
+                    var xmlReturn = new XmlDocument();
+                    xmlReturn.LoadXml(xmlResponse.ToLower());
 
                     //Id transazione inviato  
-                    string errorCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode")?.InnerText;
-                    string ErrorDesc = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription")?.InnerText;
-                    string shopTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid")?.InnerText;
+                    var errorCode = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/errorcode")?.InnerText;
+                    var errorDesc = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/errordescription")?.InnerText;
+                    var shopTransactionId = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/shoptransactionid")?.InnerText;
 
                     //Recupero l'ordine
-                    Guid orderNumberGuid = Guid.Empty;
+                    var orderNumberGuid = Guid.Empty;
                     try
                     {
-                        orderNumberGuid = new Guid(shopTransactionId);
+                        if (shopTransactionId != null) orderNumberGuid = new Guid(shopTransactionId);
                     }
-                    catch { }
-                    Order order = _orderService.GetOrderByGuid(orderNumberGuid);
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
 
                     if (errorCode == "0" && order != null)
                     {
                         //Codice autorizzazione
-                        var authorizationCode = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
+                        //var authorizationCode = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/authorizationcode")?.InnerText;
                         //Codice transazione
-                        var bankTransactionId = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid")?.InnerText;
+                        //var bankTransactionId = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/banktransactionid")?.InnerText;
                         //Ammontare della transazione
-                        var amount = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/amount")?.InnerText;
+                        //var amount = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/amount")?.InnerText;
                         //Risultato transazione
-                        var transactionResult = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult")?.InnerText;
+                        //var transactionResult = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/transactionresult")?.InnerText;
                         //Nome dell'utente
-                        var buyerName = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername")?.InnerText;
+                        //var buyerName = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyername")?.InnerText;
                         //Email utilizzata nella transazione
-                        var buyerEmail = XMLReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail")?.InnerText;
+                        //var buyerEmail = xmlReturn.SelectSingleNode("/gestpaycryptdecrypt/buyer/buyeremail")?.InnerText;
 
                         //load settings for a chosen store scope
-                        var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-                        var gestPayPaymentSettings = _settingService.LoadSetting<GestPayPaymentSettings>(storeScope);
+                        //var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+                        //var gestPayPaymentSettings = await _settingService.LoadSettingAsync<GestPayPaymentSettings>(storeScope);
 
                         //__________ Ordine Completato __________//
                         return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
@@ -484,7 +487,7 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                     else
                     {
                         //__________ ??Comunicarlo all'utente?? __________//
-                        return RedirectToAction("GeneralError", new { type = "1", errC = HttpUtility.UrlEncode(errorCode), errD = HttpUtility.UrlEncode(ErrorDesc) });
+                        return RedirectToAction("GeneralError", new { type = "1", errC = HttpUtility.UrlEncode(errorCode), errD = HttpUtility.UrlEncode(errorDesc) });
                     }
                 }
             }
@@ -493,31 +496,31 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             return RedirectToAction("GeneralError", new { type = "2" });
         }
 
-        public IActionResult AcceptPaymenyByLink(string a, string status, string paymentId, string paymentToken)
+        public async Task<IActionResult> AcceptPaymenyByLink(string a, string status, string paymentId, string paymentToken)
         {
             var endpoint = _gestPayPaymentSettings.UseSandbox ? "https://sandbox.gestpay.net/api/v1/payment/detail/" + paymentId : "https://ecomms2s.sella.it/api/v1/payment/detail/" + paymentId;
 
             var responseStr = string.Empty;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
+            var request = (HttpWebRequest)WebRequest.Create(endpoint);
             request.ContentType = "application/json";
             request.Headers.Add("Authorization", "apikey " + _gestPayPaymentSettings.ApiKey);
             request.Headers.Add("paymentToken", paymentToken);
 
             try
             {
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    Stream dataStream = response.GetResponseStream();
-                    StreamReader reader = new StreamReader(dataStream);
+                    var dataStream = response.GetResponseStream();
+                    var reader = new StreamReader(dataStream);
                     responseStr = reader.ReadToEnd();
                     reader.Close();
                     dataStream.Close();
 
-                    PaymentDetailResponseModel paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
+                    var paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
 
                     Guid orderGuid;
                     Guid.TryParse(paymentDetailResponse.payload.shopTransactionID, out orderGuid);
-                    var order = _orderService.GetOrderByGuid(orderGuid);
+                    var order = await _orderService.GetOrderByGuidAsync(orderGuid);
 
                     if (order != null)
                     {
@@ -547,15 +550,15 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         };
-                        _orderService.InsertOrderNote(orderNote);
+                        await _orderService.InsertOrderNoteAsync(orderNote);
 
                         order.AuthorizationTransactionId = paymentDetailResponse.payload.bankTransactionID;
                         order.AuthorizationTransactionCode = paymentDetailResponse.payload.authorizationCode;
 
-                        _orderService.UpdateOrder(order);
+                        await _orderService.UpdateOrderAsync(order);
 
                         if (!_gestPayPaymentSettings.EnableGuaranteedPayment && paymentDetailResponse.payload.transactionResult == "APPROVED")
-                            _orderProcessingService.MarkOrderAsPaid(order);
+                           await _orderProcessingService.MarkOrderAsPaidAsync(order);
 
                         return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
                     }
@@ -564,19 +567,21 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             }
             catch (WebException ex)
             {
-                using (var stream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
-                {
-                    responseStr = reader.ReadToEnd();
-                }
-                PaymentDetailResponseModel paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
-                _logger.Error("Gestpay Pay Link Verify Error = " + paymentDetailResponse.error.code + " " + paymentDetailResponse.error.description, ex);
+                await using (var stream = ex.Response?.GetResponseStream())
+                    if (stream != null)
+                    {
+                        using var reader = new StreamReader(stream);
+                        responseStr = reader.ReadToEnd();
+                    }
+
+                var paymentDetailResponse = JsonConvert.DeserializeObject<PaymentDetailResponseModel>(responseStr);
+                await _logger.ErrorAsync("Gestpay Pay Link Verify Error = " + paymentDetailResponse.error.code + " " + paymentDetailResponse.error.description, ex);
 
                 return RedirectToAction("GeneralError", "PaymentGestPay", new { type = "1", errc = HttpUtility.UrlEncode(paymentDetailResponse.error.code), errd = HttpUtility.UrlEncode(paymentDetailResponse.error.description) });
             }
         }
 
-        public IActionResult GeneralError()
+        public async Task<IActionResult> GeneralError()
         {
             var model = new GeneralErrorModel
             {
@@ -592,24 +597,24 @@ namespace Nop.Plugin.Payments.GestPay.Controllers
             switch (typErr)
             {
                 case "0":
-                    model.PageMessage = _localizationService.GetLocaleStringResourceByName("Plugins.Payments.GestPay.ErrorMessage.PageMessage00").ResourceValue;
+                    model.PageMessage = await _localizationService.GetResourceAsync("Plugins.Payments.GestPay.ErrorMessage.PageMessage00");
                     break;
                 case "1":
                 case "2":
-                    model.PageMessage = _localizationService.GetLocaleStringResourceByName("Plugins.Payments.GestPay.ErrorMessage.PageMessage01").ResourceValue;
+                    model.PageMessage = await _localizationService.GetResourceAsync("Plugins.Payments.GestPay.ErrorMessage.PageMessage01");
                     break;
             }
 
-            if (!String.IsNullOrEmpty(errC) || !String.IsNullOrEmpty(errD))
+            if (!string.IsNullOrEmpty(errC) || !String.IsNullOrEmpty(errD))
             {
-                model.SummaryTitle = _localizationService.GetLocaleStringResourceByName("Plugins.Payments.GestPay.ErrorMessage.TitleSummary").ResourceValue;
-                if (!String.IsNullOrEmpty(errC))
+                model.SummaryTitle = (await _localizationService.GetResourceAsync("Plugins.Payments.GestPay.ErrorMessage.TitleSummary"));
+                if (!string.IsNullOrEmpty(errC))
                 {
-                    model.SummaryMessage += String.Format("Err. Code:{0}<br/>", errC);
+                    model.SummaryMessage += $"Err. Code:{errC}<br/>";
                 }
-                if (!String.IsNullOrEmpty(errD))
+                if (!string.IsNullOrEmpty(errD))
                 {
-                    model.SummaryMessage += String.Format("Err. Desc:{0}<br/>", HttpUtility.UrlDecode(errD));
+                    model.SummaryMessage += $"Err. Desc:{HttpUtility.UrlDecode(errD)}<br/>";
                 }
             }
 

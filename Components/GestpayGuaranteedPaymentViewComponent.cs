@@ -4,7 +4,7 @@ using Nop.Web.Framework.Components;
 using System;
 
 
-namespace Nop.Plugin.Payments.GestPay.Component
+namespace Nop.Plugin.Payments.GestPay.Components
 {
     [ViewComponent(Name = "GestpayGuaranteedPayment")]
     public class GestpayGuaranteedPaymentViewComponent : NopViewComponent
@@ -21,7 +21,7 @@ namespace Nop.Plugin.Payments.GestPay.Component
 
         public IViewComponentResult Invoke()
         {
-            var url = new Uri(_storeContext.CurrentStore.Url);
+            var url = new Uri(_storeContext.GetCurrentStore().Url);
             ViewBag.StoreDomain = url.Host;
             ViewBag.EnableGuaranteedPayment = _gestPayPaymentSettings.EnableGuaranteedPayment;
 

@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Payments.GestPay.Models
 {
-    public class GeneralErrorModel : BaseNopModel
+    public record GeneralErrorModel : BaseNopModel
     {
         public string PageMessage { get; set; }
 

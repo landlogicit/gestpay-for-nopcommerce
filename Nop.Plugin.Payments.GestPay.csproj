@@ -1,12 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup Label="Globals">
-    <SccProjectName>%24/XmagNopCommerce/nopCommerce_4.30_Source/Plugins/Nop.Plugin.Payments.GestPay</SccProjectName>
-    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
-    <SccAuxPath>https://net13.visualstudio.com</SccAuxPath>
-    <SccLocalPath>.</SccLocalPath>
-  </PropertyGroup>
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Copyright></Copyright>
     <Company>Nop.Plugin.Payments.GestPay</Company>
     <Authors>Nop.Plugin.Payments.GestPay</Authors>
@@ -61,12 +56,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
-    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" />
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
   <!-- This target execute after "Build" target -->
@@ -74,4 +63,11 @@
     <!-- Delete unnecessary libraries from plugins path -->
     <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
   </Target>
+  <ItemGroup>
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.10.*" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="4.10.*" />
+  </ItemGroup>
 </Project>

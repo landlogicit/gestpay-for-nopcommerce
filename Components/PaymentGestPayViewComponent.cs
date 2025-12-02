@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Framework.Components;
 
-namespace Nop.Plugin.Payments.GestPay.Component
+namespace Nop.Plugin.Payments.GestPay.Components
 {
     [ViewComponent(Name = "PaymentGestPay")]
     public class PaymentGestPayViewComponent : NopViewComponent

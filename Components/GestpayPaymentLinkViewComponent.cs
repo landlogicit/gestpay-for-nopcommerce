@@ -2,9 +2,6 @@
 using Nop.Core.Domain.Payments;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Components;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nop.Plugin.Payments.GestPay.Components
 {

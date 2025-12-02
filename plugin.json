@@ -2,9 +2,11 @@
   "Group": "Payment methods",
   "FriendlyName": "GestPay BancaSella",
   "SystemName": "Payments.GestPay",
-  "Version": "1.55",
-  "SupportedVersions": [ "4.30" ],
-  "Author": "Lorenzo Battaglia, LandLogic IT & Alessandro Betti, .NET SRL",
+  "Version": "1.56",
+  "SupportedVersions": [
+    "4.40"
+  ],
+  "Author": "Lorenzo Battaglia, LandLogic IT",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Payments.GestPay.dll",
   "Description": "This plugin allows paying with GestPay Banca Sella"

@@ -20,7 +20,7 @@ namespace Nop.Plugin.Payments.GestPay.Infrastructure
 
             //s2s
             endpointRouteBuilder.MapControllerRoute("Plugin.Payments.GestPay.s2sHandler", "Plugins/PaymentGestPay/s2sHandler",
-                new { controller = "PaymentGestPay", action = "s2sHandler" });
+                new { controller = "PaymentGestPay", action = "S2SHandler" });
 
             //Cancel
             endpointRouteBuilder.MapControllerRoute("Plugin.Payments.GestPay.CancelOrder", "Plugins/PaymentGestPay/CancelOrder",

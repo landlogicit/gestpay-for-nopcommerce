@@ -3,7 +3,7 @@
 }
 
 @using Microsoft.AspNetCore.Http;
-@inject IHttpContextAccessor httpContextAccessor
+@inject IHttpContextAccessor HttpContextAccessor
 
 @if(ViewBag.EnableGuaranteedPayment)
 {
@@ -12,7 +12,7 @@
     (function() {
       function riskifiedBeaconLoad() {
         var store_domain = '@ViewBag.StoreDomain';
-        var session_id = '@httpContextAccessor.HttpContext.Session.Id';//'SESSION ID GOES HERE - as passed to Order->cart_token';
+        var session_id = '@HttpContextAccessor.HttpContext?.Session.Id';//'SESSION ID GOES HERE - as passed to Order->cart_token';
         var url = ('https:' == document.location.protocol ? 'https://' : 'http://')
           + "beacon.riskified.com?shop=" + store_domain + "&sid=" + session_id;
         var s = document.createElement('script');

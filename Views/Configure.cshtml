@@ -1,4 +1,4 @@
-﻿@inject Nop.Core.IWebHelper webHelper
+﻿@inject Nop.Core.IWebHelper WebHelper
 @{
     Layout = "_ConfigurePlugin";
 }
@@ -8,7 +8,9 @@
 @inject Nop.Core.IStoreContext storeContext;
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
-
+@{
+    var currentStore = await storeContext.GetCurrentStoreAsync();
+}
 <form asp-controller="PaymentGestPay" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
@@ -24,15 +26,15 @@
                     <h2>Risposta all'esercente</h2>
                     La notifica, viene inoltrata con una chiamata server to server alla pagina opportunamente predisposta sul server dell'esercente
                     (l'url della pagina di notiﬁca è una delle informazioni che compongono il proﬁlo dell'esercente configurabile tramite l'ambiente di back ofﬁce di GestPay).<br />
-                    <b>@(storeContext.CurrentStore.Url + "Plugins/PaymentGestPay/s2sHandler")</b>
+                    <b>@(currentStore.Url + "Plugins/PaymentGestPay/s2sHandler")</b>
                     <br />
 
                     <h2>Risposta all'acquirente</h2>
                     L'esito della transazione viene immediatamente notiﬁcato da GestPay visualizzando lo "scontrino virtuale" che riporta i dati essenziali della transazione.<br />
                     GestPay indirizzerà il browser dell'acquirente sul server dell'esercente per concludere il processo d'acquisto. <br />
                     L'esercente dovrà predisporre due url (e conﬁgurarle nel proﬁlo esercente) <br />
-                    <b>@(storeContext.CurrentStore.Url + "Plugins/PaymentGestPay/EsitoGestPay/OK      (Esito positivo)")</b><br />
-                    <b>@(storeContext.CurrentStore.Url + "Plugins/PaymentGestPay/EsitoGestPay/KO      (Esito negativo)")</b><br /><br />
+                    <b>@(currentStore.Url + "Plugins/PaymentGestPay/EsitoGestPay/OK      (Esito positivo)")</b><br />
+                    <b>@(currentStore.Url + "Plugins/PaymentGestPay/EsitoGestPay/KO      (Esito negativo)")</b><br /><br />
 
                     <h2>Profilo esercente</h2>
                     Ogni esercente ha la possibilità di configurare il proﬁlo accedendo all'ambiente di back office di GestPay.<br />
